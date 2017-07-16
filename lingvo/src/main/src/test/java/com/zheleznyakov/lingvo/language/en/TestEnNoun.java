@@ -53,7 +53,24 @@ public class TestEnNoun {
     public void testNounDeclensions_YEnding() {
         EnNoun city = EnNoun.builder("city")
                 .build();
+        EnNoun boy = EnNoun.builder("boy")
+                .build();
 
         Assert.assertArrayEquals(new String[]{"city", "cities", "city's", "cities'"}, city.getDeclensions());
+        Assert.assertArrayEquals(new String[]{"boy", "boys", "boy's", "boys'"}, boy.getDeclensions());
+    }
+
+    @Test
+    public void testNounDeclensions_FEnding() {
+        EnNoun thief = EnNoun.builder("thief")
+                .build();
+        EnNoun wife = EnNoun.builder("wife")
+                .build();
+        EnNoun cliff = EnNoun.builder("cliff")
+                .build();
+
+        Assert.assertArrayEquals(new String[]{"thief", "thieves", "thief's", "thieves'"}, thief.getDeclensions());
+        Assert.assertArrayEquals(new String[]{"wife", "wives", "wife's", "wives'"}, wife.getDeclensions());
+        Assert.assertArrayEquals(new String[]{"cliff", "cliffs", "cliff's", "cliffs'"}, cliff.getDeclensions());
     }
 }

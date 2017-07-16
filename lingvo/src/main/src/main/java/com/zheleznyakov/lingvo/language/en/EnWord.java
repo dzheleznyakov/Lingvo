@@ -1,8 +1,13 @@
 package com.zheleznyakov.lingvo.language.en;
 
+import java.util.Set;
+
 import com.zheleznyakov.lingvo.util.Word;
+import com.google.common.collect.ImmutableSet;
 
 public abstract class EnWord implements Word {
+
+    public static final Set<Character> VOWELS = ImmutableSet.of('a', 'o', 'e', 'u', 'i');
 
     protected final String mainForm;
 
@@ -13,22 +18,6 @@ public abstract class EnWord implements Word {
     @Override
     public String getMainForm() {
         return mainForm;
-    }
-
-    protected boolean endsInSibilant() {
-        return mainForm.endsWith("x")
-                || mainForm.endsWith("ch")
-                || mainForm.endsWith("sh");
-    }
-
-    protected String appendSEnding() {
-        if (endsInSibilant() || mainForm.endsWith("s")) {
-            return mainForm + "es";
-        } else if (mainForm.endsWith("y")) {
-            return mainForm.substring(0, mainForm.length() - 1) + "ies";
-        } else {
-            return mainForm + "s";
-        }
     }
 
     public Language getLanguage() {

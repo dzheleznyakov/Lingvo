@@ -32,6 +32,42 @@ public class EnNoun extends EnWord implements Noun {
         }
     }
 
+    private String appendSEnding() {
+        if (endsInSibilant() || mainForm.endsWith("s")) {
+            return mainForm + "es";
+        } else if (endsWithVowelY()) {
+            return mainForm.substring(0, mainForm.length() - 1) + "ies";
+        } else if (endsInSingleF()) {
+            return mainForm.substring(0, mainForm.length() - 1) + "ves";
+        } else if (endsInFe()) {
+            return mainForm.substring(0, mainForm.length() - 2) + "ves";
+        } else {
+            return mainForm + "s";
+        }
+    }
+
+    private boolean endsInSibilant() {
+        return mainForm.endsWith("x")
+                || mainForm.endsWith("ch")
+                || mainForm.endsWith("sh");
+    }
+
+    private boolean endsWithVowelY() {
+        return mainForm.endsWith("y") && !VOWELS.contains(getSecondLastChar());
+    }
+
+    private char getSecondLastChar() {
+        return mainForm.charAt(mainForm.length() - 2);
+    }
+
+    private boolean endsInSingleF() {
+        return mainForm.endsWith("f") && getSecondLastChar() != 'f';
+    }
+
+    private boolean endsInFe() {
+        return mainForm.endsWith("fe");
+    }
+
     static class Builder {
         String mainForm;
         boolean regular = true;
