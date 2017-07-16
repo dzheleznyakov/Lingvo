@@ -2,17 +2,15 @@ package com.zheleznyakov.lingvo.language.en;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.zheleznyakov.lingvo.util.ChangeType;
 import com.zheleznyakov.lingvo.util.Noun;
 
-public class EnNoun implements EnWord, Noun {
+public class EnNoun extends EnWord implements Noun {
 
-    private final String mainForm;
-    private final ChangeType changeType;
+    private final boolean regular;
 
     private EnNoun(Builder builder) {
-        mainForm = builder.mainForm;
-        changeType = builder.changeType;
+        super(builder.mainForm);
+        regular = builder.regular;
     }
 
     @NotNull
@@ -21,35 +19,29 @@ public class EnNoun implements EnWord, Noun {
     }
 
     @Override
-    public String getMainForm() {
-        return mainForm;
-    }
-
-    @Override
-    public ChangeType getChangeType() {
-        return changeType;
+    public boolean isRegular() {
+        return regular;
     }
 
     @Override
     public String[] getDeclensions() {
-        char lastChar = mainForm.charAt(mainForm.length() - 1);
-        if (lastChar == 'x') {
-            return  new String[]{mainForm, mainForm + "es", mainForm + "'s", mainForm + "es'"};
+        if (mainForm.endsWith("s")) {
+            return  new String[]{mainForm, appendSEnding(), mainForm + "'", appendSEnding() + "'"};
         } else {
-            return new String[]{mainForm, mainForm + "s", mainForm + "'s", mainForm + "s'"};
+            return new String[]{mainForm, appendSEnding(), mainForm + "'s", appendSEnding() + "'"};
         }
     }
 
     static class Builder {
         String mainForm;
-        ChangeType changeType = ChangeType.REG;
+        boolean regular = true;
 
         Builder(String mainForm) {
             this.mainForm = mainForm;
         }
 
         Builder irregular() {
-            changeType = ChangeType.IRR;
+            regular = false;
             return this;
         }
 

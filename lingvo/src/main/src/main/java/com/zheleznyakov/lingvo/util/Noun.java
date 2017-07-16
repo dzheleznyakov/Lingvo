@@ -4,7 +4,7 @@ public interface Noun extends Word {
 
     String[] getDeclensions();
 
-    ChangeType getChangeType();
+    boolean isRegular();
 
     default PartOfSpeech getPartOfSpeech() {
         return PartOfSpeech.NOUN;
