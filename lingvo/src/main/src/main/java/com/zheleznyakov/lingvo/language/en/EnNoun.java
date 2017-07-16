@@ -7,10 +7,12 @@ import com.zheleznyakov.lingvo.util.Noun;
 public class EnNoun extends EnWord implements Noun {
 
     private final boolean regular;
+    private final String plural;
 
     private EnNoun(Builder builder) {
         super(builder.mainForm);
         regular = builder.regular;
+        plural = regular ? appendSEnding() : builder.plural;
     }
 
     @NotNull
@@ -26,9 +28,11 @@ public class EnNoun extends EnWord implements Noun {
     @Override
     public String[] getDeclensions() {
         if (mainForm.endsWith("s")) {
-            return  new String[]{mainForm, appendSEnding(), mainForm + "'", appendSEnding() + "'"};
+            return  new String[]{mainForm, plural, mainForm + "'", plural + "'"};
+        } else if (plural.endsWith("s")) {
+            return new String[]{mainForm, plural, mainForm + "'s", plural + "'"};
         } else {
-            return new String[]{mainForm, appendSEnding(), mainForm + "'s", appendSEnding() + "'"};
+            return new String[]{mainForm, plural, mainForm + "'s", plural + "'s"};
         }
     }
 
@@ -70,13 +74,15 @@ public class EnNoun extends EnWord implements Noun {
 
     static class Builder {
         String mainForm;
+        String plural;
         boolean regular = true;
 
         Builder(String mainForm) {
             this.mainForm = mainForm;
         }
 
-        Builder irregular() {
+        public Builder irregularPlural(String plural) {
+            this.plural = plural;
             regular = false;
             return this;
         }

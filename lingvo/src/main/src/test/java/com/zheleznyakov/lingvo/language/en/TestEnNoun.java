@@ -8,20 +8,15 @@ import com.zheleznyakov.lingvo.util.PartOfSpeech;
 public class TestEnNoun {
 
     @Test
-    public void testEnNounCreation() {
+    public void testCreateEnNoun() {
         String mockNoun = "abc";
         EnNoun noun = EnNoun.builder(mockNoun)
                 .build();
 
         Assert.assertEquals(Language.ENGLISH, noun.getLanguage());
         Assert.assertEquals(PartOfSpeech.NOUN, noun.getPartOfSpeech());
-        Assert.assertEquals(true, noun.isRegular());
+        Assert.assertTrue(noun.isRegular());
         Assert.assertEquals(mockNoun, noun.getMainForm());
-
-        noun = EnNoun.builder(mockNoun)
-                .irregular()
-                .build();
-        Assert.assertEquals(false, noun.isRegular());
     }
 
     @Test
@@ -72,5 +67,19 @@ public class TestEnNoun {
         Assert.assertArrayEquals(new String[]{"thief", "thieves", "thief's", "thieves'"}, thief.getDeclensions());
         Assert.assertArrayEquals(new String[]{"wife", "wives", "wife's", "wives'"}, wife.getDeclensions());
         Assert.assertArrayEquals(new String[]{"cliff", "cliffs", "cliff's", "cliffs'"}, cliff.getDeclensions());
+    }
+
+    @Test
+    public void testNounDeclensions_Irregular() {
+        EnNoun man = EnNoun.builder("man")
+                .irregularPlural("men")
+                .build();
+        EnNoun hero = EnNoun.builder("hero")
+                .irregularPlural("heroes")
+                .build();
+
+        Assert.assertFalse(man.isRegular());
+        Assert.assertArrayEquals(new String[]{"man", "men", "man's", "men's"}, man.getDeclensions());
+        Assert.assertArrayEquals(new String[]{"hero", "heroes", "hero's", "heroes'"}, hero.getDeclensions());
     }
 }
