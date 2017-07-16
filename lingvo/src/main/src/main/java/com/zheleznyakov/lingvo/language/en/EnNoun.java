@@ -15,27 +15,6 @@ public class EnNoun extends EnWord implements Noun {
         plural = regular ? appendSEnding() : builder.plural;
     }
 
-    @NotNull
-    public static Builder builder(@NotNull String noun) {
-        return new Builder(noun);
-    }
-
-    @Override
-    public boolean isRegular() {
-        return regular;
-    }
-
-    @Override
-    public String[] getDeclensions() {
-        if (mainForm.endsWith("s")) {
-            return  new String[]{mainForm, plural, mainForm + "'", plural + "'"};
-        } else if (plural.endsWith("s")) {
-            return new String[]{mainForm, plural, mainForm + "'s", plural + "'"};
-        } else {
-            return new String[]{mainForm, plural, mainForm + "'s", plural + "'s"};
-        }
-    }
-
     private String appendSEnding() {
         if (endsInSibilant() || mainForm.endsWith("s")) {
             return mainForm + "es";
@@ -48,6 +27,25 @@ public class EnNoun extends EnWord implements Noun {
         } else {
             return mainForm + "s";
         }
+    }
+
+    @NotNull
+    public static Builder builder(@NotNull String noun) {
+        return new Builder(noun);
+    }
+
+    @Override
+    public boolean isRegular() {
+        return regular;
+    }
+
+    @Override
+    public String[] getDeclensions() {
+        return new String[]{mainForm, plural, makePossessive(mainForm), makePossessive(plural)};
+    }
+
+    private static String makePossessive(String form) {
+        return form.endsWith("s") ? form + "'" : form + "'s";
     }
 
     private boolean endsInSibilant() {
