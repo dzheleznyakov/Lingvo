@@ -1,1 +1,9 @@
 *.DS_Store
+# Intellij
+.idea/
+*.iml
+
+# Maven
+log/
+logs/
+target/
