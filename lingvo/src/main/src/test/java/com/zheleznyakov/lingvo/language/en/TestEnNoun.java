@@ -3,7 +3,7 @@ package com.zheleznyakov.lingvo.language.en;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.zheleznyakov.lingvo.util.PartOfSpeech;
+import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 
 public class TestEnNoun {
 

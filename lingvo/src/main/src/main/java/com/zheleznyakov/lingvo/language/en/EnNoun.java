@@ -2,7 +2,7 @@ package com.zheleznyakov.lingvo.language.en;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.zheleznyakov.lingvo.util.Noun;
+import com.zheleznyakov.lingvo.basic.Noun;
 
 public class EnNoun extends EnWord implements Noun {
 

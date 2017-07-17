@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.util;
+package com.zheleznyakov.lingvo.basic;
 
 import com.zheleznyakov.lingvo.language.en.Language;
 

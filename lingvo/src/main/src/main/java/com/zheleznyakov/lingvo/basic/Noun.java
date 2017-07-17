@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.util;
+package com.zheleznyakov.lingvo.basic;
 
 public interface Noun extends Word {
 
