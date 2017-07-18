@@ -40,14 +40,14 @@ public class TestEnNoun {
 
     @Test
     public void testCreateEnNoun() {
-        String mockNoun = "abc";
-        EnNoun noun = buildRegularNoun(mockNoun);
+        String nounString = "abc";
+        EnNoun noun = buildRegularNoun(nounString);
 
         assertEquals(Language.ENGLISH, noun.getLanguage());
         assertEquals(PartOfSpeech.NOUN, noun.getPartOfSpeech());
         assertTrue(noun.isRegular());
         assertFalse(noun.isProperNoun());
-        assertEquals(mockNoun, noun.getMainForm());
+        assertEquals(nounString, noun.getMainForm());
     }
 
     @Test

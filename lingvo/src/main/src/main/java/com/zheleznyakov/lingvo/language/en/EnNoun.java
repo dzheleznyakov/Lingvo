@@ -125,12 +125,12 @@ public class EnNoun extends EnWord implements Noun {
         return new Builder(noun);
     }
 
-    static class Builder {
-        String mainForm;
-        String alternativeForm;
-        String pluralForm;
-        boolean regular = true;
-        boolean properNoun = false;
+    public static class Builder {
+        private String mainForm;
+        private String alternativeForm;
+        private String pluralForm;
+        private boolean regular = true;
+        private boolean properNoun = false;
 
         Builder(String mainForm) {
             this.mainForm = mainForm;
