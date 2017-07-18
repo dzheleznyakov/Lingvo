@@ -20,6 +20,7 @@ public abstract class EnWord implements Word {
         return mainForm;
     }
 
+    @Override
     public Language getLanguage() {
         return Language.ENGLISH;
     }

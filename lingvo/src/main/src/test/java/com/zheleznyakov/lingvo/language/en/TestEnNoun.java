@@ -1,85 +1,136 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 
 public class TestEnNoun {
 
+    private EnNoun buildRegularNoun(String noun) {
+        return EnNoun.builder(noun).build();
+    }
+
+    private EnNoun buildIrregularNoun(String mainForm, String pluralForm) {
+        return EnNoun.builder(mainForm)
+                .irregularPlural(pluralForm);
+    }
+
+    private EnNoun getNounWithAlternativeForm(String mainForm, String alternativeForm) {
+        return EnNoun.builder(mainForm)
+                .alternativeForm(alternativeForm);
+    }
+
+    private EnNoun buildProperNoun(String mainForm) {
+        return EnNoun.builder(mainForm)
+                .properNoun();
+    }
+
+    private void assertDeclensions(EnNoun noun, String[] declensions) {
+        assertArrayEquals(declensions, noun.getDeclensions());
+    }
+
+    private void assertDeclensionsFull(EnNoun form, String[] declensions) {
+        assertArrayEquals(declensions, form.getDeclensionsFull());
+    }
+
     @Test
     public void testCreateEnNoun() {
         String mockNoun = "abc";
-        EnNoun noun = EnNoun.builder(mockNoun)
-                .build();
+        EnNoun noun = buildRegularNoun(mockNoun);
 
-        Assert.assertEquals(Language.ENGLISH, noun.getLanguage());
-        Assert.assertEquals(PartOfSpeech.NOUN, noun.getPartOfSpeech());
-        Assert.assertTrue(noun.isRegular());
-        Assert.assertEquals(mockNoun, noun.getMainForm());
+        assertEquals(Language.ENGLISH, noun.getLanguage());
+        assertEquals(PartOfSpeech.NOUN, noun.getPartOfSpeech());
+        assertTrue(noun.isRegular());
+        assertFalse(noun.isProperNoun());
+        assertEquals(mockNoun, noun.getMainForm());
     }
 
     @Test
     public void testNounDeclensions_StandardEnding() {
-        EnNoun house = EnNoun.builder("house")
-                .build();
+        EnNoun house = buildRegularNoun("house");
 
-        Assert.assertArrayEquals(new String[]{"house", "houses", "house's", "houses'"}, house.getDeclensions());
+        assertDeclensions(house, new String[]{"house", "houses", "house's", "houses'"});
     }
 
     @Test
     public void testNounDeclensions_SibilantEnding() {
-        EnNoun box = EnNoun.builder("box")
-                .build();
-        EnNoun sandwich = EnNoun.builder("sandwich")
-                .build();
-        EnNoun parish = EnNoun.builder("parish")
-                .build();
-        EnNoun miss = EnNoun.builder("miss")
-                .build();
+        EnNoun box = buildRegularNoun("box");
+        EnNoun sandwich = buildRegularNoun("sandwich");
+        EnNoun parish = buildRegularNoun("parish");
+        EnNoun miss = buildRegularNoun("miss");
 
-        Assert.assertArrayEquals(new String[]{"box", "boxes", "box's", "boxes'"}, box.getDeclensions());
-        Assert.assertArrayEquals(new String[]{"sandwich", "sandwiches", "sandwich's", "sandwiches'"}, sandwich.getDeclensions());
-        Assert.assertArrayEquals(new String[]{"parish", "parishes", "parish's", "parishes'"}, parish.getDeclensions());
-        Assert.assertArrayEquals(new String[]{"miss", "misses", "miss'", "misses'"}, miss.getDeclensions());
+        assertDeclensions(box, new String[]{"box", "boxes", "box's", "boxes'"});
+        assertDeclensions(sandwich, new String[]{"sandwich", "sandwiches", "sandwich's", "sandwiches'"});
+        assertDeclensions(parish, new String[]{"parish", "parishes", "parish's", "parishes'"});
+        assertDeclensions(miss, new String[]{"miss", "misses", "miss'", "misses'"});
     }
 
     @Test
     public void testNounDeclensions_YEnding() {
-        EnNoun city = EnNoun.builder("city")
-                .build();
-        EnNoun boy = EnNoun.builder("boy")
-                .build();
+        EnNoun city = buildRegularNoun("city");
+        EnNoun boy = buildRegularNoun("boy");
 
-        Assert.assertArrayEquals(new String[]{"city", "cities", "city's", "cities'"}, city.getDeclensions());
-        Assert.assertArrayEquals(new String[]{"boy", "boys", "boy's", "boys'"}, boy.getDeclensions());
+        assertDeclensions(city, new String[]{"city", "cities", "city's", "cities'"});
+        assertDeclensions(boy, new String[]{"boy", "boys", "boy's", "boys'"});
     }
 
     @Test
     public void testNounDeclensions_FEnding() {
-        EnNoun thief = EnNoun.builder("thief")
-                .build();
-        EnNoun wife = EnNoun.builder("wife")
-                .build();
-        EnNoun cliff = EnNoun.builder("cliff")
-                .build();
+        EnNoun thief = buildRegularNoun("thief");
+        EnNoun wife = buildRegularNoun("wife");
+        EnNoun cliff = buildRegularNoun("cliff");
 
-        Assert.assertArrayEquals(new String[]{"thief", "thieves", "thief's", "thieves'"}, thief.getDeclensions());
-        Assert.assertArrayEquals(new String[]{"wife", "wives", "wife's", "wives'"}, wife.getDeclensions());
-        Assert.assertArrayEquals(new String[]{"cliff", "cliffs", "cliff's", "cliffs'"}, cliff.getDeclensions());
+        assertDeclensions(thief, new String[]{"thief", "thieves", "thief's", "thieves'"});
+        assertDeclensions(wife, new String[]{"wife", "wives", "wife's", "wives'"});
+        assertDeclensions(cliff, new String[]{"cliff", "cliffs", "cliff's", "cliffs'"});
     }
 
     @Test
     public void testNounDeclensions_Irregular() {
-        EnNoun man = EnNoun.builder("man")
-                .irregularPlural("men")
-                .build();
-        EnNoun hero = EnNoun.builder("hero")
-                .irregularPlural("heroes")
-                .build();
+        EnNoun man = buildIrregularNoun("man", "men");
+        EnNoun hero = buildIrregularNoun("hero", "heroes");
 
-        Assert.assertFalse(man.isRegular());
-        Assert.assertArrayEquals(new String[]{"man", "men", "man's", "men's"}, man.getDeclensions());
-        Assert.assertArrayEquals(new String[]{"hero", "heroes", "hero's", "heroes'"}, hero.getDeclensions());
+        assertFalse(man.isRegular());
+        assertFalse(man.isProperNoun());
+        assertDeclensions(man, new String[]{"man", "men", "man's", "men's"});
+        assertDeclensions(hero, new String[]{"hero", "heroes", "hero's", "heroes'"});
+    }
+
+    @Test
+    public void testAlternativeForms_WordHasAlternativeForm() {
+        EnNoun realization = getNounWithAlternativeForm("realization", "realisation");
+
+        assertDeclensionsFull(realization, new String[]{
+                "realization/realisation",
+                "realizations/realisations",
+                "realization's/realisation's",
+                "realizations'/realisations'"});
+    }
+
+    @Test
+    public void testAlternativeForm_WordDoesNotHaveAlternativeForm() {
+        EnNoun house = buildRegularNoun("house");
+
+        assertDeclensionsFull(house, new String[]{"house", "houses", "house's", "houses'"});
+    }
+
+    @Test
+    public void testProperNoun() {
+        EnNoun john = buildProperNoun("John");
+        EnNoun thomas = buildProperNoun("Thomas");
+
+        String[] johnDeclensions = {"John", "John's"};
+
+        assertTrue(john.isProperNoun());
+        assertTrue(john.isRegular());
+        assertDeclensions(john, johnDeclensions);
+        assertDeclensionsFull(john, johnDeclensions);
+        assertDeclensions(thomas, new String[]{"Thomas", "Thomas's"});
+        assertDeclensionsFull(thomas, new String[]{"Thomas", "Thomas's/Thomas'"});
     }
 }
