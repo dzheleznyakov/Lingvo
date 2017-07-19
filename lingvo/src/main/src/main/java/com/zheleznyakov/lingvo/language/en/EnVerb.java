@@ -34,13 +34,12 @@ public class EnVerb extends EnWord implements Verb {
 
     private void appendFormToList(Form form, List<String> forms) {
         String irregularForm = irregularForms.get(form);
-        if (!form.isMandatory() && irregularForm == null) {
+        if (!form.isMandatory() && irregularForm == null)
             return;
-        } else if (irregularForm != null) {
+        else if (irregularForm != null)
             forms.add(irregularForm);
-        } else {
+        else
             forms.add(form.standardConverter.apply(mainForm));
-        }
     }
 
     private static String appendEdEnding(String form) {
