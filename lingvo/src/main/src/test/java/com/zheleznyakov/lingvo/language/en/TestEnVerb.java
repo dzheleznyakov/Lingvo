@@ -1,8 +1,12 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PAST;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.GERUND;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PAST_PLURAL;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PAST_SINGLE;
 import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PAST_PARTICIPLE;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PRESENT_SECOND_SINGULAR;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PRESENT_FIRST_SINGULAR;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PRESENT_PLURAL;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PRESENT_THIRD_SINGULAR;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -73,12 +77,22 @@ public class TestEnVerb {
     @Test
     public void testGetForms_Irregular() {
         EnVerb vDo = EnVerb.builder("do")
-                .irregularForm(PRESENT_SECOND_SINGULAR, "does")
-                .irregularForm(PAST, "did")
+                .irregularForm(PRESENT_THIRD_SINGULAR, "does")
+                .irregularForm(PAST_SINGLE, "did")
                 .irregularForm(PAST_PARTICIPLE, "done")
+                .build();
+        EnVerb be = EnVerb.builder("be")
+                .irregularForm(GERUND, "being")
+                .irregularForm(PRESENT_FIRST_SINGULAR, "am")
+                .irregularForm(PRESENT_THIRD_SINGULAR, "is")
+                .irregularForm(PRESENT_PLURAL, "are")
+                .irregularForm(PAST_SINGLE, "was")
+                .irregularForm(PAST_PLURAL, "were")
+                .irregularForm(PAST_PARTICIPLE, "been")
                 .build();
 
         assertFalse(vDo.isRegular());
-//        assertVerbForms(vDo, "do", "does", "doing", "did", "done");
+        assertVerbForms(vDo, "do", "does", "doing", "did", "done");
+        assertVerbForms(be, "be", "am", "is", "are", "being", "was", "were", "been");
     }
 }

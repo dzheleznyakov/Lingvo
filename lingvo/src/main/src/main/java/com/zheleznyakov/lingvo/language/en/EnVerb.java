@@ -1,7 +1,6 @@
 package com.zheleznyakov.lingvo.language.en;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,9 @@ public class EnVerb extends EnWord implements Verb {
 
     private EnVerb(Builder builder) {
         super(builder.mainForm);
-        irregularForms = builder.irregularForms;
+        irregularForms = builder.irregularForms == null
+                ? new HashMap<>()
+                : builder.irregularForms;
         regular = builder.regular;
     }
 
@@ -26,14 +27,20 @@ public class EnVerb extends EnWord implements Verb {
 
     public String[] getForms() {
         List<String> forms = new ArrayList<>();
-        Arrays.stream(Form.values()).forEach(form -> {
-            if (form == Form.PAST_PARTICIPLE && irregularForms.get(Form.PAST_PARTICIPLE) == null) {
-                return;
-            } else {
-                forms.add(form.standardConverter.apply(mainForm));
-            }
-        });
-        return (String[]) forms.toArray();
+        for (Form form : Form.values())
+            appendFormToList(form, forms);
+        return forms.toArray(new String[forms.size()]);
+    }
+
+    private void appendFormToList(Form form, List<String> forms) {
+        String irregularForm = irregularForms.get(form);
+        if (!form.isMandatory() && irregularForm == null) {
+            return;
+        } else if (irregularForm != null) {
+            forms.add(irregularForm);
+        } else {
+            forms.add(form.standardConverter.apply(mainForm));
+        }
     }
 
     private static String appendEdEnding(String form) {
@@ -86,16 +93,25 @@ public class EnVerb extends EnWord implements Verb {
     }
 
     public enum Form {
-        MAIN_FORM(Function.identity()),
-        PRESENT_SECOND_SINGULAR(EnWord::appendSEnding),
-        GERUND(EnVerb::appendIngEnding),
-        PAST(EnVerb::appendEdEnding),
-        PAST_PARTICIPLE(EnVerb::appendEdEnding),;
+        MAIN_FORM(true, Function.identity()),
+        PRESENT_FIRST_SINGULAR(false, MAIN_FORM.standardConverter),
+        PRESENT_THIRD_SINGULAR(true, EnWord::appendSEnding),
+        PRESENT_PLURAL(false, MAIN_FORM.standardConverter),
+        GERUND(true, EnVerb::appendIngEnding),
+        PAST_SINGLE(true, EnVerb::appendEdEnding),
+        PAST_PLURAL(false, PAST_SINGLE.standardConverter),
+        PAST_PARTICIPLE(false, PAST_SINGLE.standardConverter),;
 
-        final Function<String, String> standardConverter;
+        private final boolean mandatory;
+        private final Function<String, String> standardConverter;
 
-        Form(Function<String, String> standardConverter) {
+        Form(boolean mandatory, Function<String, String> standardConverter) {
+            this.mandatory = mandatory;
             this.standardConverter = standardConverter;
+        }
+
+        public boolean isMandatory() {
+            return mandatory;
         }
     }
 
