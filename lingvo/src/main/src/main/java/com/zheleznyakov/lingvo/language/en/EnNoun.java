@@ -10,7 +10,6 @@ public class EnNoun extends EnWord implements Noun {
     private final boolean properNoun;
     private final String alternativeForm;
     private final String pluralForm;
-    private String[] declensionsFullForProperNoun;
 
     private EnNoun(Builder builder) {
         super(builder.mainForm);
@@ -29,20 +28,6 @@ public class EnNoun extends EnWord implements Noun {
         return properNoun;
     }
 
-    private String appendSEnding(String form) {
-        if (endsInSibilant(form) || form.endsWith("s")) {
-            return form + "es";
-        } else if (endsInVowelY(form)) {
-            return form.substring(0, form.length() - 1) + "ies";
-        } else if (endsInSingleF(form)) {
-            return form.substring(0, form.length() - 1) + "ves";
-        } else if (endsInFe(form)) {
-            return form.substring(0, form.length() - 2) + "ves";
-        } else {
-            return form + "s";
-        }
-    }
-
     @Override
     @NotNull
     public String[] getDeclensions() {
@@ -52,11 +37,7 @@ public class EnNoun extends EnWord implements Noun {
     }
 
     private String[] getDeclensionsForProperNoun() {
-        if (mainForm.endsWith("s")) {
-            return new String[]{mainForm, mainForm + "'s"};
-        } else {
-            return new String[]{mainForm, makePossessive(mainForm)};
-        }
+        return new String[]{mainForm, mainForm + "'s"};
     }
 
     private String[] getDeclensions(String mForm, String pForm) {
@@ -97,28 +78,6 @@ public class EnNoun extends EnWord implements Noun {
             declensionsFull[i] = mainDeclensions[i] + "/" + alternativeDeclensions[i];
         }
         return declensionsFull;
-    }
-
-    private boolean endsInSibilant(String form) {
-        return form.endsWith("x")
-                || form.endsWith("ch")
-                || form.endsWith("sh");
-    }
-
-    private boolean endsInVowelY(String form) {
-        return form.endsWith("y") && !VOWELS.contains(getSecondLastChar());
-    }
-
-    private char getSecondLastChar() {
-        return mainForm.charAt(mainForm.length() - 2);
-    }
-
-    private boolean endsInSingleF(String form) {
-        return form.endsWith("f") && getSecondLastChar() != 'f';
-    }
-
-    private boolean endsInFe(String form) {
-        return form.endsWith("fe");
     }
 
     public static Builder builder(@NotNull String noun) {
