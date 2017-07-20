@@ -1,12 +1,12 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.GERUND;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PAST_PLURAL;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PAST_SINGLE;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PAST_PARTICIPLE;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PRESENT_FIRST_SINGULAR;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PRESENT_PLURAL;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.Form.PRESENT_THIRD_SINGULAR;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.GERUND;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PAST_PLURAL;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PAST_SINGLE;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PAST_PARTICIPLE;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PRESENT_FIRST_SINGULAR;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PRESENT_PLURAL;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PRESENT_THIRD_SINGULAR;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
