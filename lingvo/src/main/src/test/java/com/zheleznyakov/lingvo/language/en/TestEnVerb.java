@@ -28,9 +28,8 @@ public class TestEnVerb {
         if (alternativeForms.length % 2 != 0)
             throw new IllegalArgumentException("The length of alternativeForms should be even");
         EnVerb.Builder verbBuilder = EnVerb.builder(mainForm);
-        for (int i = 0; i < alternativeForms.length; i += 2) {
+        for (int i = 0; i < alternativeForms.length; i += 2)
             appendAlternativeForm(verbBuilder, alternativeForms[i], alternativeForms[i + 1]);
-        }
         return verbBuilder.build();
     }
 
