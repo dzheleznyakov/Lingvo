@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.zheleznyakov.lingvo.language.Language;
 import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 
 public class EnNounTest {

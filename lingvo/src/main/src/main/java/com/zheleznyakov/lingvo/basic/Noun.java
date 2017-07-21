@@ -2,9 +2,9 @@ package com.zheleznyakov.lingvo.basic;
 
 public interface Noun extends Word {
 
-    String[] getForms();
-
     boolean isRegular();
+
+    boolean isProperNoun();
 
     default PartOfSpeech getPartOfSpeech() {
         return PartOfSpeech.NOUN;

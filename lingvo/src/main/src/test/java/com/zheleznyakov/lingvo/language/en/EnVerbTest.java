@@ -1,12 +1,12 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.GERUND;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PAST_PARTICIPLE;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PAST_PLURAL;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PAST_SINGLE;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PRESENT_FIRST_SINGULAR;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PRESENT_PLURAL;
-import static com.zheleznyakov.lingvo.language.en.EnVerb.FormName.PRESENT_THIRD_SINGULAR;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.GERUND;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PAST_PARTICIPLE;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PAST_PLURAL;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PAST_SINGLE;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PRESENT_FIRST_SINGULAR;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PRESENT_PLURAL;
+import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PRESENT_THIRD_SINGULAR;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,8 +14,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.zheleznyakov.lingvo.language.Language;
 import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 import com.zheleznyakov.lingvo.language.en.EnVerb.Builder;
+import com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName;
 
 public class EnVerbTest {
 
@@ -34,9 +36,9 @@ public class EnVerbTest {
     }
 
     private void appendAlternativeForm(Builder verbBuilder, Object formName, Object alternativeForm) {
-        EnVerb.FormName formNameCast = (EnVerb.FormName) formName;
+        EnVerbFormName enVerbFormNameCast = (EnVerbFormName) formName;
         String alternativeFormCast = (String) alternativeForm;
-        verbBuilder.irregularForm(formNameCast, alternativeFormCast);
+        verbBuilder.irregularForm(enVerbFormNameCast, alternativeFormCast);
     }
 
     private EnVerb buildVerbWithAlternativeForm(String mainForm, String alternativeForm) {

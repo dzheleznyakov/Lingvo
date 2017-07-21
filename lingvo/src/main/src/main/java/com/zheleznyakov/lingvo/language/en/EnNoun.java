@@ -1,5 +1,8 @@
 package com.zheleznyakov.lingvo.language.en;
 
+import static com.zheleznyakov.lingvo.language.en.EnSpellingHelper.appendSEnding;
+import static com.zheleznyakov.lingvo.language.en.EnSpellingHelper.endsInS;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.zheleznyakov.lingvo.basic.Noun;
@@ -24,6 +27,7 @@ public class EnNoun extends EnWord implements Noun {
         return regular;
     }
 
+    @Override
     public boolean isProperNoun() {
         return properNoun;
     }
@@ -46,9 +50,10 @@ public class EnNoun extends EnWord implements Noun {
     }
 
     private static String makePossessive(String form) {
-        return form.endsWith("s") ? form + "'" : form + "'s";
+        return endsInS(form) ? form + "'" : form + "'s";
     }
 
+    @Override
     @NotNull
     public String[] getFormsFull() {
         return properNoun
@@ -56,8 +61,8 @@ public class EnNoun extends EnWord implements Noun {
                 : getFormsFullForNonProperNoun();
     }
 
-    public String[] getFormsFullForProperNoun() {
-        if (mainForm.endsWith("s")) {
+    private String[] getFormsFullForProperNoun() {
+        if (endsInS(mainForm)) {
             String[] declensions = getFormsForProperNoun();
             declensions[1] += "/" + mainForm + "'";
             return declensions;
@@ -66,7 +71,7 @@ public class EnNoun extends EnWord implements Noun {
         }
     }
 
-    public String[] getFormsFullForNonProperNoun() {
+    private String[] getFormsFullForNonProperNoun() {
         return alternativeForm == null
                 ? getForms()
                 : joinForms(getForms(), getForms(alternativeForm, null));
