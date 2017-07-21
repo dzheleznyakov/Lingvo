@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 
-public class TestEnNoun {
+public class EnNounTest {
 
     private EnNoun buildRegularNoun(String noun) {
         return EnNoun.builder(noun).build();

@@ -17,7 +17,7 @@ import org.junit.Test;
 import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 import com.zheleznyakov.lingvo.language.en.EnVerb.Builder;
 
-public class TestEnVerb {
+public class EnVerbTest {
 
     private EnVerb buildRegularVerb(String mainForm) {
         return EnVerb.builder(mainForm)
@@ -59,6 +59,7 @@ public class TestEnVerb {
 
         assertEquals(Language.ENGLISH, verb.getLanguage());
         assertEquals(PartOfSpeech.VERB, verb.getPartOfSpeech());
+        assertTrue(verb.isRegular());
         assertEquals(verbString, verb.getMainForm());
     }
 
@@ -66,7 +67,6 @@ public class TestEnVerb {
     public void testGetForms_Regular() {
         EnVerb test = buildRegularVerb("test");
 
-        assertTrue(test.isRegular());
         assertVerbForms(test, "test", "tests", "testing", "tested");
     }
 
