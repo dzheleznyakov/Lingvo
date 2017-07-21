@@ -60,4 +60,12 @@ public abstract class EnWord implements Word {
     protected static boolean endsInFe(String form) {
         return form.endsWith("fe");
     }
+
+    protected static String[] joinForms(String[] mainDeclensions, String[] alternativeDeclensions) {
+        String[] declensionsFull = new String[mainDeclensions.length];
+        for (int i = 0; i < mainDeclensions.length; i++) {
+            declensionsFull[i] = mainDeclensions[i] + "/" + alternativeDeclensions[i];
+        }
+        return declensionsFull;
+    }
 }

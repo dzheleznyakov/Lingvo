@@ -30,17 +30,17 @@ public class EnNoun extends EnWord implements Noun {
 
     @Override
     @NotNull
-    public String[] getDeclensions() {
+    public String[] getForms() {
         return properNoun
-                ? getDeclensionsForProperNoun()
-                : getDeclensions(this.mainForm, this.pluralForm);
+                ? getFormsForProperNoun()
+                : getForms(this.mainForm, this.pluralForm);
     }
 
-    private String[] getDeclensionsForProperNoun() {
+    private String[] getFormsForProperNoun() {
         return new String[]{mainForm, mainForm + "'s"};
     }
 
-    private String[] getDeclensions(String mForm, String pForm) {
+    private String[] getForms(String mForm, String pForm) {
         String pluralForm = pForm == null ? appendSEnding(mForm) : pForm;
         return new String[]{mForm, pluralForm, makePossessive(mForm), makePossessive(pluralForm)};
     }
@@ -50,34 +50,26 @@ public class EnNoun extends EnWord implements Noun {
     }
 
     @NotNull
-    public String[] getDeclensionsFull() {
+    public String[] getFormsFull() {
         return properNoun
-                ? getDeclensionsFullForProperNoun()
-                : getDeclensionsFullForNonProperNoun();
+                ? getFormsFullForProperNoun()
+                : getFormsFullForNonProperNoun();
     }
 
-    public String[] getDeclensionsFullForProperNoun() {
+    public String[] getFormsFullForProperNoun() {
         if (mainForm.endsWith("s")) {
-            String[] declensions = getDeclensionsForProperNoun();
+            String[] declensions = getFormsForProperNoun();
             declensions[1] += "/" + mainForm + "'";
             return declensions;
         } else {
-            return getDeclensionsForProperNoun();
+            return getFormsForProperNoun();
         }
     }
 
-    public String[] getDeclensionsFullForNonProperNoun() {
+    public String[] getFormsFullForNonProperNoun() {
         return alternativeForm == null
-                ? getDeclensions()
-                : joinForms(getDeclensions(), getDeclensions(alternativeForm, null));
-    }
-
-    private String[] joinForms(String[] mainDeclensions, String[] alternativeDeclensions) {
-        String[] declensionsFull = new String[mainDeclensions.length];
-        for (int i = 0; i < mainDeclensions.length; i++) {
-            declensionsFull[i] = mainDeclensions[i] + "/" + alternativeDeclensions[i];
-        }
-        return declensionsFull;
+                ? getForms()
+                : joinForms(getForms(), getForms(alternativeForm, null));
     }
 
     public static Builder builder(@NotNull String noun) {
@@ -91,7 +83,7 @@ public class EnNoun extends EnWord implements Noun {
         private boolean regular = true;
         private boolean properNoun = false;
 
-        Builder(String mainForm) {
+        private Builder(String mainForm) {
             this.mainForm = mainForm;
         }
 

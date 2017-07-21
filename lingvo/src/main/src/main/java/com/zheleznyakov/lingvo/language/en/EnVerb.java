@@ -11,10 +11,12 @@ import com.zheleznyakov.lingvo.basic.Verb;
 public class EnVerb extends EnWord implements Verb {
 
     private final boolean regular;
+    private final String alternativeForm;
     private final Map<FormName, String> irregularForms;
 
     private EnVerb(Builder builder) {
         super(builder.mainForm);
+        alternativeForm = builder.alternativeForm;
         irregularForms = builder.irregularForms == null
                 ? new HashMap<>()
                 : builder.irregularForms;
@@ -26,7 +28,7 @@ public class EnVerb extends EnWord implements Verb {
     }
 
     public String[] getForms() {
-        return EnVerb.getForms(irregularForms, mainForm);
+        return getForms(irregularForms, mainForm);
     }
 
     private static String[] getForms(Map<FormName, String> irregularForms, String mainForm) {
@@ -44,6 +46,12 @@ public class EnVerb extends EnWord implements Verb {
             forms.add(irregularForm);
         else
             forms.add(formName.standardConverter.apply(mainForm));
+    }
+
+    public String[] getFormsFull() {
+        return alternativeForm == null
+                ? getForms()
+                : joinForms(getForms(), getForms(irregularForms, alternativeForm));
     }
 
     private static String appendEdEnding(String form) {
@@ -73,10 +81,11 @@ public class EnVerb extends EnWord implements Verb {
 
     public static class Builder {
         private String mainForm;
+        private String alternativeForm;
         private boolean regular = true;
         private Map<FormName, String> irregularForms;
 
-        public Builder(String mainForm) {
+        private Builder(String mainForm) {
             this.mainForm = mainForm;
         }
 
@@ -86,6 +95,11 @@ public class EnVerb extends EnWord implements Verb {
             irregularForms.put(verbFormName, form);
             regular = false;
             return this;
+        }
+
+        public EnVerb alternativeForm(String alternativeForm) {
+            this.alternativeForm = alternativeForm;
+            return build();
         }
 
         public EnVerb build() {

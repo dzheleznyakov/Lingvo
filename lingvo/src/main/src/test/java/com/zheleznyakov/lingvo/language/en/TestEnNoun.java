@@ -31,11 +31,11 @@ public class TestEnNoun {
     }
 
     private void assertDeclensions(EnNoun noun, String[] declensions) {
-        assertArrayEquals(declensions, noun.getDeclensions());
+        assertArrayEquals(declensions, noun.getForms());
     }
 
     private void assertDeclensionsFull(EnNoun form, String[] declensions) {
-        assertArrayEquals(declensions, form.getDeclensionsFull());
+        assertArrayEquals(declensions, form.getFormsFull());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class TestEnNoun {
     }
 
     @Test
-    public void testAlternativeForms_WordHasAlternativeForm() {
+    public void testAlternativeForms_NounHasAlternativeForm() {
         EnNoun realization = getNounWithAlternativeForm("realization", "realisation");
 
         assertDeclensionsFull(realization, new String[]{
@@ -113,7 +113,7 @@ public class TestEnNoun {
     }
 
     @Test
-    public void testAlternativeForm_WordDoesNotHaveAlternativeForm() {
+    public void testAlternativeForm_NounDoesNotHaveAlternativeForm() {
         EnNoun house = buildRegularNoun("house");
 
         assertDeclensionsFull(house, new String[]{"house", "houses", "house's", "houses'"});
