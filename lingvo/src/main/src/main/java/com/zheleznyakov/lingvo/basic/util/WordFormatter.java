@@ -7,6 +7,10 @@ import java.util.function.Function;
 
 public class WordFormatter {
 
+    private WordFormatter() throws IllegalAccessException {
+        throw new IllegalAccessException("This class is a static helper; it is not supposed to be instantiated");
+    }
+
     public static String[] getForms(String mainForm, Map<FormName, String> irregularForms, FormName[] formNames) {
         List<String> forms = new ArrayList<>();
         for (FormName formName : formNames)

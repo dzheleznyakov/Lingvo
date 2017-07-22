@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.basic.util;
 
 import static com.zheleznyakov.testutils.ZhAssert.assertIllegalAccess;
 
@@ -6,10 +6,11 @@ import java.lang.reflect.Constructor;
 
 import org.junit.Test;
 
-public class EnSpellingHelperTest {
+
+public class WordFormatterTest {
     @Test
     public void createClassInstance_Throws() throws NoSuchMethodException, IllegalAccessException, InstantiationException {
-        Constructor<EnSpellingHelper> constructor = EnSpellingHelper.class.getDeclaredConstructor();
+        Constructor<WordFormatter> constructor = WordFormatter.class.getDeclaredConstructor();
         assertIllegalAccess(constructor, "This class is a static helper; it is not supposed to be instantiated");
     }
 }
