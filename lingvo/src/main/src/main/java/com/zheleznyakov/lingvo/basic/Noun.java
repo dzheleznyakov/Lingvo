@@ -6,6 +6,7 @@ public interface Noun extends Word {
 
     boolean isProperNoun();
 
+    @Override
     default PartOfSpeech getPartOfSpeech() {
         return PartOfSpeech.NOUN;
     }

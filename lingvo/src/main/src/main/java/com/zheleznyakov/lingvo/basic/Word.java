@@ -12,5 +12,7 @@ public interface Word {
 
     String[] getForms();
 
-    String[] getFormsFull();
+    default String[] getFormsFull() {
+        return getForms();
+    };
 }
