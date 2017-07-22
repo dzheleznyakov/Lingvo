@@ -1,8 +1,8 @@
 package com.zheleznyakov.lingvo.basic;
 
-public interface Adjective extends Word {
+public interface Preposition extends Word {
     @Override
     default PartOfSpeech getPartOfSpeech() {
-        return PartOfSpeech.ADJECTIVE;
+        return PartOfSpeech.PREPOSITION;
     }
 }

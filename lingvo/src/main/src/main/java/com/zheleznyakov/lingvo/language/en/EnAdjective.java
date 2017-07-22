@@ -7,9 +7,4 @@ public class EnAdjective extends EnWord implements Adjective {
     public EnAdjective(String mainForm) {
         super(mainForm);
     }
-
-    @Override
-    public String[] getForms() {
-        return new String[]{mainForm};
-    }
 }

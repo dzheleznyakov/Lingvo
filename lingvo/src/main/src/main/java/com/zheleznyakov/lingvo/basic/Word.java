@@ -10,7 +10,9 @@ public interface Word {
 
     String getMainForm();
 
-    String[] getForms();
+    default String[] getForms() {
+        return new String[]{getMainForm()};
+    }
 
     default String[] getFormsFull() {
         return getForms();
