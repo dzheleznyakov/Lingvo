@@ -14,8 +14,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.zheleznyakov.lingvo.language.Language;
 import com.zheleznyakov.lingvo.basic.PartOfSpeech;
+import com.zheleznyakov.lingvo.language.Language;
 import com.zheleznyakov.lingvo.language.en.EnVerb.Builder;
 import com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName;
 
@@ -114,6 +114,15 @@ public class EnVerbTest {
         assertFalse(vDo.isRegular());
         assertVerbForms(vDo, "do", "does", "doing", "did", "done");
         assertVerbForms(be, "be", "am", "is", "are", "being", "was", "were", "been");
+    }
+
+    @Test
+    public void testGetForms_ShortVerb() {
+        EnVerb log = buildRegularVerb("log");
+        EnVerb refer = buildRegularVerb("refer");
+
+        assertVerbForms(log, "log", "logs", "logging", "logged");
+        assertVerbForms(refer, "refer", "refers", "referring", "referred");
     }
 
     @Test

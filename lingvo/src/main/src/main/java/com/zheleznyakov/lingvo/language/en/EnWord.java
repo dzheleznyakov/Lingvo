@@ -8,7 +8,13 @@ import com.google.common.collect.ImmutableSet;
 
 public abstract class EnWord implements Word {
 
-    public static final Set<Character> VOWELS = ImmutableSet.of('a', 'o', 'e', 'u', 'i');
+    public static final Set<String> VOWELS_STRICT = ImmutableSet.of("a", "o", "e", "u", "i");
+    public static final Set<String> VOWELS_FULL = ImmutableSet.<String>builder()
+            .addAll(VOWELS_STRICT).add("y").build();
+    public static final Set<String> END_CONSONANT = ImmutableSet
+            .of("b", "d", "g", "l", "m", "n", "p", "r", "s", "t", "z");
+    public static final Set<String> SIBILANTS = ImmutableSet.of("x", "ch", "sh", "s");
+    public static final Set<String> APPROXIMANTS = ImmutableSet.of("r", "l");
 
     protected final String mainForm;
 

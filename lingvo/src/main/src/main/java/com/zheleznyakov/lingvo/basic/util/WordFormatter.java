@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class WordFormatter {
+public class WordFormatter {
 
     public static String[] getForms(String mainForm, Map<FormName, String> irregularForms, FormName[] formNames) {
         List<String> forms = new ArrayList<>();
@@ -16,11 +16,9 @@ public abstract class WordFormatter {
 
     private static void appendFormToList(Map<FormName, String> irregularForms, String mainForm, FormName formName, List<String> forms) {
         String irregularForm = irregularForms.get(formName);
-        if (!formName.isMandatory() && irregularForm == null)
-            return;
-        else if (irregularForm != null)
+        if (irregularForm != null)
             forms.add(irregularForm);
-        else
+        else if (formName.isMandatory())
             forms.add(formName.getStandardConverter().apply(mainForm));
     }
 
