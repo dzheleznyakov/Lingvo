@@ -31,7 +31,7 @@ public class EnProperNoun extends EnNoun {
     public String[] getFormsFull() {
         if (endsInS(mainForm)) {
             String[] declensions = getForms();
-            declensions[1] += "/" + mainForm + "'";
+            declensions[1] += "/" + EnSpellingHelper.makePossessive(mainForm);
             return declensions;
         } else {
             return getForms();
