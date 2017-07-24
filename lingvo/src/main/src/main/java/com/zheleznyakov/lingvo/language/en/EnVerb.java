@@ -31,16 +31,16 @@ public class EnVerb extends EnWord implements Verb {
                 : joinForms(getForms(), WordFormatter.getForms(alternativeForm, irregularForms, EnVerbFormName.values()));
     }
 
-    public static Builder builder(String mainForm) {
-        return new Builder(mainForm);
-    }
-
     private EnVerb(Builder builder) {
         super(builder.mainForm);
         alternativeForm = builder.alternativeForm;
         irregularForms = builder.irregularForms == null
                 ? Word.EMPTY_IRREGULAR_FORMS
                 : builder.irregularForms;
+    }
+
+    public static Builder builder(String mainForm) {
+        return new Builder(mainForm);
     }
 
     public static class Builder {

@@ -16,16 +16,7 @@ import com.zheleznyakov.lingvo.basic.util.WordFormatter.FormName;
 public class EnNoun extends EnWord implements Noun {
 
     private final String alternativeForm;
-
     private final Map<FormName, String> irregularForms;
-
-    protected EnNoun(Builder builder) {
-        super(builder.mainForm);
-        alternativeForm = builder.alternativeForm;
-        irregularForms = builder.irregularForms == null
-                ? Word.EMPTY_IRREGULAR_FORMS
-                : builder.irregularForms;
-    }
 
     @Override
     public boolean isRegular() {
@@ -40,15 +31,28 @@ public class EnNoun extends EnWord implements Noun {
     @Override
     @NotNull
     public String[] getForms() {
-        return WordFormatter.getForms(mainForm, irregularForms, EnNounFormName.values());
+        return getForms(mainForm, irregularForms);
     }
 
     @Override
     @NotNull
     public String[] getFormsFull() {
-        return alternativeForm == null
+        return this.alternativeForm == null
                 ? getForms()
-                : joinForms(getForms(), WordFormatter.getForms(alternativeForm, Word.EMPTY_IRREGULAR_FORMS, EnNounFormName.values()));
+                : joinForms(getForms(), getForms(this.alternativeForm, Word.EMPTY_IRREGULAR_FORMS));
+    }
+
+    @NotNull
+    private String[] getForms(String form, Map<FormName, String> irregularForms) {
+        return WordFormatter.getForms(form, irregularForms, EnNounFormName.values());
+    }
+
+    protected EnNoun(Builder builder) {
+        super(builder.mainForm);
+        alternativeForm = builder.alternativeForm;
+        irregularForms = builder.irregularForms == null
+                ? Word.EMPTY_IRREGULAR_FORMS
+                : builder.irregularForms;
     }
 
     public static Builder builder(@NotNull String noun) {
