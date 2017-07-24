@@ -112,4 +112,8 @@ class EnSpellingHelper {
     static boolean endsInS(String form) {
         return form.endsWith("s");
     }
+
+    static String makePossessive(String form) {
+        return endsInS(form) ? form + "'" : form + "'s";
+    }
 }

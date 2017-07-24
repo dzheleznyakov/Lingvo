@@ -5,18 +5,18 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.zheleznyakov.lingvo.basic.Verb;
+import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter.FormName;
 
 public class EnVerb extends EnWord implements Verb {
 
-    private final boolean regular;
     private final String alternativeForm;
     private final Map<FormName, String> irregularForms;
 
     @Override
     public boolean isRegular() {
-        return regular;
+        return irregularForms.isEmpty();
     }
 
     @Override
@@ -39,15 +39,13 @@ public class EnVerb extends EnWord implements Verb {
         super(builder.mainForm);
         alternativeForm = builder.alternativeForm;
         irregularForms = builder.irregularForms == null
-                ? new HashMap<>()
+                ? Word.EMPTY_IRREGULAR_FORMS
                 : builder.irregularForms;
-        regular = builder.regular;
     }
 
     public static class Builder {
         private String mainForm;
         private String alternativeForm;
-        private boolean regular = true;
         private Map<FormName, String> irregularForms;
 
         private Builder(String mainForm) {
@@ -58,7 +56,6 @@ public class EnVerb extends EnWord implements Verb {
             if (irregularForms == null)
                 irregularForms = new HashMap<>();
             irregularForms.put(verbEnVerbFormName, form);
-            regular = false;
             return this;
         }
 
@@ -90,6 +87,7 @@ public class EnVerb extends EnWord implements Verb {
             this.standardConverter = standardConverter;
         }
 
+        @Override
         public boolean isMandatory() {
             return mandatory;
         }

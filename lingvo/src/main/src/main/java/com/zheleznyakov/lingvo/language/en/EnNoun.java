@@ -1,80 +1,54 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static com.zheleznyakov.lingvo.language.en.EnSpellingHelper.appendSEnding;
-import static com.zheleznyakov.lingvo.language.en.EnSpellingHelper.endsInS;
+import static com.zheleznyakov.lingvo.language.en.EnSpellingHelper.makePossessive;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
 
 import com.zheleznyakov.lingvo.basic.Noun;
+import com.zheleznyakov.lingvo.basic.Word;
+import com.zheleznyakov.lingvo.basic.util.WordFormatter;
+import com.zheleznyakov.lingvo.basic.util.WordFormatter.FormName;
 
 public class EnNoun extends EnWord implements Noun {
 
-    private final boolean regular;
-    private final boolean properNoun;
     private final String alternativeForm;
-    private final String pluralForm;
 
-    private EnNoun(Builder builder) {
+    private final Map<FormName, String> irregularForms;
+
+    protected EnNoun(Builder builder) {
         super(builder.mainForm);
-        regular = builder.regular;
-        properNoun = builder.properNoun;
         alternativeForm = builder.alternativeForm;
-        pluralForm = builder.pluralForm;
+        irregularForms = builder.irregularForms == null
+                ? Word.EMPTY_IRREGULAR_FORMS
+                : builder.irregularForms;
     }
 
     @Override
     public boolean isRegular() {
-        return regular;
+        return irregularForms.isEmpty();
     }
 
     @Override
     public boolean isProperNoun() {
-        return properNoun;
+        return false;
     }
 
     @Override
     @NotNull
     public String[] getForms() {
-        return properNoun
-                ? getFormsForProperNoun()
-                : getForms(this.mainForm, this.pluralForm);
-    }
-
-    private String[] getFormsForProperNoun() {
-        return new String[]{mainForm, mainForm + "'s"};
-    }
-
-    private String[] getForms(String mForm, String pForm) {
-        String pluralForm = pForm == null ? appendSEnding(mForm) : pForm;
-        return new String[]{mForm, pluralForm, makePossessive(mForm), makePossessive(pluralForm)};
-    }
-
-    private static String makePossessive(String form) {
-        return endsInS(form) ? form + "'" : form + "'s";
+        return WordFormatter.getForms(mainForm, irregularForms, EnNounFormName.values());
     }
 
     @Override
     @NotNull
     public String[] getFormsFull() {
-        return properNoun
-                ? getFormsFullForProperNoun()
-                : getFormsFullForNonProperNoun();
-    }
-
-    private String[] getFormsFullForProperNoun() {
-        if (endsInS(mainForm)) {
-            String[] declensions = getFormsForProperNoun();
-            declensions[1] += "/" + mainForm + "'";
-            return declensions;
-        } else {
-            return getFormsForProperNoun();
-        }
-    }
-
-    private String[] getFormsFullForNonProperNoun() {
         return alternativeForm == null
                 ? getForms()
-                : joinForms(getForms(), getForms(alternativeForm, null));
+                : joinForms(getForms(), WordFormatter.getForms(alternativeForm, Word.EMPTY_IRREGULAR_FORMS, EnNounFormName.values()));
     }
 
     public static Builder builder(@NotNull String noun) {
@@ -84,17 +58,18 @@ public class EnNoun extends EnWord implements Noun {
     public static class Builder {
         private String mainForm;
         private String alternativeForm;
-        private String pluralForm;
-        private boolean regular = true;
         private boolean properNoun = false;
+        private Map<FormName, String> irregularForms;
 
         private Builder(String mainForm) {
             this.mainForm = mainForm;
         }
 
         public EnNoun irregularPlural(String pluralForm) {
-            this.pluralForm = pluralForm;
-            regular = false;
+            if (irregularForms == null)
+                irregularForms = new HashMap<>();
+            irregularForms.put(EnNounFormName.NOMINATIVE_PLURAL, pluralForm);
+            irregularForms.put(EnNounFormName.POSSESSIVE_PLURAL, makePossessive(pluralForm));
             return build();
         }
 
@@ -109,7 +84,31 @@ public class EnNoun extends EnWord implements Noun {
         }
 
         public EnNoun build() {
-            return new EnNoun(this);
+            return properNoun ? new EnProperNoun(this) : new EnNoun(this);
         }
     }
+
+    public enum EnNounFormName implements WordFormatter.FormName {
+        NOMINATIVE_SINGLE(Function.identity()),
+        NOMINATIVE_PLURAL(EnSpellingHelper::appendSEnding),
+        POSSESSIVE_SINGLE(EnSpellingHelper::makePossessive),
+        POSSESSIVE_PLURAL(NOMINATIVE_PLURAL.standardConverter.andThen(POSSESSIVE_SINGLE.standardConverter));
+
+        private final Function<String, String> standardConverter;
+
+        EnNounFormName(Function<String, String> standardConverter) {
+            this.standardConverter = standardConverter;
+        }
+
+        @Override
+        public boolean isMandatory() {
+            return true;
+        }
+
+        @Override
+        public Function<String, String> getStandardConverter() {
+            return standardConverter;
+        }
+    }
+
 }

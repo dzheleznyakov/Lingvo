@@ -28,7 +28,6 @@ public class WordFormatter {
 
     public interface FormName {
         Function<String, String> getStandardConverter();
-
         boolean isMandatory();
     }
 }
