@@ -12,8 +12,8 @@ import com.zheleznyakov.lingvo.basic.FormName;
 
 public class EnVerb extends EnWord implements Verb, MultiFormWord {
 
-    private final String alternativeForm;
-    private final Map<FormName, String> irregularForms;
+    protected final String alternativeForm;
+    protected final Map<FormName, String> irregularForms;
 
     @Override
     public boolean isRegular() {
@@ -37,7 +37,7 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
         return getForm(formName, irregularForms);
     }
 
-    private EnVerb(Builder builder) {
+    protected EnVerb(Builder builder) {
         super(builder.mainForm);
         alternativeForm = builder.alternativeForm;
         irregularForms = builder.irregularForms == null
@@ -53,6 +53,7 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
         private String mainForm;
         private String alternativeForm;
         private Map<FormName, String> irregularForms;
+        private String phrasePart;
 
         private Builder(String mainForm) {
             this.mainForm = mainForm;
@@ -70,9 +71,17 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
             return build();
         }
 
-        public EnVerb build() {
-            return new EnVerb(this);
+        public Builder withPhrasePart(String phrasePart) {
+            this.phrasePart = phrasePart;
+            return this;
         }
+
+        public EnVerb build() {
+            return phrasePart == null
+                    ? new EnVerb(this)
+                    : new EnVerbPhrase(this, phrasePart);
+        }
+
     }
 
     public enum EnVerbFormName implements FormName {

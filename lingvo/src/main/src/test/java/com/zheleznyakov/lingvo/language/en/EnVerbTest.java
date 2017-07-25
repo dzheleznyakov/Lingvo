@@ -149,4 +149,26 @@ public class EnVerbTest {
         assertEquals("put", put.getForm(PAST_PARTICIPLE));
         assertEquals("put", put.getForm(PAST_PLURAL));
     }
+
+    @Test
+    public void testVerbPhrase_Regular() {
+        EnVerb pullOff = EnVerb.builder("pull")
+                .withPhrasePart("off")
+                .build();
+
+        assertTrue(pullOff.isRegular());
+        assertVerbForms(pullOff, "pull off", "pulls off", "pulling off", "pulled off");
+        assertVerbFormsFull(pullOff, "pull off", "pulls off", "pulling off", "pulled off");
+    }
+
+    @Test
+    public void testVerbPhrase_AlternativeForm() {
+        EnVerb realiseOut = EnVerb.builder("realise")
+                .withPhrasePart("out")
+                .alternativeForm("realize");
+
+        assertVerbFormsFull(realiseOut,
+                "realise out/realize out",
+                "realises out/realizes out", "realising out/realizing out", "realised out/realized out");
+    }
 }
