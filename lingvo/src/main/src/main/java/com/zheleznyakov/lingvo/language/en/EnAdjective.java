@@ -4,7 +4,11 @@ import com.zheleznyakov.lingvo.basic.Adjective;
 
 public class EnAdjective extends EnWord implements Adjective {
 
-    public EnAdjective(String mainForm) {
+    private EnAdjective(String mainForm) {
         super(mainForm);
+    }
+
+    public static EnAdjective build(String adjString) {
+        return new EnAdjective(adjString);
     }
 }

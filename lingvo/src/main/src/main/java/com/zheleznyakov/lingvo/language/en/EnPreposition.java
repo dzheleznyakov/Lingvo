@@ -4,7 +4,11 @@ import com.zheleznyakov.lingvo.basic.Preposition;
 
 public class EnPreposition extends EnWord implements Preposition {
 
-    public EnPreposition(String mainForm) {
+    EnPreposition(String mainForm) {
         super(mainForm);
+    }
+
+    public static EnPreposition build(String mainForm) {
+        return new EnPreposition(mainForm);
     }
 }

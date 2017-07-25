@@ -4,7 +4,11 @@ import com.zheleznyakov.lingvo.basic.Adverb;
 
 public class EnAdverb extends EnWord implements Adverb {
 
-    public EnAdverb(String mainForm) {
+    private EnAdverb(String mainForm) {
         super(mainForm);
+    }
+
+    public static EnAdverb build(String mainForm) {
+        return new EnAdverb(mainForm);
     }
 }

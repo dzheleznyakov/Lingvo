@@ -1,6 +1,7 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static org.junit.Assert.assertArrayEquals;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordForms;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordFormsFull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,14 +35,6 @@ public class EnNounTest {
                 .properNoun();
     }
 
-    private void assertForms(EnNoun noun, String... forms) {
-        assertArrayEquals(forms, noun.getForms());
-    }
-
-    private void assertFormsFull(EnNoun form, String... forms) {
-        assertArrayEquals(forms, form.getFormsFull());
-    }
-
     @Test
     public void testCreateEnNoun() {
         String nounString = "abc";
@@ -58,7 +51,7 @@ public class EnNounTest {
     public void testNounForms_StandardEnding() {
         EnNoun house = buildRegularNoun("house");
 
-        assertForms(house, "house", "houses", "house's", "houses'");
+        assertWordForms(house, "house", "houses", "house's", "houses'");
     }
 
     @Test
@@ -68,10 +61,10 @@ public class EnNounTest {
         EnNoun parish = buildRegularNoun("parish");
         EnNoun miss = buildRegularNoun("miss");
 
-        assertForms(box, "box", "boxes", "box's", "boxes'");
-        assertForms(sandwich, "sandwich", "sandwiches", "sandwich's", "sandwiches'");
-        assertForms(parish, "parish", "parishes", "parish's", "parishes'");
-        assertForms(miss, "miss", "misses", "miss'", "misses'");
+        assertWordForms(box, "box", "boxes", "box's", "boxes'");
+        assertWordForms(sandwich, "sandwich", "sandwiches", "sandwich's", "sandwiches'");
+        assertWordForms(parish, "parish", "parishes", "parish's", "parishes'");
+        assertWordForms(miss, "miss", "misses", "miss'", "misses'");
     }
 
     @Test
@@ -79,8 +72,8 @@ public class EnNounTest {
         EnNoun city = buildRegularNoun("city");
         EnNoun boy = buildRegularNoun("boy");
 
-        assertForms(city, "city", "cities", "city's", "cities'");
-        assertForms(boy, "boy", "boys", "boy's", "boys'");
+        assertWordForms(city, "city", "cities", "city's", "cities'");
+        assertWordForms(boy, "boy", "boys", "boy's", "boys'");
     }
 
     @Test
@@ -89,9 +82,9 @@ public class EnNounTest {
         EnNoun wife = buildRegularNoun("wife");
         EnNoun cliff = buildRegularNoun("cliff");
 
-        assertForms(thief, "thief", "thieves", "thief's", "thieves'");
-        assertForms(wife, "wife", "wives", "wife's", "wives'");
-        assertForms(cliff, "cliff", "cliffs", "cliff's", "cliffs'");
+        assertWordForms(thief, "thief", "thieves", "thief's", "thieves'");
+        assertWordForms(wife, "wife", "wives", "wife's", "wives'");
+        assertWordForms(cliff, "cliff", "cliffs", "cliff's", "cliffs'");
     }
 
     @Test
@@ -101,15 +94,15 @@ public class EnNounTest {
 
         assertFalse(man.isRegular());
         assertFalse(man.isProperNoun());
-        assertForms(man, "man", "men", "man's", "men's");
-        assertForms(hero, "hero", "heroes", "hero's", "heroes'");
+        assertWordForms(man, "man", "men", "man's", "men's");
+        assertWordForms(hero, "hero", "heroes", "hero's", "heroes'");
     }
 
     @Test
     public void testAlternativeForms_NounHasAlternativeForm() {
         EnNoun realization = getNounWithAlternativeForm("realization", "realisation");
 
-        assertFormsFull(realization,
+        assertWordFormsFull(realization,
                 "realization/realisation",
                 "realizations/realisations",
                 "realization's/realisation's",
@@ -120,7 +113,7 @@ public class EnNounTest {
     public void testAlternativeForm_NounDoesNotHaveAlternativeForm() {
         EnNoun house = buildRegularNoun("house");
 
-        assertFormsFull(house, "house", "houses", "house's", "houses'");
+        assertWordFormsFull(house, "house", "houses", "house's", "houses'");
     }
 
     @Test
@@ -132,10 +125,10 @@ public class EnNounTest {
 
         assertTrue(john.isProperNoun());
         assertTrue(john.isRegular());
-        assertForms(john, johnDeclensions);
-        assertFormsFull(john, johnDeclensions);
-        assertForms(thomas, "Thomas", "Thomas's");
-        assertFormsFull(thomas, "Thomas", "Thomas's/Thomas'");
+        assertWordForms(john, johnDeclensions);
+        assertWordFormsFull(john, johnDeclensions);
+        assertWordForms(thomas, "Thomas", "Thomas's");
+        assertWordFormsFull(thomas, "Thomas", "Thomas's/Thomas'");
     }
 
     @Test

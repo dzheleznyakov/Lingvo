@@ -7,6 +7,8 @@ import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PAST_SIN
 import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PRESENT_FIRST_SINGULAR;
 import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PRESENT_PLURAL;
 import static com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName.PRESENT_THIRD_SINGULAR;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordForms;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordFormsFull;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -46,14 +48,6 @@ public class EnVerbTest {
                 .alternativeForm(alternativeForm);
     }
 
-    private void assertVerbForms(EnVerb verb, String... expectedForms) {
-        assertArrayEquals(expectedForms, verb.getForms());
-    }
-
-    private void assertVerbFormsFull(EnVerb verb, String... expectedForms) {
-        assertArrayEquals(expectedForms, verb.getFormsFull());
-    }
-
     @Test
     public void testCreateEnVerb() {
         String verbString = "abc";
@@ -69,7 +63,7 @@ public class EnVerbTest {
     public void testGetForms_Regular() {
         EnVerb test = buildRegularVerb("test");
 
-        assertVerbForms(test, "test", "tests", "testing", "tested");
+        assertWordForms(test, "test", "tests", "testing", "tested");
     }
 
     @Test
@@ -79,17 +73,17 @@ public class EnVerbTest {
         EnVerb match = buildRegularVerb("match");
         EnVerb fix = buildRegularVerb("fix");
 
-        assertVerbForms(miss, "miss", "misses", "missing", "missed");
-        assertVerbForms(wish, "wish", "wishes", "wishing", "wished");
-        assertVerbForms(match, "match", "matches", "matching", "matched");
-        assertVerbForms(fix, "fix", "fixes", "fixing", "fixed");
+        assertWordForms(miss, "miss", "misses", "missing", "missed");
+        assertWordForms(wish, "wish", "wishes", "wishing", "wished");
+        assertWordForms(match, "match", "matches", "matching", "matched");
+        assertWordForms(fix, "fix", "fixes", "fixing", "fixed");
     }
 
     @Test
     public void testGetForms_EEnding() {
         EnVerb move = buildRegularVerb("move");
 
-        assertVerbForms(move, "move", "moves", "moving", "moved");
+        assertWordForms(move, "move", "moves", "moving", "moved");
     }
 
     @Test
@@ -97,8 +91,8 @@ public class EnVerbTest {
         EnVerb apply = buildRegularVerb("apply");
         EnVerb employ = buildRegularVerb("employ");
 
-        assertVerbForms(apply, "apply", "applies", "applying", "applied");
-        assertVerbForms(employ, "employ", "employs", "employing", "employed");
+        assertWordForms(apply, "apply", "applies", "applying", "applied");
+        assertWordForms(employ, "employ", "employs", "employing", "employed");
     }
 
     @Test
@@ -112,8 +106,8 @@ public class EnVerbTest {
                 PAST_SINGLE, "was", PAST_PLURAL, "were", PAST_PARTICIPLE, "been");
 
         assertFalse(vDo.isRegular());
-        assertVerbForms(vDo, "do", "does", "doing", "did", "done");
-        assertVerbForms(be, "be", "am", "is", "are", "being", "was", "were", "been");
+        assertWordForms(vDo, "do", "does", "doing", "did", "done");
+        assertWordForms(be, "be", "am", "is", "are", "being", "was", "were", "been");
     }
 
     @Test
@@ -121,16 +115,16 @@ public class EnVerbTest {
         EnVerb log = buildRegularVerb("log");
         EnVerb refer = buildRegularVerb("refer");
 
-        assertVerbForms(log, "log", "logs", "logging", "logged");
-        assertVerbForms(refer, "refer", "refers", "referring", "referred");
+        assertWordForms(log, "log", "logs", "logging", "logged");
+        assertWordForms(refer, "refer", "refers", "referring", "referred");
     }
 
     @Test
     public void testAlternativeForms_VerbHasAlternativeForm() {
         EnVerb realise = buildVerbWithAlternativeForm("realise", "realize");
 
-        assertVerbForms(realise, "realise", "realises", "realising", "realised");
-        assertVerbFormsFull(realise, "realise/realize",
+        assertWordForms(realise, "realise", "realises", "realising", "realised");
+        assertWordFormsFull(realise, "realise/realize",
                 "realises/realizes", "realising/realizing", "realised/realized");
     }
 
@@ -138,7 +132,7 @@ public class EnVerbTest {
     public void testAlternativeForms_VerbDoesNotHaveAlternativeForm() {
         EnVerb test = buildRegularVerb("test");
 
-        assertVerbFormsFull(test, "test", "tests", "testing", "tested");
+        assertWordFormsFull(test, "test", "tests", "testing", "tested");
     }
 
     @Test
@@ -157,8 +151,8 @@ public class EnVerbTest {
                 .build();
 
         assertTrue(pullOff.isRegular());
-        assertVerbForms(pullOff, "pull off", "pulls off", "pulling off", "pulled off");
-        assertVerbFormsFull(pullOff, "pull off", "pulls off", "pulling off", "pulled off");
+        assertWordForms(pullOff, "pull off", "pulls off", "pulling off", "pulled off");
+        assertWordFormsFull(pullOff, "pull off", "pulls off", "pulling off", "pulled off");
     }
 
     @Test
@@ -167,7 +161,7 @@ public class EnVerbTest {
                 .withPhrasePart("out")
                 .alternativeForm("realize");
 
-        assertVerbFormsFull(realiseOut,
+        assertWordFormsFull(realiseOut,
                 "realise out/realize out",
                 "realises out/realizes out", "realising out/realizing out", "realised out/realized out");
     }

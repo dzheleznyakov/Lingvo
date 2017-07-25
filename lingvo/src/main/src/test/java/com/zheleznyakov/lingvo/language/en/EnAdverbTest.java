@@ -1,6 +1,7 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static org.junit.Assert.assertArrayEquals;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordForms;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordFormsFull;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -12,13 +13,13 @@ public class EnAdverbTest {
     @Test
     public void testCreateEnAdverb() {
         String mainForm = "well";
-        EnAdverb well = new EnAdverb(mainForm);
-        String[] expectedforms = {mainForm};
+        EnAdverb well = EnAdverb.build(mainForm);
+        String[] expectedForms = {mainForm};
 
         assertEquals(Language.ENGLISH, well.getLanguage());
         assertEquals(PartOfSpeech.ADVERB, well.getPartOfSpeech());
         assertEquals(mainForm, well.getMainForm());
-        assertArrayEquals(expectedforms, well.getForms());
-        assertArrayEquals(expectedforms, well.getFormsFull());
+        assertWordForms(well, expectedForms);
+        assertWordFormsFull(well, expectedForms);
     }
 }

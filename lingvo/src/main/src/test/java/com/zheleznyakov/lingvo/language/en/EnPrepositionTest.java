@@ -1,6 +1,7 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static org.junit.Assert.assertArrayEquals;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordForms;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordFormsFull;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -12,13 +13,13 @@ public class EnPrepositionTest {
     @Test
     public void testCreateEnPreposition() {
         String mainForm = "of";
-        EnPreposition of = new EnPreposition(mainForm);
+        EnPreposition of = EnPreposition.build(mainForm);
         String[] expectedForms = {mainForm};
 
         assertEquals(Language.ENGLISH, of.getLanguage());
         assertEquals(PartOfSpeech.PREPOSITION, of.getPartOfSpeech());
         assertEquals(mainForm, of.getMainForm());
-        assertArrayEquals(expectedForms, of.getForms());
-        assertArrayEquals(expectedForms, of.getFormsFull());
+        assertWordForms(of, expectedForms);
+        assertWordFormsFull(of, expectedForms);
     }
 }

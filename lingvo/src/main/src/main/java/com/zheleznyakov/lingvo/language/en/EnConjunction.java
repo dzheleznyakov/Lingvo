@@ -4,7 +4,11 @@ import com.zheleznyakov.lingvo.basic.Conjunction;
 
 public class EnConjunction extends EnWord implements Conjunction {
 
-    public EnConjunction(String mainForm) {
+    private EnConjunction(String mainForm) {
         super(mainForm);
+    }
+
+    public static EnConjunction build(String mainForm) {
+        return new EnConjunction(mainForm);
     }
 }

@@ -1,6 +1,7 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static org.junit.Assert.assertArrayEquals;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordForms;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordFormsFull;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -13,13 +14,13 @@ public class EnAdjectiveTest {
     @Test
     public void testEnAdjective() {
         String adjString = "abc";
-        EnAdjective adj = new EnAdjective(adjString);
+        EnAdjective adj = EnAdjective.build(adjString);
         String[] expectedForms = {adjString};
 
         assertEquals(Language.ENGLISH, adj.getLanguage());
         assertEquals(PartOfSpeech.ADJECTIVE, adj.getPartOfSpeech());
         assertEquals(adjString, adj.getMainForm());
-        assertArrayEquals(expectedForms, adj.getForms());
-        assertArrayEquals(expectedForms, adj.getFormsFull() );
+        assertWordForms(adj, expectedForms);
+        assertWordFormsFull(adj, expectedForms);
     }
 }

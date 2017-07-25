@@ -1,6 +1,7 @@
 package com.zheleznyakov.lingvo.language.en;
 
-import static org.junit.Assert.assertArrayEquals;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordForms;
+import static com.zheleznyakov.testutils.ZhAssert.assertWordFormsFull;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -12,13 +13,13 @@ public class EnConjunctionTest {
     @Test
     public void createEnConjunction() {
         String mainForm = "and";
-        EnConjunction and = new EnConjunction(mainForm);
+        EnConjunction and = EnConjunction.build(mainForm);
         String[] expectedForms = {mainForm};
 
         assertEquals(Language.ENGLISH, and.getLanguage());
         assertEquals(PartOfSpeech.CONJUNCTION, and.getPartOfSpeech());
         assertEquals(mainForm, and.getMainForm());
-        assertArrayEquals(expectedForms, and.getForms());
-        assertArrayEquals(expectedForms, and.getFormsFull());
+        assertWordForms(and, expectedForms);
+        assertWordFormsFull(and, expectedForms);
     }
 }
