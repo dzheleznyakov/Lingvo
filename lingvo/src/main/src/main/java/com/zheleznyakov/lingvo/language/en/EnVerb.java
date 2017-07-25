@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.zheleznyakov.lingvo.basic.MultiFormWord;
 import com.zheleznyakov.lingvo.basic.Verb;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
-import com.zheleznyakov.lingvo.basic.util.WordFormatter.FormName;
+import com.zheleznyakov.lingvo.basic.FormName;
 
-public class EnVerb extends EnWord implements Verb {
+public class EnVerb extends EnWord implements Verb, MultiFormWord {
 
     private final String alternativeForm;
     private final Map<FormName, String> irregularForms;
@@ -29,6 +30,11 @@ public class EnVerb extends EnWord implements Verb {
         return alternativeForm == null
                 ? getForms()
                 : joinForms(getForms(), WordFormatter.getForms(alternativeForm, irregularForms, EnVerbFormName.values()));
+    }
+
+    @Override
+    public String getForm(FormName formName) {
+        return getForm(formName, irregularForms);
     }
 
     private EnVerb(Builder builder) {
@@ -69,32 +75,37 @@ public class EnVerb extends EnWord implements Verb {
         }
     }
 
-    public enum EnVerbFormName implements WordFormatter.FormName {
-        MAIN_FORM             (true,  Function.identity()),
-        PRESENT_FIRST_SINGULAR(false, MAIN_FORM.standardConverter),
-        PRESENT_THIRD_SINGULAR(true,  EnSpellingHelper::appendSEnding),
-        PRESENT_PLURAL        (false, MAIN_FORM.standardConverter),
-        GERUND                (true,  EnSpellingHelper::appendIngEnding),
-        PAST_SINGLE           (true,  EnSpellingHelper::appendEdEnding),
-        PAST_PLURAL           (false, PAST_SINGLE.standardConverter),
-        PAST_PARTICIPLE       (false, PAST_SINGLE.standardConverter),;
+    public enum EnVerbFormName implements FormName {
+        MAIN_FORM             (Function.identity(),               null),
+        PRESENT_FIRST_SINGULAR(MAIN_FORM.standardConverter,       MAIN_FORM),
+        PRESENT_THIRD_SINGULAR(EnSpellingHelper::appendSEnding,   null),
+        PRESENT_PLURAL        (MAIN_FORM.standardConverter,       MAIN_FORM),
+        GERUND                (EnSpellingHelper::appendIngEnding, null),
+        PAST_SINGLE           (EnSpellingHelper::appendEdEnding,  null),
+        PAST_PLURAL           (PAST_SINGLE.standardConverter,     PAST_SINGLE),
+        PAST_PARTICIPLE       (PAST_SINGLE.standardConverter,     PAST_SINGLE),;
 
-        private final boolean mandatory;
         private final Function<String, String> standardConverter;
+        private final EnVerbFormName root;
 
-        EnVerbFormName(boolean mandatory, Function<String, String> standardConverter) {
-            this.mandatory = mandatory;
+        EnVerbFormName(Function<String, String> standardConverter, EnVerbFormName root) {
             this.standardConverter = standardConverter;
+            this.root = root;
         }
 
         @Override
         public boolean isMandatory() {
-            return mandatory;
+            return root == null;
         }
 
         @Override
         public Function<String, String> getStandardConverter() {
             return standardConverter;
+        }
+
+        @Override
+        public EnVerbFormName getRoot() {
+            return root;
         }
     }
 

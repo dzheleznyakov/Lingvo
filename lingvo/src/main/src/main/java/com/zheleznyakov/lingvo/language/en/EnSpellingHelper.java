@@ -9,8 +9,12 @@ class EnSpellingHelper {
         throw new IllegalAccessException("This class is a static helper; it is not supposed to be instantiated");
     }
 
+    static String makePossessive(String form) {
+        return endsInS(form) ? form + "'" : form + "'s";
+    }
+
     static String appendSEnding(String form) {
-        if (endsIn(form, EnWord.SIBILANTS))
+        if (endsInOneOf(form, EnWord.SIBILANTS))
             return form + "es";
         else if (endsInVowelY(form))
             return cutAndAppend(form, 1, "ies");
@@ -87,12 +91,12 @@ class EnSpellingHelper {
         return form.charAt(form.length() - 1 - position);
     }
 
-    private static boolean endsIn(String form, Set<String> letters) {
+    private static boolean endsInOneOf(String form, Set<String> letters) {
         return letters.stream()
                 .anyMatch(form::endsWith);
     }
 
-    static boolean endsInVowelY(String form) {
+    private static boolean endsInVowelY(String form) {
         String secondLastLetter = getSecondLastLetter(form);
         return form.endsWith("y") && !EnWord.VOWELS_STRICT.contains(secondLastLetter);
     }
@@ -111,9 +115,5 @@ class EnSpellingHelper {
 
     static boolean endsInS(String form) {
         return form.endsWith("s");
-    }
-
-    static String makePossessive(String form) {
-        return endsInS(form) ? form + "'" : form + "'s";
     }
 }

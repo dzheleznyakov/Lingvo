@@ -140,4 +140,13 @@ public class EnVerbTest {
 
         assertVerbFormsFull(test, "test", "tests", "testing", "tested");
     }
+
+    @Test
+    public void testGetForm() {
+        EnVerb put = buildIrregularVerb("put", PAST_SINGLE, "put",
+                PAST_PARTICIPLE, "put");
+
+        assertEquals("put", put.getForm(PAST_PARTICIPLE));
+        assertEquals("put", put.getForm(PAST_PLURAL));
+    }
 }

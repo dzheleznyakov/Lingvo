@@ -2,9 +2,9 @@ package com.zheleznyakov.lingvo.language.en;
 
 import java.util.Set;
 
-import com.zheleznyakov.lingvo.language.Language;
-import com.zheleznyakov.lingvo.basic.Word;
 import com.google.common.collect.ImmutableSet;
+import com.zheleznyakov.lingvo.basic.Word;
+import com.zheleznyakov.lingvo.language.Language;
 
 public abstract class EnWord implements Word {
 

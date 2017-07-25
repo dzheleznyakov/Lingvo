@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.zheleznyakov.lingvo.basic.FormName;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
 
@@ -38,7 +39,12 @@ public class EnProperNoun extends EnNoun {
         }
     }
 
-    public enum EnProperNounFormName implements WordFormatter.FormName {
+    @Override
+    public String getForm(FormName formName) {
+        return super.getForm(formName, Word.EMPTY_IRREGULAR_FORMS);
+    }
+
+    public enum EnProperNounFormName implements FormName {
         NOMINATIVE_SINGLE(Function.identity()),
         POSSESSIVE_SINGLE(form -> form + "'s");
 
@@ -57,5 +63,12 @@ public class EnProperNoun extends EnNoun {
         public Function<String, String> getStandardConverter() {
             return standardConverter;
         }
+
+        @Override
+        public FormName getRoot() {
+            return null;
+        }
+
+
     }
 }

@@ -8,12 +8,13 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.zheleznyakov.lingvo.basic.MultiFormWord;
 import com.zheleznyakov.lingvo.basic.Noun;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
-import com.zheleznyakov.lingvo.basic.util.WordFormatter.FormName;
+import com.zheleznyakov.lingvo.basic.FormName;
 
-public class EnNoun extends EnWord implements Noun {
+public class EnNoun extends EnWord implements Noun, MultiFormWord {
 
     private final String alternativeForm;
     private final Map<FormName, String> irregularForms;
@@ -45,6 +46,11 @@ public class EnNoun extends EnWord implements Noun {
     @NotNull
     private String[] getForms(String form, Map<FormName, String> irregularForms) {
         return WordFormatter.getForms(form, irregularForms, EnNounFormName.values());
+    }
+
+    @Override
+    public String getForm(FormName formName) {
+        return getForm(formName, irregularForms);
     }
 
     protected EnNoun(Builder builder) {
@@ -92,7 +98,7 @@ public class EnNoun extends EnWord implements Noun {
         }
     }
 
-    public enum EnNounFormName implements WordFormatter.FormName {
+    public enum EnNounFormName implements FormName {
         NOMINATIVE_SINGLE(Function.identity()),
         NOMINATIVE_PLURAL(EnSpellingHelper::appendSEnding),
         POSSESSIVE_SINGLE(EnSpellingHelper::makePossessive),
@@ -112,6 +118,11 @@ public class EnNoun extends EnWord implements Noun {
         @Override
         public Function<String, String> getStandardConverter() {
             return standardConverter;
+        }
+
+        @Override
+        public FormName getRoot() {
+            return null;
         }
     }
 

@@ -3,7 +3,8 @@ package com.zheleznyakov.lingvo.basic.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+
+import com.zheleznyakov.lingvo.basic.FormName;
 
 public class WordFormatter {
 
@@ -26,8 +27,4 @@ public class WordFormatter {
             forms.add(formName.getStandardConverter().apply(mainForm));
     }
 
-    public interface FormName {
-        Function<String, String> getStandardConverter();
-        boolean isMandatory();
-    }
 }
