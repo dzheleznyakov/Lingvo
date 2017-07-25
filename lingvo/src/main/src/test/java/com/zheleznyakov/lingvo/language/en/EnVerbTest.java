@@ -171,4 +171,16 @@ public class EnVerbTest {
                 "realise out/realize out",
                 "realises out/realizes out", "realising out/realizing out", "realised out/realized out");
     }
+
+    @Test
+    public void testIrregularVerb_FormsCanGoInAnyOrder() {
+        EnVerb be1 = buildIrregularVerb("be", GERUND, "being",
+                PRESENT_FIRST_SINGULAR, "am", PRESENT_THIRD_SINGULAR, "is", PRESENT_PLURAL, "are",
+                PAST_SINGLE, "was", PAST_PLURAL, "were", PAST_PARTICIPLE, "been");
+        EnVerb be2 = buildIrregularVerb("be", GERUND, "being",
+                PAST_PARTICIPLE, "been", PAST_PLURAL, "were", PAST_SINGLE, "was",
+                PRESENT_PLURAL, "are", PRESENT_THIRD_SINGULAR, "is", PRESENT_FIRST_SINGULAR, "am");
+
+        assertArrayEquals(be1.getForms(), be2.getForms());
+    }
 }
