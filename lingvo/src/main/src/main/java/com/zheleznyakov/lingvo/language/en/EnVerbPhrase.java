@@ -26,12 +26,14 @@ public class EnVerbPhrase extends EnVerb {
 
     @Override
     public String[] getFormsFull() {
-        if (alternativeForm == null)
-            return getForms();
-        else {
-            String[] formsFull = WordFormatter.getForms(alternativeForm, irregularForms, EnVerbFormName.values());
-            formsFull = appendPhrasePart(formsFull);
-            return joinForms(getForms(), formsFull);
-        }
+        return alternativeForm == null
+            ? getForms()
+            : joinForms(getForms(), getAlternativeForms());
+    }
+
+    @NotNull
+    private String[] getAlternativeForms() {
+        String[] formsFull = WordFormatter.getForms(alternativeForm, irregularForms, EnVerbFormName.values());
+        return appendPhrasePart(formsFull);
     }
 }
