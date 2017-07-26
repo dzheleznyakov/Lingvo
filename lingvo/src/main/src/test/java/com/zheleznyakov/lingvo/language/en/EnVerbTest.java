@@ -185,4 +185,11 @@ public class EnVerbTest {
 
         assertEquals("[kɔːl]", call.getTranscription());
     }
+
+    @Test
+    public void testGetInfinitive() {
+        EnVerb call = EnVerb.build("call");
+
+        assertEquals("to call", call.getForm(EnVerbFormName.INFINITIVE));
+    }
 }
