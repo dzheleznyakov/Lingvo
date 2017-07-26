@@ -19,9 +19,15 @@ public class EnArticle extends EnWord implements Article {
 
     @Override
     public String[] getFormsFull() {
-        if (THE.equals(mainForm))
-            return getForms();
-        else
-            return new String[]{"a/an"};
+        return THE.equals(mainForm)
+                ? getForms()
+                : new String[]{"a/an"};
+    }
+
+    @Override
+    public String getTranscription() {
+        return THE.equals(mainForm)
+                ? "[ðə]"
+                : "[ə]";
     }
 }

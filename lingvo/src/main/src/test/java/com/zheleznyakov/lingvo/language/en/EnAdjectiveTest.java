@@ -23,4 +23,13 @@ public class EnAdjectiveTest {
         assertWordForms(adj, expectedForms);
         assertWordFormsFull(adj, expectedForms);
     }
+
+    @Test
+    public void testGetTranscription() {
+        EnAdjective quick = EnAdjective.builder("quick")
+                .transcription("kwɪk")
+                .build();
+
+        assertEquals("[kwɪk]", quick.getTranscription());
+    }
 }

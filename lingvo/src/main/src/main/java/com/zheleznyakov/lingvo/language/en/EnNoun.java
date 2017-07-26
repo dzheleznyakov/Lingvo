@@ -55,6 +55,7 @@ public class EnNoun extends EnWord implements Noun, MultiFormWord {
 
     protected EnNoun(Builder builder) {
         super(builder.mainForm);
+        transcription = builder.transcription;
         alternativeForm = builder.alternativeForm;
         irregularForms = builder.irregularForms == null
                 ? Word.EMPTY_IRREGULAR_FORMS
@@ -70,6 +71,7 @@ public class EnNoun extends EnWord implements Noun, MultiFormWord {
         private String alternativeForm;
         private boolean properNoun = false;
         private Map<FormName, String> irregularForms;
+        private String transcription;
 
         private Builder(String mainForm) {
             this.mainForm = mainForm;
@@ -95,6 +97,11 @@ public class EnNoun extends EnWord implements Noun, MultiFormWord {
 
         public EnNoun build() {
             return properNoun ? new EnProperNoun(this) : new EnNoun(this);
+        }
+
+        public Builder transcription(String transcription) {
+            this.transcription = transcription;
+            return this;
         }
     }
 

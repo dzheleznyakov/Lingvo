@@ -17,6 +17,7 @@ public abstract class EnWord implements Word {
     public static final Set<String> APPROXIMANTS = ImmutableSet.of("r", "l");
 
     protected final String mainForm;
+    protected String transcription;
 
     protected EnWord(String mainForm) {
         this.mainForm = mainForm;
@@ -38,5 +39,9 @@ public abstract class EnWord implements Word {
             declensionsFull[i] = mainDeclensions[i] + "/" + alternativeDeclensions[i];
         }
         return declensionsFull;
+    }
+
+    public String getTranscription() {
+        return "[" + transcription + "]";
     }
 }

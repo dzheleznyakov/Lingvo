@@ -22,4 +22,13 @@ public class EnConjunctionTest {
         assertWordForms(and, expectedForms);
         assertWordFormsFull(and, expectedForms);
     }
+
+    @Test
+    public void testGetTranscription() {
+        EnConjunction or = EnConjunction.builder("or")
+                .transcription("ɔː")
+                .build();
+
+        assertEquals("[ɔː]", or.getTranscription());
+    }
 }

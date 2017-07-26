@@ -22,4 +22,13 @@ public class EnAdverbTest {
         assertWordForms(well, expectedForms);
         assertWordFormsFull(well, expectedForms);
     }
+
+    @Test
+    public void testGetTranscription() {
+        EnAdverb easily = EnAdverb.builder("easily")
+                .transcription("ˈiːzɪli")
+                .build();
+
+        assertEquals("[ˈiːzɪli]", easily.getTranscription());
+    }
 }

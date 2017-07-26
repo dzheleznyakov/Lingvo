@@ -22,4 +22,13 @@ public class EnPrepositionTest {
         assertWordForms(of, expectedForms);
         assertWordFormsFull(of, expectedForms);
     }
+
+    @Test
+    public void testGetTranscription() {
+        EnPreposition from = EnPreposition.builder("from")
+                .transcription("frɒm")
+                .build();
+
+        assertEquals("[frɒm]", from.getTranscription());
+    }
 }

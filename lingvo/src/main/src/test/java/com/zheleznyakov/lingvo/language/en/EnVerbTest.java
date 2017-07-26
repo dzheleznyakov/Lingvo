@@ -177,4 +177,13 @@ public class EnVerbTest {
 
         assertArrayEquals(be1.getForms(), be2.getForms());
     }
+
+    @Test
+    public void testGetTranscription() {
+        EnVerb call = EnVerb.builder("call")
+                .transcription("kɔːl")
+                .build();
+
+        assertEquals("[kɔːl]", call.getTranscription());
+    }
 }

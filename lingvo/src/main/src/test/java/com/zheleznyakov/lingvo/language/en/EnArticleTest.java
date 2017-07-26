@@ -19,6 +19,7 @@ public class EnArticleTest {
         assertEquals(Language.ENGLISH, the.getLanguage());
         assertEquals(PartOfSpeech.ARTICLE, the.getPartOfSpeech());
         assertEquals(mainForm, the.getMainForm());
+        assertEquals("[ðə]", the.getTranscription());
         assertWordForms(the, expectedForms);
         assertWordFormsFull(the, expectedForms);
     }
@@ -29,6 +30,7 @@ public class EnArticleTest {
         EnArticle a = EnArticle.build(mainForm);
 
         assertWordFormsFull(a, "a/an");
+        assertEquals("[ə]", a.getTranscription());
     }
 
     @Test(expected = IllegalArgumentException.class)

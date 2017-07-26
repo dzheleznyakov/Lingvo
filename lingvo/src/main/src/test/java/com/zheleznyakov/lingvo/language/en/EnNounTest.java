@@ -155,4 +155,13 @@ public class EnNounTest {
 
         assertEquals(noun.getMainForm(), noun.getForm(EnVerbFormName.MAIN_FORM));
     }
+
+    @Test
+    public void testGetTranscription() {
+        EnNoun house = EnNoun.builder("house")
+                .transcription("haʊs")
+                .build();
+
+        assertEquals("[haʊs]", house.getTranscription());
+    }
 }

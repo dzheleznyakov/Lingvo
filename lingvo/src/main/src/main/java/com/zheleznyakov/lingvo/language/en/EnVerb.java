@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.zheleznyakov.lingvo.basic.FormName;
 import com.zheleznyakov.lingvo.basic.MultiFormWord;
 import com.zheleznyakov.lingvo.basic.Verb;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
-import com.zheleznyakov.lingvo.basic.FormName;
 
 public class EnVerb extends EnWord implements Verb, MultiFormWord {
 
@@ -39,6 +39,7 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
 
     protected EnVerb(Builder builder) {
         super(builder.mainForm);
+        transcription = builder.transcription;
         alternativeForm = builder.alternativeForm;
         irregularForms = builder.irregularForms == null
                 ? Word.EMPTY_IRREGULAR_FORMS
@@ -54,6 +55,7 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
         private String alternativeForm;
         private Map<FormName, String> irregularForms;
         private String phrasePart;
+        private String transcription;
 
         private Builder(String mainForm) {
             this.mainForm = mainForm;
@@ -76,12 +78,16 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
             return this;
         }
 
+        public Builder transcription(String transcription) {
+            this.transcription = transcription;
+            return this;
+        }
+
         public EnVerb build() {
             return phrasePart == null
                     ? new EnVerb(this)
                     : new EnVerbPhrase(this, phrasePart);
         }
-
     }
 
     public enum EnVerbFormName implements FormName {
