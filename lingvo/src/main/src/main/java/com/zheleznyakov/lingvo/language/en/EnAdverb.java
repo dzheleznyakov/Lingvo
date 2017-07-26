@@ -4,36 +4,25 @@ import com.zheleznyakov.lingvo.basic.Adverb;
 
 public class EnAdverb extends EnWord implements Adverb {
 
-    private EnAdverb(String mainForm) {
-        super(mainForm);
-    }
-
-    public EnAdverb(Builder builder) {
-        super(builder.mainForm);
-        transcription = builder.transcription;
+    private EnAdverb(Builder builder) {
+        super(builder);
     }
 
     public static EnAdverb build(String mainForm) {
-        return new EnAdverb(mainForm);
+        return new EnAdverb(EnAdverb.builder(mainForm));
     }
 
     public static Builder builder(String mainForm) {
         return new Builder(mainForm);
     }
 
-    public static class Builder {
-        private final String mainForm;
-        private String transcription;
+    public static class Builder extends EnWord.Builder {
 
         public Builder(String mainForm) {
-            this.mainForm = mainForm;
+            super(mainForm);
         }
 
-        public Builder transcription(String transcription) {
-            this.transcription = transcription;
-            return this;
-        }
-
+        @Override
         public EnAdverb build() {
             return new EnAdverb(this);
         }

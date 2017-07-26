@@ -16,10 +16,6 @@ import com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName;
 
 public class EnNounTest {
 
-    private EnNoun buildRegularNoun(String noun) {
-        return EnNoun.builder(noun).build();
-    }
-
     private EnNoun buildIrregularNoun(String mainForm, String pluralForm) {
         return EnNoun.builder(mainForm)
                 .irregularPlural(pluralForm);
@@ -38,7 +34,7 @@ public class EnNounTest {
     @Test
     public void testCreateEnNoun() {
         String nounString = "abc";
-        EnNoun noun = buildRegularNoun(nounString);
+        EnNoun noun = EnNoun.build(nounString);
 
         assertEquals(Language.ENGLISH, noun.getLanguage());
         assertEquals(PartOfSpeech.NOUN, noun.getPartOfSpeech());
@@ -49,17 +45,17 @@ public class EnNounTest {
 
     @Test
     public void testNounForms_StandardEnding() {
-        EnNoun house = buildRegularNoun("house");
+        EnNoun house = EnNoun.build("house");
 
         assertWordForms(house, "house", "houses", "house's", "houses'");
     }
 
     @Test
     public void testNounForms_SibilantEnding() {
-        EnNoun box = buildRegularNoun("box");
-        EnNoun sandwich = buildRegularNoun("sandwich");
-        EnNoun parish = buildRegularNoun("parish");
-        EnNoun miss = buildRegularNoun("miss");
+        EnNoun box = EnNoun.build("box");
+        EnNoun sandwich = EnNoun.build("sandwich");
+        EnNoun parish = EnNoun.build("parish");
+        EnNoun miss = EnNoun.build("miss");
 
         assertWordForms(box, "box", "boxes", "box's", "boxes'");
         assertWordForms(sandwich, "sandwich", "sandwiches", "sandwich's", "sandwiches'");
@@ -69,8 +65,8 @@ public class EnNounTest {
 
     @Test
     public void testNounForms_YEnding() {
-        EnNoun city = buildRegularNoun("city");
-        EnNoun boy = buildRegularNoun("boy");
+        EnNoun city = EnNoun.build("city");
+        EnNoun boy = EnNoun.build("boy");
 
         assertWordForms(city, "city", "cities", "city's", "cities'");
         assertWordForms(boy, "boy", "boys", "boy's", "boys'");
@@ -78,9 +74,9 @@ public class EnNounTest {
 
     @Test
     public void testNounForms_FEnding() {
-        EnNoun thief = buildRegularNoun("thief");
-        EnNoun wife = buildRegularNoun("wife");
-        EnNoun cliff = buildRegularNoun("cliff");
+        EnNoun thief = EnNoun.build("thief");
+        EnNoun wife = EnNoun.build("wife");
+        EnNoun cliff = EnNoun.build("cliff");
 
         assertWordForms(thief, "thief", "thieves", "thief's", "thieves'");
         assertWordForms(wife, "wife", "wives", "wife's", "wives'");
@@ -111,7 +107,7 @@ public class EnNounTest {
 
     @Test
     public void testAlternativeForm_NounDoesNotHaveAlternativeForm() {
-        EnNoun house = buildRegularNoun("house");
+        EnNoun house = EnNoun.build("house");
 
         assertWordFormsFull(house, "house", "houses", "house's", "houses'");
     }
@@ -151,7 +147,7 @@ public class EnNounTest {
 
     @Test
     public void testGetForm_UnknownForm() {
-        EnNoun noun = buildRegularNoun("abc");
+        EnNoun noun = EnNoun.build("abc");
 
         assertEquals(noun.getMainForm(), noun.getForm(EnVerbFormName.MAIN_FORM));
     }

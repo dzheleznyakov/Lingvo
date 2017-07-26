@@ -4,36 +4,25 @@ import com.zheleznyakov.lingvo.basic.Adjective;
 
 public class EnAdjective extends EnWord implements Adjective {
 
-    private EnAdjective(String mainForm) {
-        super(mainForm);
+    public static EnAdjective build(String mainForm) {
+        return new EnAdjective(EnAdjective.builder(mainForm));
     }
 
-    public static EnAdjective build(String adjString) {
-        return new EnAdjective(adjString);
-    }
-
-    public EnAdjective(Builder builder) {
-        super(builder.mainForm);
-        transcription = builder.transcription;
+    private EnAdjective(Builder builder) {
+        super(builder);
     }
 
     public static Builder builder(String mainForm) {
         return new Builder(mainForm);
     }
 
-    public static class Builder {
-        private final String mainForm;
-        private String transcription;
+    public static class Builder extends EnWord.Builder {
 
         public Builder(String mainForm) {
-            this.mainForm = mainForm;
+            super(mainForm);
         }
 
-        public Builder transcription(String transcription) {
-            this.transcription = transcription;
-            return this;
-        }
-
+        @Override
         public EnAdjective build() {
             return new EnAdjective(this);
         }

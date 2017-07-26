@@ -24,8 +24,7 @@ import com.zheleznyakov.lingvo.language.en.EnVerb.EnVerbFormName;
 public class EnVerbTest {
 
     private EnVerb buildRegularVerb(String mainForm) {
-        return EnVerb.builder(mainForm)
-                .build();
+        return EnVerb.build(mainForm);
     }
 
     private EnVerb buildIrregularVerb(String mainForm, Object... alternativeForms) {

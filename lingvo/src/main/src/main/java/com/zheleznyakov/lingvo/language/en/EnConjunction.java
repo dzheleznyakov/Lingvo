@@ -4,36 +4,24 @@ import com.zheleznyakov.lingvo.basic.Conjunction;
 
 public class EnConjunction extends EnWord implements Conjunction {
 
-    private EnConjunction(String mainForm) {
-        super(mainForm);
-    }
-
     public EnConjunction(Builder builder) {
-        super(builder.mainForm);
-        transcription = builder.transcription;
+        super(builder);
     }
 
     public static EnConjunction build(String mainForm) {
-        return new EnConjunction(mainForm);
+        return new EnConjunction(EnConjunction.builder(mainForm));
     }
 
     public static Builder builder(String mainForm) {
         return new Builder(mainForm);
     }
 
-    public static class Builder {
-        private final String mainForm;
-        private String transcription;
-
+    public static class Builder extends EnWord.Builder {
         public Builder(String mainForm) {
-            this.mainForm = mainForm;
+            super(mainForm);
         }
 
-        public Builder transcription(String transcription) {
-            this.transcription = transcription;
-            return this;
-        }
-
+        @Override
         public EnConjunction build() {
             return new EnConjunction(this);
         }

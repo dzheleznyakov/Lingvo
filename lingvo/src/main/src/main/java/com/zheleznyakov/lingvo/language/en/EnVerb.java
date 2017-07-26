@@ -37,9 +37,12 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
         return getForm(formName, irregularForms);
     }
 
+    public static EnVerb build(String mainForm) {
+        return new EnVerb(EnVerb.builder(mainForm));
+    }
+
     protected EnVerb(Builder builder) {
-        super(builder.mainForm);
-        transcription = builder.transcription;
+        super(builder);
         alternativeForm = builder.alternativeForm;
         irregularForms = builder.irregularForms == null
                 ? Word.EMPTY_IRREGULAR_FORMS
@@ -50,15 +53,13 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
         return new Builder(mainForm);
     }
 
-    public static class Builder {
-        private String mainForm;
+    public static class Builder extends EnWord.Builder {
         private String alternativeForm;
         private Map<FormName, String> irregularForms;
         private String phrasePart;
-        private String transcription;
 
         private Builder(String mainForm) {
-            this.mainForm = mainForm;
+            super(mainForm);
         }
 
         public Builder irregularForm(EnVerbFormName verbEnVerbFormName, String form) {
@@ -78,11 +79,7 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
             return this;
         }
 
-        public Builder transcription(String transcription) {
-            this.transcription = transcription;
-            return this;
-        }
-
+        @Override
         public EnVerb build() {
             return phrasePart == null
                     ? new EnVerb(this)

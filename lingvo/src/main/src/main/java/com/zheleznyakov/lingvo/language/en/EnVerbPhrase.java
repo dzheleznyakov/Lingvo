@@ -7,7 +7,7 @@ import com.zheleznyakov.lingvo.basic.util.WordFormatter;
 public class EnVerbPhrase extends EnVerb {
     private final String phrasePart;
 
-    EnVerbPhrase(@NotNull EnVerb.Builder verbPartBuilder, String phrasePart) {
+    EnVerbPhrase(@NotNull Builder verbPartBuilder, String phrasePart) {
         super(verbPartBuilder);
         this.phrasePart = phrasePart;
     }

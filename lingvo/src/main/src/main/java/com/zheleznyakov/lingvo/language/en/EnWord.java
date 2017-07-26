@@ -19,6 +19,11 @@ public abstract class EnWord implements Word {
     protected final String mainForm;
     protected String transcription;
 
+    protected EnWord(Builder builder) {
+        mainForm = builder.mainForm;
+        transcription = builder.transcription;
+    }
+
     protected EnWord(String mainForm) {
         this.mainForm = mainForm;
     }
@@ -43,5 +48,21 @@ public abstract class EnWord implements Word {
 
     public String getTranscription() {
         return "[" + transcription + "]";
+    }
+
+    public static abstract class Builder {
+        protected String mainForm;
+        protected String transcription;
+
+        protected Builder(String mainForm) {
+            this.mainForm = mainForm;
+        }
+
+        public Builder transcription(String transcription) {
+            this.transcription = transcription;
+            return this;
+        }
+
+        public abstract <T extends EnWord> T build();
     }
 }
