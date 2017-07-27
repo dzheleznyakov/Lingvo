@@ -95,8 +95,7 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
         GERUND                (EnSpellingHelper::appendIngEnding, null),
         PAST_SINGLE           (EnSpellingHelper::appendEdEnding,  null),
         PAST_PLURAL           (PAST_SINGLE.standardConverter,     PAST_SINGLE),
-        PAST_PARTICIPLE       (PAST_SINGLE.standardConverter,     PAST_SINGLE),
-        INFINITIVE            (form -> "to " + form,              null);
+        PAST_PARTICIPLE       (PAST_SINGLE.standardConverter,     PAST_SINGLE);
 
         private final Function<String, String> standardConverter;
         private final EnVerbFormName root;
@@ -108,7 +107,7 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
 
         @Override
         public boolean isMandatory() {
-            return root == null && INFINITIVE != this;
+            return root == null;
         }
 
         @Override

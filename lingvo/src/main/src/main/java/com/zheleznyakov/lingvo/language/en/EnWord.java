@@ -7,7 +7,6 @@ import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.language.Language;
 
 public abstract class EnWord implements Word {
-
     public static final Set<String> VOWELS_STRICT = ImmutableSet.of("a", "o", "e", "u", "i");
     public static final Set<String> VOWELS_FULL = ImmutableSet.<String>builder()
             .addAll(VOWELS_STRICT).add("y").build();
@@ -20,8 +19,15 @@ public abstract class EnWord implements Word {
     protected String transcription;
 
     protected EnWord(Builder builder) {
+        verifyChars(builder.mainForm);
         mainForm = builder.mainForm;
         transcription = builder.transcription;
+    }
+
+    private void verifyChars(String form) {
+        if (!form.matches("[a-zA-Z'\\-]*")) {
+            throw new IllegalArgumentException("Word " + form + " contains illegal symbols for English");
+        }
     }
 
     protected EnWord(String mainForm) {
