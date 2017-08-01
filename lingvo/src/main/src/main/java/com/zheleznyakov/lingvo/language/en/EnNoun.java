@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.google.common.base.Objects;
 import com.zheleznyakov.lingvo.basic.MultiFormWord;
 import com.zheleznyakov.lingvo.basic.Noun;
 import com.zheleznyakov.lingvo.basic.Word;
@@ -129,5 +130,4 @@ public class EnNoun extends EnWord implements Noun, MultiFormWord {
             return null;
         }
     }
-
 }

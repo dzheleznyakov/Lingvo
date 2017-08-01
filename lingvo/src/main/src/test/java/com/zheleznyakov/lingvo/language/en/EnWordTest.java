@@ -5,16 +5,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 public class EnWordTest {
-    static int count = 0;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     private void testIllegalMainForm(String form) {
-        count++;
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("illegal symbols");
-
+        thrown.expectMessage("illegal symbol");
         EnNoun.build(form);
     }
 
@@ -29,7 +26,7 @@ public class EnWordTest {
     }
 
     @Test
-    public void addingWordWithApostrophIsFine() {
+    public void addingWordWithApostropheIsFine() {
         EnAdjective.build("abc'");
     }
 
@@ -39,10 +36,8 @@ public class EnWordTest {
     }
 
     @Test
-    public void testIllegalMainForm() {
-        for (int i = 0; i < 2000; i++) {
-            testIllegalMainForm("abc" + ((char)i));
-        }
-        System.out.println(count);
+    public void addingNonCharacterSymbolOtherThanApostropheOrHyphenThrows() {
+        testIllegalMainForm("abc!");
+        testIllegalMainForm("abc/");
     }
 }
