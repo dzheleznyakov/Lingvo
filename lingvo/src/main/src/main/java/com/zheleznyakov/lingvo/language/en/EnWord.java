@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo.language.en;
 
 import java.util.Set;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.language.Language;
@@ -70,5 +71,18 @@ public abstract class EnWord implements Word {
         }
 
         public abstract <T extends EnWord> T build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EnWord word = (EnWord) o;
+        return Objects.equal(mainForm, word.mainForm);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(mainForm);
     }
 }
