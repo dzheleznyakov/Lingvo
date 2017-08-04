@@ -1,16 +1,19 @@
 package com.zheleznyakov.lingvo.learning.checker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.Word;
+import com.zheleznyakov.lingvo.language.en.EnNoun;
 import com.zheleznyakov.lingvo.learning.LearningBaseTest;
 import com.zheleznyakov.testutils.ZhSets;
 
@@ -25,12 +28,12 @@ public class MainFormCheckerTest extends LearningBaseTest {
 
     private void exerciseWordCorrectly(int number) {
         for (int i = 0; i < number; i++)
-            mainFormChecker.exercise(word, meaning);
+            assertTrue(mainFormChecker.exercise(word, meaning));
     }
 
     private void exerciseWordIncorrectly(int number) {
         for (int i = 0; i < number; i++)
-            mainFormChecker.exercise(word, meaning + "a");
+            assertFalse(mainFormChecker.exercise(word, meaning + "a"));
     }
 
     private Set<Word> addAdditionalWordsToDictionaryAndCollectAllWordsToSet() throws IllegalAccessException, InstantiationException {
@@ -125,5 +128,15 @@ public class MainFormCheckerTest extends LearningBaseTest {
         assertEquals(ImmutableSet.of(word), words);
     }
 
-    // test partial answer when learning main form
+    @Ignore
+    @Test
+    public void testPartialAnswer() {
+        Word house = EnNoun.build("house");
+        dictionary.add(house, "дом, здание");
+        mainFormChecker.exercisePartialAnswer(house, "дом");
+
+        assertEquals(1, dictionary.getNumberOfCorrectAnswers(house));
+    }
+
+// test partial answer when learning main form
 }
