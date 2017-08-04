@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.dictionary;
+package com.zheleznyakov.lingvo.learning.checker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,65 +10,33 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
-import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 import com.zheleznyakov.lingvo.basic.Word;
-import com.zheleznyakov.lingvo.language.Language;
-import com.zheleznyakov.lingvo.language.en.EnNoun;
-import com.zheleznyakov.lingvo.language.en.EnVerb;
+import com.zheleznyakov.lingvo.learning.LearningBaseTest;
 import com.zheleznyakov.testutils.ZhSets;
 
-public class LearningDictionaryTest {
+public class MainFormCheckerTest extends LearningBaseTest {
 
-    private LearningDictionary dictionary;
-    private Word word;
-    private Word secondWord;
-    private Word thirdWord;
-    private String meaning;
-    private int numberOfRepetitions = 10;
+    private MainFormChecker mainFormChecker;
 
     @Before
-    public void setUp() throws Exception {
-        dictionary = new LearningDictionary(Language.ENGLISH);
-        word = EnNoun.build("word");
-        secondWord = EnNoun.build("another");
-        thirdWord = EnNoun.build("other");
-        meaning = "meaning";
-        dictionary.add(word, meaning);
-        dictionary.setNumberOfRepetitions(numberOfRepetitions);
+    public void setUp() {
+        mainFormChecker = new MainFormChecker(dictionary);
     }
 
     private void exerciseWordCorrectly(int number) {
         for (int i = 0; i < number; i++)
-            dictionary.checkWordMeaning(word, meaning);
+            mainFormChecker.exercise(word, meaning);
     }
 
     private void exerciseWordIncorrectly(int number) {
         for (int i = 0; i < number; i++)
-            dictionary.checkWordMeaning(word, meaning + "a");
+            mainFormChecker.exercise(word, meaning + "a");
     }
 
     private Set<Word> addAdditionalWordsToDictionaryAndCollectAllWordsToSet() throws IllegalAccessException, InstantiationException {
         dictionary.add(secondWord, "second meaning");
         dictionary.add(thirdWord, "third meaning");
         return ZhSets.newSet(HashSet.class, word, secondWord, thirdWord);
-    }
-
-    private void assertWordLearningProgress(int correctScore, boolean isLearned) {
-        assertEquals(correctScore, dictionary.getNumberOfCorrectAnswers(word));
-        assertEquals(isLearned, dictionary.isLearned(word));
-    }
-
-    @Test
-    public void createLearningDictionaryAndAddWord() {
-        assertEquals(Language.ENGLISH, dictionary.getLanguage());
-        assertEquals(meaning, dictionary.getMeaning(word));
-        assertWordLearningProgress(0, false);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void whenAddingWordInWrongLanguageThrow() {
-        Word spanishWord = new SpanishWord();
-        dictionary.add(spanishWord, meaning);
     }
 
     @Test
@@ -86,9 +54,9 @@ public class LearningDictionaryTest {
 
     @Test
     public void learnWordCompletelyWithOneMinorSetback() {
-        exerciseWordCorrectly(1);
+        exerciseWordCorrectly(2);
         exerciseWordIncorrectly(1);
-        exerciseWordCorrectly(numberOfRepetitions - 1);
+        exerciseWordCorrectly(numberOfRepetitions - 2);
 
         assertWordLearningProgress(numberOfRepetitions, true);
     }
@@ -116,25 +84,9 @@ public class LearningDictionaryTest {
     }
 
     @Test
-    public void sameWordTakeOneRecordInDictionary() {
-        Word word1 = EnNoun.build(word.getMainForm());
-        dictionary.add(word1, meaning);
-
-        assertEquals(1, dictionary.size());
-    }
-
-
-    @Test
-    public void differentWordsWithTheSameMainFormTakeTwoRecords() {
-        Word word1 = EnVerb.build(word.getMainForm());
-        dictionary.add(word1, meaning);
-
-        assertEquals(2, dictionary.size());
-    }
-
-    @Test
     public void testDictionaryIterator() throws InstantiationException, IllegalAccessException {
         Set<Word> words = addAdditionalWordsToDictionaryAndCollectAllWordsToSet();
+        exerciseWordCorrectly(numberOfRepetitions);
         for (Word w : dictionary)
             words.remove(w);
 
@@ -142,8 +94,9 @@ public class LearningDictionaryTest {
     }
 
     @Test
-    public void testDictionaryStreams() throws InstantiationException, IllegalAccessException {
+    public void testDictionaryStream() throws InstantiationException, IllegalAccessException {
         Set<Word> words = addAdditionalWordsToDictionaryAndCollectAllWordsToSet();
+        exerciseWordCorrectly(numberOfRepetitions);
         dictionary.streamWords()
                 .forEach(words::remove);
 
@@ -161,21 +114,16 @@ public class LearningDictionaryTest {
         assertEquals(ImmutableSet.of(word), words);
     }
 
-    private static class SpanishWord implements Word {
-        @Override
-        public Language getLanguage() {
-            return Language.SPANISH;
-        }
+    @Test
+    public void testDictionaryNonLearnedStream() throws InstantiationException, IllegalAccessException {
+        Set<Word> words = addAdditionalWordsToDictionaryAndCollectAllWordsToSet();
+        exerciseWordCorrectly(numberOfRepetitions);
+        dictionary.streamNonLearnedWords()
+                .forEach(words::remove);
 
-        @Override
-        public PartOfSpeech getPartOfSpeech() {
-            return null;
-        }
-
-        @Override
-        public String getMainForm() {
-            return null;
-        }
+        assertTrue(dictionary.isLearned(word));
+        assertEquals(ImmutableSet.of(word), words);
     }
 
+    // test partial answer when learning main form
 }
