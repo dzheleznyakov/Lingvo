@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
 import static com.zheleznyakov.testutils.ZhAssert.assertIllegalAccess;
 

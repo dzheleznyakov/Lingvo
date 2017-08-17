@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.Word;
-import com.zheleznyakov.lingvo.language.en.EnNoun;
+import com.zheleznyakov.lingvo.language.en.word.EnNoun;
 import com.zheleznyakov.lingvo.learning.LearningBaseTest;
 import com.zheleznyakov.testutils.ZhSets;
 

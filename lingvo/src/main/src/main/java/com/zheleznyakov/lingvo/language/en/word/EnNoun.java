@@ -1,6 +1,7 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
-import static com.zheleznyakov.lingvo.language.en.EnSpellingHelper.makePossessive;
+
+import static com.zheleznyakov.lingvo.language.en.word.EnSpellingHelper.makePossessive;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,12 +9,12 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.google.common.base.Objects;
+import com.zheleznyakov.lingvo.basic.FormName;
 import com.zheleznyakov.lingvo.basic.MultiFormWord;
 import com.zheleznyakov.lingvo.basic.Noun;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
-import com.zheleznyakov.lingvo.basic.FormName;
+import com.zheleznyakov.lingvo.language.en.EnWord;
 
 public class EnNoun extends EnWord implements Noun, MultiFormWord {
 
@@ -70,7 +71,7 @@ public class EnNoun extends EnWord implements Noun, MultiFormWord {
         return new EnNoun(EnNoun.builder(mainForm));
     }
 
-    public static class Builder extends EnWord.Builder {
+    public static class Builder extends EnWord.Builder<EnNoun> {
         private String alternativeForm;
         private boolean properNoun = false;
         private Map<FormName, String> irregularForms;

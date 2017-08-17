@@ -1,7 +1,9 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
 import java.util.Objects;
 import java.util.Set;
+
+import com.zheleznyakov.lingvo.language.en.EnWord;
 
 class EnSpellingHelper {
 

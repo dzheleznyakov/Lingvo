@@ -1,6 +1,7 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
 import com.zheleznyakov.lingvo.basic.Conjunction;
+import com.zheleznyakov.lingvo.language.en.EnWord;
 
 public class EnConjunction extends EnWord implements Conjunction {
 
@@ -16,7 +17,7 @@ public class EnConjunction extends EnWord implements Conjunction {
         return new Builder(mainForm);
     }
 
-    public static class Builder extends EnWord.Builder {
+    public static class Builder extends EnWord.Builder<EnConjunction> {
         public Builder(String mainForm) {
             super(mainForm);
         }

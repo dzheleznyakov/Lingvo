@@ -1,6 +1,7 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
-import static com.zheleznyakov.lingvo.language.en.EnSpellingHelper.endsInS;
+
+import static com.zheleznyakov.lingvo.language.en.word.EnSpellingHelper.endsInS;
 
 import java.util.function.Function;
 

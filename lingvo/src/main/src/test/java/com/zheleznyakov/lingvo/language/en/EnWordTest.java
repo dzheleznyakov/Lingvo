@@ -4,6 +4,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.zheleznyakov.lingvo.language.en.word.EnAdjective;
+import com.zheleznyakov.lingvo.language.en.word.EnAdverb;
+import com.zheleznyakov.lingvo.language.en.word.EnNoun;
+
 public class EnWordTest {
 
     @Rule

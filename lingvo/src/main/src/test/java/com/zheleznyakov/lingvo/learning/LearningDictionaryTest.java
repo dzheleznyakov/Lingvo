@@ -10,9 +10,9 @@ import org.junit.Test;
 import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.language.Language;
-import com.zheleznyakov.lingvo.language.en.EnNoun;
+import com.zheleznyakov.lingvo.language.en.word.EnNoun;
 import com.zheleznyakov.lingvo.language.en.EnPronounPattern;
-import com.zheleznyakov.lingvo.language.en.EnVerb;
+import com.zheleznyakov.lingvo.language.en.word.EnVerb;
 import com.zheleznyakov.lingvo.language.en.EnVerbConjugation;
 
 public class LearningDictionaryTest extends LearningBaseTest {

@@ -1,6 +1,7 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
 import com.zheleznyakov.lingvo.basic.Adverb;
+import com.zheleznyakov.lingvo.language.en.EnWord;
 
 public class EnAdverb extends EnWord implements Adverb {
 
@@ -16,8 +17,7 @@ public class EnAdverb extends EnWord implements Adverb {
         return new Builder(mainForm);
     }
 
-    public static class Builder extends EnWord.Builder {
-
+    public static class Builder extends EnWord.Builder<EnAdverb> {
         public Builder(String mainForm) {
             super(mainForm);
         }

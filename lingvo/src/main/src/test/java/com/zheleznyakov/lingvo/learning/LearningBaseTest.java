@@ -6,7 +6,7 @@ import org.junit.Before;
 
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.language.Language;
-import com.zheleznyakov.lingvo.language.en.EnNoun;
+import com.zheleznyakov.lingvo.language.en.word.EnNoun;
 
 public abstract class LearningBaseTest {
     protected LearningDictionary dictionary;

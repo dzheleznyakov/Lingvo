@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +9,7 @@ import com.zheleznyakov.lingvo.basic.MultiFormWord;
 import com.zheleznyakov.lingvo.basic.Verb;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
+import com.zheleznyakov.lingvo.language.en.EnWord;
 
 public class EnVerb extends EnWord implements Verb, MultiFormWord {
 
@@ -53,7 +54,7 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
         return new Builder(mainForm);
     }
 
-    public static class Builder extends EnWord.Builder {
+    public static class Builder extends EnWord.Builder<EnVerb> {
         private String alternativeForm;
         private Map<FormName, String> irregularForms;
         private String phrasePart;

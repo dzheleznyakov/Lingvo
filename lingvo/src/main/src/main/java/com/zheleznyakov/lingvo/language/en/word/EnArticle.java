@@ -1,6 +1,7 @@
-package com.zheleznyakov.lingvo.language.en;
+package com.zheleznyakov.lingvo.language.en.word;
 
 import com.zheleznyakov.lingvo.basic.Article;
+import com.zheleznyakov.lingvo.language.en.EnWord;
 
 public class EnArticle extends EnWord implements Article {
     private static final String THE = "the";
