@@ -77,4 +77,20 @@ class EnWordSpec extends Specification {
         "from"   | "frɒm"        | { EnPreposition.builder(it) }
     }
 
+    def "Throw when creating a word with illegal symbols"() {
+        when: "an creating a word with illegal symbol"
+        EnNoun.build("abc" + illegalSymbol)
+
+        then: "an Illegal Argument Exception is thrown"
+        IllegalArgumentException exception = thrown()
+        exception.getMessage().contains "illegal symbol"
+
+        where: "the words are"
+        illegalSymbol | _
+        "ж"           | _
+        "1"           | _
+        "!"           | _
+        "/"           | _
+    }
+
 }

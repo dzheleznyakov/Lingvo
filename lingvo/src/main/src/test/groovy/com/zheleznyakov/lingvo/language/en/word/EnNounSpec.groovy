@@ -16,26 +16,27 @@ class EnNounSpec extends Specification {
 
         then: "all its basic properties are correct"
         with(noun) {
-            regular == reg
             properNoun == proper
             forms == expectedForms
             formsFull == expectedFormsFull
         }
 
         where: "the test parameters are"
-        word       || reg  | proper | expectedForms                                           | expectedFormsFull
-        "house"    || true | false  | ["house", "houses", "house's", "houses'"]               | ["house", "houses", "house's", "houses'"]
-        "box"      || true | false  | ["box", "boxes", "box's", "boxes'"]                     | ["box", "boxes", "box's", "boxes'"]
-        "sandwich" || true | false  | ["sandwich", "sandwiches", "sandwich's", "sandwiches'"] | ["sandwich", "sandwiches", "sandwich's", "sandwiches'"]
-        "parish"   || true | false  | ["parish", "parishes", "parish's", "parishes'"]         | ["parish", "parishes", "parish's", "parishes'"]
-        "miss"     || true | false  | ["miss", "misses", "miss'", "misses'"]                  | ["miss", "misses", "miss'", "misses'"]
-        "city"     || true | false  | ["city", "cities", "city's", "cities'"]                 | ["city", "cities", "city's", "cities'"]
-        "boy"      || true | false  | ["boy", "boys", "boy's", "boys'"]                       | ["boy", "boys", "boy's", "boys'"]
-        "thief"    || true | false  | ["thief", "thieves", "thief's", "thieves'"]             | ["thief", "thieves", "thief's", "thieves'"]
-        "wife"     || true | false  | ["wife", "wives", "wife's", "wives'"]                   | ["wife", "wives", "wife's", "wives'"]
-        "cliff"    || true | false  | ["cliff", "cliffs", "cliff's", "cliffs'"]               | ["cliff", "cliffs", "cliff's", "cliffs'"]
-        "John"     || true | true   | ["John", "John's"]                                      | ["John", "John's"]
-        "Thomas"   || true | true   | ["Thomas", "Thomas's"]                                  | ["Thomas", "Thomas's/Thomas'"]
+        word       | proper || expectedForms                                           | expectedFormsDiff
+        "house"    | false  || ["house", "houses", "house's", "houses'"]               | null
+        "box"      | false  || ["box", "boxes", "box's", "boxes'"]                     | null
+        "sandwich" | false  || ["sandwich", "sandwiches", "sandwich's", "sandwiches'"] | null
+        "parish"   | false  || ["parish", "parishes", "parish's", "parishes'"]         | null
+        "miss"     | false  || ["miss", "misses", "miss'", "misses'"]                  | null
+        "city"     | false  || ["city", "cities", "city's", "cities'"]                 | null
+        "boy"      | false  || ["boy", "boys", "boy's", "boys'"]                       | null
+        "thief"    | false  || ["thief", "thieves", "thief's", "thieves'"]             | null
+        "wife"     | false  || ["wife", "wives", "wife's", "wives'"]                   | null
+        "cliff"    | false  || ["cliff", "cliffs", "cliff's", "cliffs'"]               | null
+        "John"     | true   || ["John", "John's"]                                      | null
+        "Thomas"   | true   || ["Thomas", "Thomas's"]                                  | ["Thomas", "Thomas's/Thomas'"]
+
+        expectedFormsFull = expectedFormsDiff ?: expectedForms
     }
 
     @Unroll
@@ -52,8 +53,8 @@ class EnNounSpec extends Specification {
         }
 
         where: "the test parameters are"
-        nounSingle | nounPlural || expectedForms                           | expectedFormsFull
-        "man"      | "men"      || ["man", "men", "man's", "men's"]        | ["man", "men", "man's", "men's"]
+        nounSingle | nounPlural || expectedForms                             | expectedFormsFull
+        "man"      | "men"      || ["man", "men", "man's", "men's"]          | ["man", "men", "man's", "men's"]
         "hero"     | "heroes"     || ["hero", "heroes", "hero's", "heroes'"] | ["hero", "heroes", "hero's", "heroes'"]
     }
 
