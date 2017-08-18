@@ -9,6 +9,7 @@ public class EnVerbPhrase extends EnVerb {
 
     EnVerbPhrase(@NotNull Builder verbPartBuilder, String phrasePart) {
         super(verbPartBuilder);
+        verifyChars(phrasePart);
         this.phrasePart = phrasePart;
     }
 

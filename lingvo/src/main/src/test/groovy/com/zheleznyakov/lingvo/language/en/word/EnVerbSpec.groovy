@@ -92,4 +92,15 @@ class EnVerbSpec extends Specification {
         PAST_PARTICIPLE        | "had"
     }
 
+    def "Throw when creating a verb phrase with illegal symbol in phrase part"() {
+        when: "an English verb phrase with illegal symbol in phrase part"
+        EnVerb.builder("abc").
+                withPhrasePart("a!").
+                build()
+
+        then: "an Illegal Argument Exception is thrown"
+        IllegalArgumentException exception = thrown()
+        exception.getMessage().contains "illegal symbol"
+    }
+
 }

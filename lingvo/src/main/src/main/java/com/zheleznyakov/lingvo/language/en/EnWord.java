@@ -24,7 +24,7 @@ public abstract class EnWord implements Word {
         transcription = builder.transcription;
     }
 
-    private void verifyChars(String form) {
+    protected void verifyChars(String form) {
         if (!form.matches("[a-zA-Z'\\-]*")) {
             throw new IllegalArgumentException("Word " + form + " contains illegal symbols for English");
         }
