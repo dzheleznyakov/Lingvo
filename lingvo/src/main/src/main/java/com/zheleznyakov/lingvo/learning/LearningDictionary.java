@@ -45,6 +45,10 @@ public class LearningDictionary extends Dictionary {
             return countInCategory.computeIfAbsent(category, c -> 0);
         }
 
+        private boolean isPreviousAnswerCorrect(WordCategory category) {
+            return previousCorrectAnswerInCategory.computeIfAbsent(category, c -> true);
+        }
+
         private void registerCorrectAnswer(WordCategory category) {
             int count = getCount(category);
             countInCategory.put(category, ++count);
@@ -53,10 +57,10 @@ public class LearningDictionary extends Dictionary {
 
         private void registerIncorrectAnswer(WordCategory category) {
             int count = getCount(category);
-            if (previousCorrectAnswerInCategory.get(category))
+            if (isPreviousAnswerCorrect(category))
                 previousCorrectAnswerInCategory.put(category, false);
             else
-                countInCategory.put(category, --count);
+                countInCategory.put(category, Math.max(--count, 0));
         }
     }
 

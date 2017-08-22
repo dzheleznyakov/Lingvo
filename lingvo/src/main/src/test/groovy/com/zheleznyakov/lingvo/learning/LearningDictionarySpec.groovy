@@ -49,6 +49,7 @@ class LearningDictionarySpec extends Specification {
         5                 | 1              | 5                 || 10
         5                 | 2              | 5                 || 9
         5                 | 3              | 5                 || 8
+        0                 | 10             | 0                 || 0
     }
 
     def exerciseWord(int numberOfAttempts, boolean successfully) {
