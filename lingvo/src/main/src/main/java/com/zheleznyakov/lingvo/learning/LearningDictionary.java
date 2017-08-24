@@ -9,6 +9,7 @@ import com.zheleznyakov.lingvo.language.Language;
 
 public class LearningDictionary extends Dictionary {
 
+    private int maxLearningCount = 30;
     private Map<Word, Statistics> wordsToStatistics = new HashMap<>();
 
     public LearningDictionary(Language language) {
@@ -26,41 +27,38 @@ public class LearningDictionary extends Dictionary {
     }
 
 //    public void setMaxLearningCount(int maxLearningCount) {
+//        this.maxLearningCount = maxLearningCount;
 //    }
 
-    public void exercise(Word word, MeaningCategory category, String meaning) {
+    public void registerAttempt(Word word, boolean successful) {
         Statistics statistics = wordsToStatistics.get(word);
-        String correctMeaning = getMeaning(word);
-        if (correctMeaning.equals(meaning))
-            statistics.registerCorrectAnswer(category);
+        if (successful)
+            statistics.registerSuccessfulAttempt();
         else
-            statistics.registerIncorrectAnswer(category);
+            statistics.registerUnsuccessfulAttempt();
     }
 
+//    public boolean isLearned(Word word, Exercise category) {
+//        return wordsToStatistics.get(word).getCount(category) == maxLearningCount;
+//    }
+
     public static class Statistics {
-        private Map<WordCategory, Integer> countInCategory = new HashMap<>();
-        private Map<WordCategory, Boolean> previousCorrectAnswerInCategory = new HashMap<>();
+        private int count = 0;
+        boolean previousAnswerWasCorrect = true;
 
-        public int getCount(WordCategory category) {
-            return countInCategory.computeIfAbsent(category, c -> 0);
+        public int getCount() {
+            return count;
         }
 
-        private boolean isPreviousAnswerCorrect(WordCategory category) {
-            return previousCorrectAnswerInCategory.computeIfAbsent(category, c -> true);
+        private void registerSuccessfulAttempt() {
+            count++;
         }
 
-        private void registerCorrectAnswer(WordCategory category) {
-            int count = getCount(category);
-            countInCategory.put(category, ++count);
-            previousCorrectAnswerInCategory.put(category, true);
-        }
-
-        private void registerIncorrectAnswer(WordCategory category) {
-            int count = getCount(category);
-            if (isPreviousAnswerCorrect(category))
-                previousCorrectAnswerInCategory.put(category, false);
+        private void registerUnsuccessfulAttempt() {
+            if (previousAnswerWasCorrect)
+                previousAnswerWasCorrect = false;
             else
-                countInCategory.put(category, Math.max(--count, 0));
+                count = Math.max(0, --count);
         }
     }
 

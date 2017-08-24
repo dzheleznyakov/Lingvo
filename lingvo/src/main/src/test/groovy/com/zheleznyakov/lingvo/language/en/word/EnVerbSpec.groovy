@@ -22,30 +22,30 @@ class EnVerbSpec extends Specification {
         }
 
         where: "the test parameters are"
-        word     | phrasePart || expectedForms
-        "test"   | null       || ["test", "tests", "testing", "tested"]
-        "miss"   | null       || ["miss", "misses", "missing", "missed"]
-        "wish"   | null       || ["wish", "wishes", "wishing", "wished"]
-        "match"  | null       || ["match", "matches", "matching", "matched"]
-        "fix"    | null       || ["fix", "fixes", "fixing", "fixed"]
-        "move"   | null       || ["move", "moves", "moving", "moved"]
-        "apply"  | null       || ["apply", "applies", "applying", "applied"]
-        "employ" | null       || ["employ", "employs", "employing", "employed"]
-        "log"    | null       || ["log", "logs", "logging", "logged"]
-        "refer"  | null       || ["refer", "refers", "referring", "referred"]
-        "pull"   | "off"      || ["pull off", "pulls off", "pulling off", "pulled off"]
+        word     | phrasePart | root | builder                || expectedForms
+        "test"   | null       | null | EN_VERB_BUILDER        || ["test", "tests", "testing", "tested"]
+        "miss"   | null       | null | EN_VERB_BUILDER        || ["miss", "misses", "missing", "missed"]
+        "wish"   | null       | null | EN_VERB_BUILDER        || ["wish", "wishes", "wishing", "wished"]
+        "match"  | null       | null | EN_VERB_BUILDER        || ["match", "matches", "matching", "matched"]
+        "fix"    | null       | null | EN_VERB_BUILDER        || ["fix", "fixes", "fixing", "fixed"]
+        "move"   | null       | null | EN_VERB_BUILDER        || ["move", "moves", "moving", "moved"]
+        "apply"  | null       | null | EN_VERB_BUILDER        || ["apply", "applies", "applying", "applied"]
+        "employ" | null       | null | EN_VERB_BUILDER        || ["employ", "employs", "employing", "employed"]
+        "log"    | null       | null | EN_VERB_BUILDER        || ["log", "logs", "logging", "logged"]
+        "refer"  | null       | null | EN_VERB_BUILDER        || ["refer", "refers", "referring", "referred"]
+        "pull"   | "off"      | null | EN_VERB_PHRASE_BUILDER || ["pull off", "pulls off", "pulling off", "pulled off"]
     }
 
     def "Test forms of irregular English verbs -- to be"() {
         when: "English verb 'to be' is created"
         EnVerb be = EnVerb.builder("be").
-                irregularForm(GERUND, "being").
-                irregularForm(PRESENT_FIRST_SINGULAR, "am").
-                irregularForm(PRESENT_THIRD_SINGULAR, "is").
-                irregularForm(PRESENT_PLURAL, "are").
-                irregularForm(PAST_SINGLE, "was").
-                irregularForm(PAST_PLURAL, "were").
-                irregularForm(PAST_PARTICIPLE, "been").
+                withIrregularForm(GERUND, "being").
+                withIrregularForm(PRESENT_FIRST_SINGULAR, "am").
+                withIrregularForm(PRESENT_THIRD_SINGULAR, "is").
+                withIrregularForm(PRESENT_PLURAL, "are").
+                withIrregularForm(PAST_SINGLE, "was").
+                withIrregularForm(PAST_PLURAL, "were").
+                withIrregularForm(PAST_PARTICIPLE, "been").
                 build()
 
         then:
@@ -73,8 +73,8 @@ class EnVerbSpec extends Specification {
     def "Get one form of English verbs at a time -- #formName"() {
         when: "an English verb is created"
         EnVerb have = EnVerb.builder("have").
-                irregularForm(PRESENT_THIRD_SINGULAR, "has").
-                irregularForm(PAST_SINGLE, "had").
+                withIrregularForm(PRESENT_THIRD_SINGULAR, "has").
+                withIrregularForm(PAST_SINGLE, "had").
                 build()
 
         then: "its form is correct"

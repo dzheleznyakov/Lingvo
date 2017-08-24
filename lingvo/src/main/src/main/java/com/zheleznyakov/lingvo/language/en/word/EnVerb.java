@@ -63,21 +63,21 @@ public class EnVerb extends EnWord implements Verb, MultiFormWord {
             super(mainForm);
         }
 
-        public Builder irregularForm(EnVerbFormName verbEnVerbFormName, String form) {
+        public Builder withIrregularForm(EnVerbFormName verbEnVerbFormName, String form) {
             if (irregularForms == null)
                 irregularForms = new HashMap<>();
             irregularForms.put(verbEnVerbFormName, form);
             return this;
         }
 
-        public EnVerb alternativeForm(String alternativeForm) {
-            this.alternativeForm = alternativeForm;
-            return build();
-        }
-
         public Builder withPhrasePart(String phrasePart) {
             this.phrasePart = phrasePart;
             return this;
+        }
+
+        public EnVerb alternativeForm(String alternativeForm) {
+            this.alternativeForm = alternativeForm;
+            return build();
         }
 
         @Override
