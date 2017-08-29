@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo
 
 import com.zheleznyakov.lingvo.basic.util.WordFormatter
 import com.zheleznyakov.lingvo.language.en.word.EnSpellingHelper
+import com.zheleznyakov.lingvo.util.Precondition
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -21,5 +22,6 @@ class IllegalAccessToStaticClassesSpec extends Specification {
         clazz                  | _
         EnSpellingHelper.class | _
         WordFormatter.class    | _
+        Precondition.class     | _
     }
 }
