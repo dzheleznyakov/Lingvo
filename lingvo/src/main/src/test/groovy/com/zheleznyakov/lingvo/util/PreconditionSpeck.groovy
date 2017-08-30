@@ -4,7 +4,6 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 class PreconditionSpeck extends Specification {
-    private static final EMPTY_ARRAY = [].toArray()
 
     def "When expression is true, then validateArgument passes"() {
         expect: "validation to pass"
@@ -39,6 +38,6 @@ class PreconditionSpeck extends Specification {
         "{}=true"                   | [true].toArray()         || "true=true"
         "one {}, two {}"            | [1, 2].toArray()         || "one 1, two 2"
         "Too many arguments: {}"    | ["one", "two"].toArray() || "Too many arguments: one"
-        "Too few arguments: {}, {}" | [1d].toArray()            || "Too few arguments: 1.0, "
+        "Too few arguments: {}, {}" | [1d].toArray()           || "Too few arguments: 1.0, "
     }
 }
