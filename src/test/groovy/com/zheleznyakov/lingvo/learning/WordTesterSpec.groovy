@@ -88,7 +88,7 @@ class WordTesterSpec extends Specification {
 
     def "When switching the tester mode in the middle of testing, throw"() {
         given: "a dictionary with several words"
-        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
+        addWordsToDictionaryAndReturnEntries(10)
 
         when: "starting the tester two times"
         tester.start()
