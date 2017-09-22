@@ -23,8 +23,7 @@ class WordTesterSpec extends Specification {
 
     def "When starting to test a dictionary, the words are shuffled"() {
         given: "a dictionary with several words"
-        Map<Word, String> wordsToMeanings = generateDictionaryEntries(20)
-        wordsToMeanings.each { dictionary.add(it.key, it.value) }
+        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(20)
 
         and: "word order on the first run"
         List<Word> wordsInOrder1 = getTestedWordsInOrderTheyRan()
@@ -39,8 +38,7 @@ class WordTesterSpec extends Specification {
     @Unroll
     def "Test dictionary in #mode mode #numberOfTests time(s)"() {
         given: "a dictionary with several words"
-        Map<Word, String> wordsToMeanings = generateDictionaryEntries(10)
-        wordsToMeanings.each { entry -> dictionary.add(entry.key, entry.value) }
+        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
 
         and: "a testing mode is set"
         tester.mode = mode
@@ -67,8 +65,7 @@ class WordTesterSpec extends Specification {
     @Unroll
     def "Test learning word pattern -- +#successfulStreak -#failingStreak"() {
         given: "a dictionary with several words"
-        Map<Word, String> wordsToMeanings = generateDictionaryEntries(10)
-        wordsToMeanings.each { entry -> dictionary.add(entry.key, entry.value) }
+        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
 
         when: "the dictionary is tested according to pattern"
         for (int i = 0; i < successfulStreak; i++)
@@ -89,6 +86,26 @@ class WordTesterSpec extends Specification {
         0                | 10            || 0
     }
 
+    def "When switching the tester mode in the middle of testing, throw"() {
+        given: "a dictionary with several words"
+        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
+
+        when: "starting the tester two times"
+        tester.start()
+        tester.start()
+
+        then: "a IllegalStateException is thrown"
+        thrown(IllegalStateException)
+    }
+
+    private addWordsToDictionaryAndReturnEntries(int number) {
+        Map<Word, String> entries = new HashMap<>()
+        for (int i = 0; i < 10; i++)
+            entries.put(getWord(i), getMeaning(i))
+        entries.each { entry -> dictionary.add(entry.key, entry.value) }
+        return entries
+    }
+
     private getTestedWordsInOrderTheyRan() {
         List<Word> wordsInOrder = []
         tester.start()
@@ -97,12 +114,6 @@ class WordTesterSpec extends Specification {
         return wordsInOrder
     }
 
-    private Map<Word, String> generateDictionaryEntries(int number) {
-        Map<Word, String> entries = new HashMap<>()
-        for (int i = 0; i < number; i++)
-            entries.put(getWord(i), getMeaning(i))
-        return entries
-    }
 
     private getWord(int i) {
         EnNoun.build("word" + getChar(i))

@@ -38,9 +38,9 @@ public class Util {
             argumentCount++;
         }
 
-        String lastPartToAppend = messagePattern.substring(nextAppendIndex);
+        String tail = messagePattern.substring(nextAppendIndex);
         return formattedMessage
-                .append(lastPartToAppend)
+                .append(tail)
                 .toString();
     }
 

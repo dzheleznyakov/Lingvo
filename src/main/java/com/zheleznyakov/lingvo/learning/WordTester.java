@@ -23,7 +23,7 @@ public class WordTester {
     }
 
     public void start() {
-        Util.validateState(wordIterator == null || !wordIterator.hasNext(), "Exerciser is already initialised");
+        Util.validateState(wordIterator == null || !wordIterator.hasNext(), "Tester has already been started");
         List<Word> words  = new ArrayList<>(dictionary.getWords());
         Collections.shuffle(words);
         this.wordIterator = words.iterator();
