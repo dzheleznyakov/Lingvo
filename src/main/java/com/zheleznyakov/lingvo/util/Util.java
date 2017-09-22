@@ -1,14 +1,19 @@
 package com.zheleznyakov.lingvo.util;
 
-public class Precondition {
+public class Util {
 
-    private Precondition() throws IllegalAccessException {
+    private Util() throws IllegalAccessException {
         throw new IllegalAccessException("This class is a static helper; it is not supposed to be instantiated");
     }
 
     public static void validateArgument(boolean expression, String messagePattern, Object... arguments) {
         if (!expression)
             throw new IllegalArgumentException(format(messagePattern, arguments));
+    }
+
+    public static void validateState(boolean expression, String messagePattern, Object... arguments) {
+        if (!expression)
+            throw new IllegalStateException(format(messagePattern, arguments));
     }
 
     public static String format(String messagePattern, Object... arguments) {

@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo.language.en;
 
 import java.util.Set;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.language.Language;
@@ -70,5 +71,12 @@ public abstract class EnWord implements Word {
         }
 
         public abstract T build();
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("mainForm", mainForm)
+                .toString();
     }
 }

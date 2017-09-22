@@ -93,4 +93,13 @@ class EnWordSpec extends Specification {
         "/"           | _
     }
 
+    def "toString method includes main form of the word"() {
+        given: "an English word"
+        String mainForm = "word"
+        EnWord word = EnNoun.build(mainForm)
+
+        expect: "toString contains the main form"
+        word.toString().contains mainForm
+    }
+
 }

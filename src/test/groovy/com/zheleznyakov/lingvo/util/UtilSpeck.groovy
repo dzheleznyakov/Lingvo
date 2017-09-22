@@ -3,27 +3,42 @@ package com.zheleznyakov.lingvo.util
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class PreconditionSpeck extends Specification {
+class UtilSpeck extends Specification {
 
     def "When expression is true, then validateArgument passes"() {
         expect: "validation to pass"
-        Precondition.validateArgument(true, "Doesn't matter")
+        Util.validateArgument(true, "Doesn't matter")
     }
 
     def "When expression is false, then validateArgument throws"() {
         when: "validating a false argument"
         String message = "Message"
-        Precondition.validateArgument(false, message)
+        Util.validateArgument(false, message)
 
         then: "an IllegalArgumentException is thrown"
         IllegalArgumentException e = thrown()
         e.message == message
     }
 
+    def "When expression is true, then validateState passes"() {
+        expect: "validation to pass"
+        Util.validateState(true, "Doesn't matter")
+    }
+
+    def "When expression is false, then validatateState throws"() {
+        when: "validating a false argument"
+        String message = "Message"
+        Util.validateState(false, message)
+
+        then: "an IllegalStateException is thrown"
+        def e = thrown(IllegalStateException)
+        e.message == message
+    }
+
     @Unroll
     def "Test message formatting with pattern \"#pattern\""() {
         when: "formatting message pattern"
-        String message = Precondition.format(pattern, arguments)
+        String message = Util.format(pattern, arguments)
 
         then: "the message is correctly formatted"
         message == expectedMessage

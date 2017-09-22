@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.learning;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,13 +23,13 @@ public class LearningDictionary extends Dictionary {
         wordsToStatistics.put(word, new Statistics());
     }
 
-    public Statistics getStatistics(Word word) {
-        return wordsToStatistics.get(word);
+    public int getCount(Word word) {
+        return wordsToStatistics.get(word).getCount();
     }
 
-//    public void setMaxLearningCount(int maxLearningCount) {
-//        this.maxLearningCount = maxLearningCount;
-//    }
+    public void setMaxLearningCount(int maxLearningCount) {
+        this.maxLearningCount = maxLearningCount;
+    }
 
     public void registerAttempt(Word word, boolean successful) {
         Statistics statistics = wordsToStatistics.get(word);
@@ -38,9 +39,13 @@ public class LearningDictionary extends Dictionary {
             statistics.registerUnsuccessfulAttempt();
     }
 
-//    public boolean isLearned(Word word, Exercise category) {
-//        return wordsToStatistics.get(word).getCount(category) == maxLearningCount;
-//    }
+    public boolean isLearned(Word word) {
+        return wordsToStatistics.get(word).getCount() == maxLearningCount;
+    }
+
+    public Collection<Word> getWords() {
+        return wordsToStatistics.keySet();
+    }
 
     public static class Statistics {
         private int count = 0;
