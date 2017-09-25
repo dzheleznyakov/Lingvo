@@ -3,11 +3,13 @@ package com.zheleznyakov.lingvo.learning
 import com.zheleznyakov.lingvo.basic.Word
 import com.zheleznyakov.lingvo.language.Language
 import com.zheleznyakov.lingvo.language.en.word.EnNoun
+import com.zheleznyakov.lingvo.language.en.word.EnVerb
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import static com.zheleznyakov.lingvo.learning.WordTester.Mode.BACKWARD
 import static com.zheleznyakov.lingvo.learning.WordTester.Mode.FORWARD
+import static com.zheleznyakov.lingvo.learning.WordTester.Mode.TOGGLE
 
 class WordTesterSpec extends Specification {
     static final int maxLearningCount = 10
@@ -50,7 +52,7 @@ class WordTesterSpec extends Specification {
         for (int i = 0; i < numberOfTests; i++)
             testWordsInDictionary(wordsToMeanings, mode, true)
 
-        then: "all words have learning count 1"
+        then: "all words have correct statistics in the dictionary"
         assertWordsCount(wordsToMeanings.keySet(), numberOfTests)
         checkWordsLearned(wordsToMeanings.keySet()) == allWordsLearned
 
@@ -98,10 +100,44 @@ class WordTesterSpec extends Specification {
         thrown(IllegalStateException)
     }
 
+    def "When testing a dictionary, only non-learned words are shown"() {
+        given: "a dictionary with several words"
+        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
+
+        and: "all words are tested correctly"
+        for (int i = 0; i < maxLearningCount; i++)
+            testWordsInDictionary(wordsToMeanings, tester.mode, true)
+
+        and: "a new word is added to the dictionary"
+        EnVerb newWord = EnVerb.build("test")
+        dictionary.add(newWord, "test");
+
+        when: "starting the tester again"
+        tester.start()
+
+        then: "the next word is NO_WORD"
+        newWord == tester.nextWord
+        null == tester.nextWord
+    }
+
+    def "Test a dictionary in a TOGGLE mode"() {
+        given: "a dictionary with several words"
+        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
+
+        and: "a tester in TOGGLE mode"
+        tester.mode = TOGGLE
+
+        when: "all words are tested correctly"
+        testWordsInDictionary(wordsToMeanings, TOGGLE, true)
+
+        then: "all the words have learning count equal to 1"
+        assertWordsCount(wordsToMeanings.keySet(), 1)
+    }
+
     private addWordsToDictionaryAndReturnEntries(int number) {
-        Map<Word, String> entries = new HashMap<>()
+        Map<Word, String> entries = [:]
         for (int i = 0; i < 10; i++)
-            entries.put(getWord(i), getMeaning(i))
+            entries[getWord(i)] = getMeaning(i)
         entries.each { entry -> dictionary.add(entry.key, entry.value) }
         return entries
     }
@@ -134,18 +170,25 @@ class WordTesterSpec extends Specification {
 
     private testWordsInDictionary(Map<Word, String> wordsToMeanings, WordTester.Mode mode, boolean correctly) {
         tester.start()
-        while (tester.hasNext())
-            tester.test getAnswer(wordsToMeanings, mode) + (correctly ? "" : "a")
+        WordTester.Mode modeForNextWord = mode == TOGGLE ? FORWARD : mode
+        while (tester.hasNext()) {
+            tester.test getAnswer(wordsToMeanings, modeForNextWord) + (correctly ? "" : "a")
+            modeForNextWord = mode == TOGGLE ? toggleMode(modeForNextWord) : mode
+        }
     }
 
-    private String getAnswer(Map<Word, String> wordStringMap, WordTester.Mode mode) {
+    private String getAnswer(wordStringMap, mode) {
         if (mode == FORWARD)
             return wordStringMap[tester.nextWord]
         else if (mode == BACKWARD)
             return tester.nextWord.mainForm
     }
 
-    private assertWordsCount(Collection<Word> words, count) {
+    private toggleMode(WordTester.Mode mode) {
+        mode == FORWARD ? BACKWARD : FORWARD
+    }
+
+    private assertWordsCount(words, count) {
         words.each { assert dictionary.getCount(it) == count }
     }
     private boolean checkWordsLearned(Collection<Word> words) {

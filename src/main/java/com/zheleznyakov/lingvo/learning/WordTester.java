@@ -11,11 +11,16 @@ import com.zheleznyakov.lingvo.util.Util;
 public class WordTester {
     private final LearningDictionary dictionary;
     private Mode mode = Mode.FORWARD;
+    private Mode nextCheckMode;
     private Iterator<Word> wordIterator;
     private Word exercisedWord;
 
     public WordTester(LearningDictionary dictionary) {
         this.dictionary = dictionary;
+    }
+
+    public Mode getMode() {
+        return mode;
     }
 
     public void setMode(Mode mode) {
@@ -27,6 +32,7 @@ public class WordTester {
         List<Word> words  = new ArrayList<>(dictionary.getWords());
         Collections.shuffle(words);
         this.wordIterator = words.iterator();
+        nextCheckMode = mode == Mode.TOGGLE ? Mode.FORWARD : mode;
     }
 
     public boolean hasNext() {
@@ -34,26 +40,34 @@ public class WordTester {
     }
 
     public Word getNextWord() {
+        if (!wordIterator.hasNext())
+            return null;
         exercisedWord = wordIterator.next();
-        return exercisedWord;
+        return dictionary.isLearned(exercisedWord) ? getNextWord() : exercisedWord;
     }
 
     public void test(String answer) {
         boolean answerIsCorrect = checkAnswer(answer);
         dictionary.registerAttempt(exercisedWord, answerIsCorrect);
+        if (mode == Mode.TOGGLE)
+            toggleNextCheckMode();
     }
 
     private boolean checkAnswer(String answer) {
-        if (mode == Mode.FORWARD)
+        if (nextCheckMode == Mode.FORWARD)
             return dictionary.getMeaning(exercisedWord).equals(answer);
         else
             return exercisedWord.getMainForm().equals(answer);
     }
 
+    private void toggleNextCheckMode() {
+        nextCheckMode = nextCheckMode == Mode.FORWARD ? Mode.BACKWARD : Mode.FORWARD;
+    }
+
     public enum Mode {
         FORWARD,
         BACKWARD,
-//        TOGGLE;
+        TOGGLE
     }
 
 }

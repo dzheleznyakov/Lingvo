@@ -55,4 +55,37 @@ class UtilSpeck extends Specification {
         "Too many arguments: {}"    | ["one", "two"].toArray() || "Too many arguments: one"
         "Too few arguments: {}, {}" | [1d].toArray()           || "Too few arguments: 1.0, "
     }
+
+    def "Test getRandom() returns an element from a collection"() {
+        given: "a collection"
+        Collection<Integer> objects = [1, 2, 3, 4, 5, 6].toSet()
+
+        expect: "the getRandom() method returns an element of the collection"
+        objects.contains Util.getRandom(objects)
+    }
+
+    def "When getRandom() is called on a singleton, the element is returned"() {
+        given: "a singleton collection"
+        def object = new Object()
+        Collection<Object> objects = [object]
+
+        expect: "the getRandom() returns the object"
+        object.is Util.getRandom(objects)
+    }
+
+    def "When getRandom() is called on an empty collection, null is returned"() {
+        given: "an empty collection"
+        Collection<Integer> objects = []
+
+        expect: "the getRandom() returns null"
+        null == Util.getRandom(objects)
+    }
+
+    def "When getRandom() is called on null, null is returned"() {
+        given: "an empty collection"
+        Collection<Integer> objects = null
+
+        expect: "the getRandom() returns null"
+        null == Util.getRandom(objects)
+    }
 }

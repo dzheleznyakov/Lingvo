@@ -1,5 +1,8 @@
 package com.zheleznyakov.lingvo.util;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 public class Util {
 
     private Util() throws IllegalAccessException {
@@ -42,6 +45,17 @@ public class Util {
         return formattedMessage
                 .append(tail)
                 .toString();
+    }
+
+    public static <T> T getRandom(Collection<T> objects) {
+        if (objects == null || objects.isEmpty())
+            return null;
+        int index = (int) (Math.random() * objects.size());
+        int currentIndex = 0;
+        Iterator<T> iterator = objects.iterator();
+        while (currentIndex++ < index)
+            iterator.next();
+        return iterator.next();
     }
 
 }
