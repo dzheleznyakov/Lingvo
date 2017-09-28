@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo.dictionary;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.language.Language;
+import com.zheleznyakov.lingvo.util.Util;
 
 public class Dictionary {
 
@@ -19,9 +21,13 @@ public class Dictionary {
         this.language = language;
     }
 
+    public Language getLanguage() {
+        return language;
+    }
+
     public void add(Word word, String meaning) {
-        if (language != word.getLanguage())
-            throw new IllegalArgumentException("Adding " + word.getLanguage() + " word to " + language + " dictionary");
+        Util.validateArgument(language == word.getLanguage(),
+                "Cannot add {} word to {} dictionary", word.getLanguage(), language);
         words.put(word, meaning);
     }
 
@@ -33,8 +39,12 @@ public class Dictionary {
         return words.get(word);
     }
 
+    public Map<Word, String> asMap() {
+        return new HashMap<>(words);
+    }
+
     public Set<Word> getWords(String mainForm) {
-        return getWords(word -> mainForm == word.getMainForm());
+        return getWords(word -> Objects.equals(mainForm, word.getMainForm()));
     }
 
     public Set<Word> getWords(PartOfSpeech partOfSpeech) {

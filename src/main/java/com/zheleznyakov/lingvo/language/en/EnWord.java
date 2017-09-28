@@ -1,8 +1,10 @@
 package com.zheleznyakov.lingvo.language.en;
 
 import java.util.Set;
+import java.util.UUID;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.language.Language;
@@ -18,6 +20,7 @@ public abstract class EnWord implements Word {
 
     protected final String mainForm;
     protected String transcription;
+    private final UUID uuid = UUID.randomUUID();
 
     protected EnWord(Builder builder) {
         verifyChars(builder.mainForm);
@@ -77,6 +80,20 @@ public abstract class EnWord implements Word {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("mainForm", mainForm)
+                .add("id", uuid)
                 .toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(uuid);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EnWord word = (EnWord) o;
+        return Objects.equal(uuid, word.uuid);
     }
 }

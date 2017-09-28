@@ -1,11 +1,12 @@
 package com.zheleznyakov.lingvo.basic;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
 import com.zheleznyakov.lingvo.language.Language;
 
-public interface Word {
+public interface Word extends Serializable {
 
     Map<FormName, String> EMPTY_IRREGULAR_FORMS = Collections.EMPTY_MAP;
 
