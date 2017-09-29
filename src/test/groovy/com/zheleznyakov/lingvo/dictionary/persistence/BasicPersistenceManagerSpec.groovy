@@ -27,8 +27,8 @@ class BasicPersistenceManagerSpec extends Specification {
         when: "the dictionary is persisted"
         persistenceManager.persist(dictionary, fileName)
 
-        and: "then is loaded"
-        Dictionary loadedDictionary = persistenceManager.load(fileName)
+        and: "is loaded back"
+        Dictionary loadedDictionary = persistenceManager.load(Dictionary.class, fileName)
 
         then: "the file for persistence exists"
         new File(fileName + ".dic").exists()
@@ -55,18 +55,19 @@ class BasicPersistenceManagerSpec extends Specification {
         when: "the dictionary is persisted"
         persistenceManager.persist(dictionary, fileName)
 
-        and: "then is loaded"
-        Dictionary loadedDictionary = persistenceManager.load(fileName)
+        and: "is loaded back"
+        Dictionary loadedDictionary = persistenceManager.load(LearningDictionary.class, fileName)
 
         then: "the file for persistence exists"
-        new File(fileName + ".dic").exists()
+        new File(fileName + ".ldi").exists()
 
         and: "the loaded dictionary is the same as the original one"
+        dictionary.class == loadedDictionary.class
         dictionary.language == loadedDictionary.language
         dictionary.asMap() == loadedDictionary.asMap()
 
         cleanup: "remove the save file"
-        new File(fileName + ".dic").delete()
+        new File(fileName + ".ldi").delete()
     }
 
     private static LearningDictionary getLearningDictionaryWithNonNullStatistics() {
@@ -76,6 +77,7 @@ class BasicPersistenceManagerSpec extends Specification {
         dictionary.add(word, meaning)
         WordTester tester = new WordTester(dictionary)
         tester.start()
+        tester.nextWord
         while (tester.hasNext())
             tester.test meaning
         dictionary.add(EnAdjective.build("green"), "зелёный")

@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.dictionary;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.language.Language;
 import com.zheleznyakov.lingvo.util.Util;
 
-public class Dictionary {
+public class Dictionary implements Serializable {
 
     private final Language language;
     private Map<Word, String> words = new HashMap<>();

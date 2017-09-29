@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
 
 public interface PersistenceManager {
-    Dictionary load(String fileName) throws IOException, ClassNotFoundException;
+    <T extends Dictionary> T load(Class<T> dictionaryClass, String fileName) throws IOException, ClassNotFoundException;
 
-    void persist(Dictionary dictionary, String fileName) throws IOException;
+    <T extends Dictionary> void persist(T dictionary, String fileName) throws IOException;
 }

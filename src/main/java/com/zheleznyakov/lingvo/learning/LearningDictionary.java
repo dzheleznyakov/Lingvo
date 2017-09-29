@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.learning;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class LearningDictionary extends Dictionary {
         return wordsToStatistics.keySet();
     }
 
-    public static class Statistics {
+    public static class Statistics implements Serializable {
         private int count = 0;
         boolean previousAnswerWasCorrect = true;
 
