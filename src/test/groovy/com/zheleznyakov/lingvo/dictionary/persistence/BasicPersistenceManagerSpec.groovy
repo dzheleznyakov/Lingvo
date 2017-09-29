@@ -75,11 +75,12 @@ class BasicPersistenceManagerSpec extends Specification {
         Word word = EnNoun.build("word")
         String meaning = "слово"
         dictionary.add(word, meaning)
-        WordTester tester = new WordTester(dictionary)
-        tester.start()
-        tester.nextWord
-        while (tester.hasNext())
-            tester.test meaning
+        new WordTester(dictionary).with {
+            start()
+            nextWord
+            test meaning
+        }
+        assert dictionary.getCount(word) == 1
         dictionary.add(EnAdjective.build("green"), "зелёный")
         return dictionary
     }

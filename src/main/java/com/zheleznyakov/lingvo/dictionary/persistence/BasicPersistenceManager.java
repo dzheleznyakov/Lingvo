@@ -31,13 +31,12 @@ public class BasicPersistenceManager implements PersistenceManager{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Dictionary> T load(Class<T> dictionaryClass, String fileName) throws IOException, ClassNotFoundException {
-        T dictionary;
         String extension = dictionaryClass == Dictionary.class ? DIC_EXTENSION : LD_EXTENSION;
         try (ObjectInputStream input = getInputStream(fileName + extension)) {
-            dictionary = dictionaryClass.cast(input.readObject());
+            return (T) input.readObject();
         }
-        return dictionary;
     }
 
     @NotNull

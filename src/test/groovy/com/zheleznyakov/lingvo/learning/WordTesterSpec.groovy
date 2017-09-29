@@ -7,9 +7,7 @@ import com.zheleznyakov.lingvo.language.en.word.EnVerb
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.zheleznyakov.lingvo.learning.WordTester.Mode.BACKWARD
-import static com.zheleznyakov.lingvo.learning.WordTester.Mode.FORWARD
-import static com.zheleznyakov.lingvo.learning.WordTester.Mode.TOGGLE
+import static com.zheleznyakov.lingvo.learning.WordTester.Mode.*
 
 class WordTesterSpec extends Specification {
     static final int maxLearningCount = 10
@@ -146,7 +144,7 @@ class WordTesterSpec extends Specification {
         List<Word> wordsInOrder = []
         tester.start()
         while (tester.hasNext())
-            wordsInOrder.add tester.nextWord
+            wordsInOrder << tester.nextWord
         return wordsInOrder
     }
 
@@ -165,7 +163,7 @@ class WordTesterSpec extends Specification {
     }
 
     private testWordsInDictionary(Map<Word, String> wordsToMeanings, boolean correctly) {
-        testWordsInDictionary(wordsToMeanings, WordTester.Mode.FORWARD, correctly)
+        testWordsInDictionary(wordsToMeanings, FORWARD, correctly)
     }
 
     private testWordsInDictionary(Map<Word, String> wordsToMeanings, WordTester.Mode mode, boolean correctly) {
@@ -177,10 +175,10 @@ class WordTesterSpec extends Specification {
         }
     }
 
-    private String getAnswer(wordStringMap, mode) {
+    private String getAnswer(Map<Word, String> wordStringMap, mode) {
         if (mode == FORWARD)
             return wordStringMap[tester.nextWord]
-        else if (mode == BACKWARD)
+        else (mode == BACKWARD)
             return tester.nextWord.mainForm
     }
 
@@ -191,6 +189,7 @@ class WordTesterSpec extends Specification {
     private assertWordsCount(words, count) {
         words.each { assert dictionary.getCount(it) == count }
     }
+
     private boolean checkWordsLearned(Collection<Word> words) {
         boolean result = false
         words.each { result = result || dictionary.isLearned(it) }
