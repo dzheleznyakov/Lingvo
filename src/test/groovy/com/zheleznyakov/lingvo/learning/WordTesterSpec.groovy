@@ -4,10 +4,13 @@ import com.zheleznyakov.lingvo.basic.Word
 import com.zheleznyakov.lingvo.language.Language
 import com.zheleznyakov.lingvo.language.en.word.EnNoun
 import com.zheleznyakov.lingvo.language.en.word.EnVerb
+import com.zheleznyakov.lingvo.learning.WordTester.Mode
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.zheleznyakov.lingvo.learning.WordTester.Mode.*
+import static com.zheleznyakov.lingvo.learning.WordTester.Mode.FORWARD
+import static com.zheleznyakov.lingvo.learning.WordTester.Mode.BACKWARD
+import static com.zheleznyakov.lingvo.learning.WordTester.Mode.TOGGLE
 
 class WordTesterSpec extends Specification {
     static final int maxLearningCount = 10
@@ -48,11 +51,11 @@ class WordTesterSpec extends Specification {
 
         when: "all words are tested correctly"
         for (int i = 0; i < numberOfTests; i++)
-            testWordsInDictionary(wordsToMeanings, mode, true)
+            testWordsInDictionary(wordsToMeanings, mode, true, true)
 
         then: "all words have correct statistics in the dictionary"
         assertWordsCount(wordsToMeanings.keySet(), numberOfTests)
-        checkWordsLearned(wordsToMeanings.keySet()) == allWordsLearned
+        areAllWordsLearned(wordsToMeanings.keySet()) == allWordsLearned
 
         where: "parameters are"
         mode     | numberOfTests    || allWordsLearned
@@ -86,7 +89,7 @@ class WordTesterSpec extends Specification {
         0                | 10            || 0
     }
 
-    def "When switching the tester mode in the middle of testing, throw"() {
+    def "When starting a tester second time, throw"() {
         given: "a dictionary with several words"
         addWordsToDictionaryAndReturnEntries(10)
 
@@ -104,7 +107,7 @@ class WordTesterSpec extends Specification {
 
         and: "all words are tested correctly"
         for (int i = 0; i < maxLearningCount; i++)
-            testWordsInDictionary(wordsToMeanings, tester.mode, true)
+            testWordsInDictionary(wordsToMeanings, tester.mode, true, true)
 
         and: "a new word is added to the dictionary"
         EnVerb newWord = EnVerb.build("test")
@@ -126,10 +129,55 @@ class WordTesterSpec extends Specification {
         tester.mode = TOGGLE
 
         when: "all words are tested correctly"
-        testWordsInDictionary(wordsToMeanings, TOGGLE, true)
+        testWordsInDictionary(wordsToMeanings, TOGGLE, true, true)
 
         then: "all the words have learning count equal to 1"
         assertWordsCount(wordsToMeanings.keySet(), 1)
+    }
+
+    @Unroll
+    def "Test a dictionary in non-strict regime in #mode mode"() {
+        given: "a dictionary in a non-strict regime"
+        Map<Word, String> wordsToMeaning = addWordsToDictionaryAndReturnEntries(10)
+        tester.setMode(mode)
+        tester.setStrict(false)
+
+        when: "all words are tested with partial answers"
+        testWordsInDictionary(wordsToMeaning, mode, true, false)
+
+        then: "all the words have learning count equal to 1"
+        assertWordsCount(wordsToMeaning.keySet(), 1)
+
+        where: "the modes are"
+        mode     | _
+        FORWARD  | _
+        BACKWARD | _
+    }
+
+    def "When switching regime of a started tester, throw"() {
+        given: "a started tester in strict regime"
+        addWordsToDictionaryAndReturnEntries(1)
+        tester.strict = true
+        tester.start()
+
+        when: "trying to change the regime"
+        tester.strict = false
+
+        then: "an IllegalStateException is thrown"
+        thrown(IllegalStateException)
+    }
+
+    def "When switching mode of a started tester, throw"() {
+        given: "a started tester in strict regime"
+        addWordsToDictionaryAndReturnEntries(1)
+        tester.mode = FORWARD
+        tester.start()
+
+        when: "trying to change the regime"
+        tester.mode = BACKWARD
+
+        then: "an IllegalStateException is thrown"
+        thrown(IllegalStateException)
     }
 
     private addWordsToDictionaryAndReturnEntries(int number) {
@@ -163,26 +211,30 @@ class WordTesterSpec extends Specification {
     }
 
     private testWordsInDictionary(Map<Word, String> wordsToMeanings, boolean correctly) {
-        testWordsInDictionary(wordsToMeanings, FORWARD, correctly)
+        testWordsInDictionary(wordsToMeanings, FORWARD, correctly, true)
     }
 
-    private testWordsInDictionary(Map<Word, String> wordsToMeanings, WordTester.Mode mode, boolean correctly) {
+    private testWordsInDictionary(Map<Word, String> wordsToMeanings, Mode mode, boolean correctly, boolean strictly) {
         tester.start()
-        WordTester.Mode modeForNextWord = mode == TOGGLE ? FORWARD : mode
+        Mode modeForNextWord = mode == TOGGLE ? FORWARD : mode
         while (tester.hasNext()) {
-            tester.test getAnswer(wordsToMeanings, modeForNextWord) + (correctly ? "" : "a")
+            tester.test getAnswer(wordsToMeanings, modeForNextWord, strictly) + (correctly ? "" : "a")
             modeForNextWord = mode == TOGGLE ? toggleMode(modeForNextWord) : mode
         }
     }
 
-    private String getAnswer(Map<Word, String> wordStringMap, mode) {
-        if (mode == FORWARD)
-            return wordStringMap[tester.nextWord]
-        else (mode == BACKWARD)
-            return tester.nextWord.mainForm
+    private String getAnswer(Map<Word, String> wordStringMap, Mode mode, boolean strictly) {
+        return mode == FORWARD ?
+                prepareAnswer(wordStringMap[tester.nextWord], strictly) :
+                prepareAnswer(tester.nextWord.mainForm, strictly)
     }
 
-    private toggleMode(WordTester.Mode mode) {
+    private String prepareAnswer(String fullAnswer, boolean strictly) {
+        def halveWord = { it.substring(0, it.length() / 2 as Integer) }
+        return strictly ? fullAnswer : halveWord.call(fullAnswer)
+    }
+
+    private toggleMode(Mode mode) {
         mode == FORWARD ? BACKWARD : FORWARD
     }
 
@@ -190,7 +242,7 @@ class WordTesterSpec extends Specification {
         words.each { assert dictionary.getCount(it) == count }
     }
 
-    private boolean checkWordsLearned(Collection<Word> words) {
+    private boolean areAllWordsLearned(Collection<Word> words) {
         boolean result = false
         words.each { result = result || dictionary.isLearned(it) }
         return result
