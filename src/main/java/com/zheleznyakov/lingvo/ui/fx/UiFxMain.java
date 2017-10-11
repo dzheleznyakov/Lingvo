@@ -3,13 +3,19 @@ package com.zheleznyakov.lingvo.ui.fx;
 import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.MIN_SPACE;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import com.zheleznyakov.lingvo.ui.fx.panes.ChooseLanguagePane;
+import com.zheleznyakov.lingvo.ui.fx.panes.LoadDictionaryPane;
 
 public class UiFxMain extends Application {
+
+    private Scene scene;
+    private ChooseLanguagePane chooseLanguagePane;
+    private Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -17,20 +23,29 @@ public class UiFxMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Pane pane = new ChooseLanguagePane();
+        chooseLanguagePane = new ChooseLanguagePane();
 
-        Scene scene = new Scene(pane, 300, 300);
+        scene = new Scene(chooseLanguagePane, 300, 300);
+        this.primaryStage = primaryStage;
         primaryStage.setTitle("ZhLingvo");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        configure(primaryStage, pane);
+        configure(chooseLanguagePane);
+
+        chooseLanguagePane.setOnChosen(this::setLoadDictionaryPane);
     }
 
-    private static void configure(Stage stage, Pane pane) {
+    private void configure(Pane pane) {
         double height = pane.getHeight() + 2 * MIN_SPACE;
         double width = pane.getWidth() + 2 * MIN_SPACE;
-        stage.setMinHeight(height);
-        stage.setMinWidth(width);
+        primaryStage.setMinHeight(height);
+        primaryStage.setMinWidth(width);
+    }
+
+    private void setLoadDictionaryPane(ActionEvent event) {
+        LoadDictionaryPane loadDictionaryPane = new LoadDictionaryPane(chooseLanguagePane.getLanguage());
+        scene.setRoot(loadDictionaryPane);
+        configure(chooseLanguagePane);
     }
 }

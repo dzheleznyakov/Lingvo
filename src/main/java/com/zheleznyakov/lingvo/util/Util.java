@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo.util;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Function;
 
 public class Util {
 
@@ -56,6 +57,24 @@ public class Util {
         while (currentIndex++ < index)
             iterator.next();
         return iterator.next();
+    }
+
+    public static double max(double... numbers) {
+        validateArgument(numbers != null && numbers.length > 0, "There are not max elements in {}", numbers);
+        double max = numbers[0];
+        for (int i = 1; i < numbers.length; i++)
+            max = max < numbers[i] ? numbers[i] : max;
+        return max;
+    }
+
+    public static <T> double max(Function<T, Double> mapperToDouble, T... elements) {
+        validateArgument(elements != null && elements.length > 0, "There are not max elements in {}", elements);
+        double max = mapperToDouble.apply(elements[0]);
+        for (int i = 0; i < elements.length; i++) {
+            double value = mapperToDouble.apply(elements[i]);
+            max = max < value ? value : max;
+        }
+        return max;
     }
 
 }

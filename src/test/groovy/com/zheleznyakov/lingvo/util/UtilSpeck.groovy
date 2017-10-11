@@ -3,6 +3,8 @@ package com.zheleznyakov.lingvo.util
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.util.function.Function
+
 class UtilSpeck extends Specification {
 
     def "When expression is true, then validateArgument passes"() {
@@ -87,5 +89,52 @@ class UtilSpeck extends Specification {
 
         expect: "the getRandom() returns null"
         null == Util.getRandom(objects)
+    }
+
+    @Unroll
+    def "When trying to find max element in array=#array, throw"(double[] array) {
+        when: "an illegal array is passed"
+        Util.max(array)
+
+        then: "IllegalArgumentException is thrown"
+        thrown(IllegalArgumentException)
+
+        where: "arrays are"
+        array | _
+        null  | _
+        []    | _
+    }
+
+    @Unroll
+    def "Max element in #array of doubles is #expectedMax"(double[] array, double expectedMax) {
+        expect: "the max element in the array to be found correctly"
+        Util.max(array) == expectedMax
+
+        where: "the parameters are"
+        array     | expectedMax
+        [1]       | 1
+        [1, 2]    | 2
+        [2, 1]    | 2
+        [1, 2, 3] | 3
+        [3, 2, 1] | 3
+        [1, 3, 2] | 3
+    }
+
+    @Unroll
+    def "Max element in #array is #expectedMax"(Integer[] array, double expectedMax) {
+        expect: "the max element in the array to be found correctly"
+        Util.max(new IntegerToDouble(), array) == expectedMax
+
+        where: "the parameters are"
+        array     | expectedMax
+        [1]       | 1
+        [2, 1, 3] | 3
+    }
+
+    private class IntegerToDouble implements Function<Integer, Double> {
+        @Override
+        Double apply(Integer integer) {
+            return integer.doubleValue();
+        }
     }
 }
