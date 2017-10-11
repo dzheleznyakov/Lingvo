@@ -65,6 +65,20 @@ class WordTesterSpec extends Specification {
         BACKWARD | maxLearningCount || true
     }
 
+    def "Test a dictionary in a TOGGLE mode"() {
+        given: "a dictionary with several words"
+        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
+
+        and: "a tester in TOGGLE mode"
+        tester.mode = TOGGLE
+
+        when: "all words are tested correctly"
+        testWordsInDictionary(wordsToMeanings, TOGGLE, true, true)
+
+        then: "all the words have learning count equal to 1"
+        assertWordsCount(wordsToMeanings.keySet(), 1)
+    }
+
     @Unroll
     def "Test learning word pattern -- +#successfulStreak -#failingStreak"() {
         given: "a dictionary with several words"
@@ -101,6 +115,19 @@ class WordTesterSpec extends Specification {
         thrown(IllegalStateException)
     }
 
+    def "When switching mode of a started tester, throw"() {
+        given: "a started tester in strict regime"
+        addWordsToDictionaryAndReturnEntries(1)
+        tester.mode = FORWARD
+        tester.start()
+
+        when: "trying to change the regime"
+        tester.mode = BACKWARD
+
+        then: "an IllegalStateException is thrown"
+        thrown(IllegalStateException)
+    }
+
     def "When testing a dictionary, only non-learned words are shown"() {
         given: "a dictionary with several words"
         Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
@@ -119,20 +146,6 @@ class WordTesterSpec extends Specification {
         then: "the next word is NO_WORD"
         newWord == tester.nextWord
         null == tester.nextWord
-    }
-
-    def "Test a dictionary in a TOGGLE mode"() {
-        given: "a dictionary with several words"
-        Map<Word, String> wordsToMeanings = addWordsToDictionaryAndReturnEntries(10)
-
-        and: "a tester in TOGGLE mode"
-        tester.mode = TOGGLE
-
-        when: "all words are tested correctly"
-        testWordsInDictionary(wordsToMeanings, TOGGLE, true, true)
-
-        then: "all the words have learning count equal to 1"
-        assertWordsCount(wordsToMeanings.keySet(), 1)
     }
 
     @Unroll
@@ -162,19 +175,6 @@ class WordTesterSpec extends Specification {
 
         when: "trying to change the regime"
         tester.strict = false
-
-        then: "an IllegalStateException is thrown"
-        thrown(IllegalStateException)
-    }
-
-    def "When switching mode of a started tester, throw"() {
-        given: "a started tester in strict regime"
-        addWordsToDictionaryAndReturnEntries(1)
-        tester.mode = FORWARD
-        tester.start()
-
-        when: "trying to change the regime"
-        tester.mode = BACKWARD
 
         then: "an IllegalStateException is thrown"
         thrown(IllegalStateException)
