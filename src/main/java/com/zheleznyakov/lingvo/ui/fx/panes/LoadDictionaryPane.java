@@ -3,8 +3,10 @@ package com.zheleznyakov.lingvo.ui.fx.panes;
 import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.INSETS;
 import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.MIN_SPACE;
 import static com.zheleznyakov.lingvo.util.Util.max;
+import static com.zheleznyakov.lingvo.util.Util.validateExpression;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +22,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import com.zheleznyakov.lingvo.dictionary.Dictionary;
+import com.zheleznyakov.lingvo.dictionary.persistence.BasicPersistenceManager;
+import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager;
 import com.zheleznyakov.lingvo.language.Language;
+import com.zheleznyakov.lingvo.util.UncheckedRunnable;
 
 public class LoadDictionaryPane extends BorderPane {
 
@@ -28,6 +34,7 @@ public class LoadDictionaryPane extends BorderPane {
 
     private final String path;
     private final File dir;
+    private final Language language;
 
     private final Label info;
     private final Button loadButton;
@@ -38,6 +45,7 @@ public class LoadDictionaryPane extends BorderPane {
     public LoadDictionaryPane(Language language)  {
         path = "src/main/resources/" + language.name().toLowerCase();
         dir = new File(path);
+        this.language = language;
         dictionaries = createDictionariesList();
         info = createInfoLabel();
         loadButton = new Button("Load");
@@ -51,16 +59,31 @@ public class LoadDictionaryPane extends BorderPane {
     @NotNull
     private Button createNewButton() {
         Button button = new Button("New");
-        button.setOnAction(this::createNewFile);
+        button.setOnAction(this::onPressingNewButton);
         return button;
     }
 
-    private void createNewFile(ActionEvent event) {
+    private void onPressingNewButton(ActionEvent event) {
         TextField textField = new TextField();
         textField.setPromptText("Enter dictionary name");
         dictionaries.getItems().add(textField);
-        textField.requestFocus();
-        textField.positionCaret(0);
+        textField.setOnAction(this::createNewDictionary);
+    }
+
+    private void createNewDictionary(ActionEvent event) {
+        String dictionaryName = ((TextField) event.getSource()).getText();
+        UncheckedRunnable<IOException> crateNewFile = () -> {
+            if (!dir.exists())
+                dir.mkdir();
+            Dictionary dictionary = new Dictionary(language);
+            PersistenceManager persistenceManager = new BasicPersistenceManager();
+            persistenceManager.persist(dictionary, dictionaryName);
+        };
+        try {
+            validateExpression(dictionaryName.matches("[0-9A-Za-z\\-_]+"), crateNewFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @NotNull
@@ -79,11 +102,11 @@ public class LoadDictionaryPane extends BorderPane {
 
     private void setFilesToDictionaryList(ListView<Node> dictionariesList, File[] files) {
         for (File file : files)
-            dictionariesList.getItems().add(getTextForfile(file.getName()));
+            dictionariesList.getItems().add(getTextForFile(file.getName()));
     }
 
     @NotNull
-    private Text getTextForfile(String fileName) {
+    private Text getTextForFile(String fileName) {
         int dotIndex = fileName.indexOf('.');
         String pureFileName = fileName.substring(0, dotIndex);
         Text textField = new Text(pureFileName);

@@ -46,16 +46,17 @@ class UtilSpeck extends Specification {
         message == expectedMessage
 
         where: "the parameters are"
-        pattern                     | arguments                || expectedMessage
-        null                        | ["a", false].toArray()   || null
-        ""                          | ["argument"].toArray()   || ""
-        "No arguments"              | [].toArray()             || "No arguments"
-        "Missing argument {}"       | [].toArray()             || "Missing argument "
-        "true={}"                   | [true].toArray()         || "true=true"
-        "{}=true"                   | [true].toArray()         || "true=true"
-        "one {}, two {}"            | [1, 2].toArray()         || "one 1, two 2"
-        "Too many arguments: {}"    | ["one", "two"].toArray() || "Too many arguments: one"
-        "Too few arguments: {}, {}" | [1d].toArray()           || "Too few arguments: 1.0, "
+        pattern                      | arguments                || expectedMessage
+        null                         | ["a", false].toArray()   || null
+        ""                           | ["argument"].toArray()   || ""
+        "No arguments"               | [].toArray()             || "No arguments"
+        "Missing argument {}"        | [].toArray()             || "Missing argument "
+        "true={}"                    | [true].toArray()         || "true=true"
+        "{}=true"                    | [true].toArray()         || "true=true"
+        "one {}, two {}"             | [1, 2].toArray()         || "one 1, two 2"
+        "Too many arguments: {}"     | ["one", "two"].toArray() || "Too many arguments: one"
+        "Too few arguments: {}, {}"  | [1d].toArray()           || "Too few arguments: 1.0, "
+        "Passed argument is null {}" | null                     || "Passed argument is null "
     }
 
     def "Test getRandom() returns an element from a collection"() {
@@ -121,6 +122,20 @@ class UtilSpeck extends Specification {
     }
 
     @Unroll
+    def "When trying to find max element in object array=#array, throw"(Integer[] array) {
+        when: "an illegal array is passed"
+        Util.max(new IntegerToDouble(), array)
+
+        then: "IllegalArgumentException is thrown"
+        thrown(IllegalArgumentException)
+
+        where: "arrays are"
+        array | _
+        null  | _
+        []    | _
+    }
+
+    @Unroll
     def "Max element in #array is #expectedMax"(Integer[] array, double expectedMax) {
         expect: "the max element in the array to be found correctly"
         Util.max(new IntegerToDouble(), array) == expectedMax
@@ -131,10 +146,37 @@ class UtilSpeck extends Specification {
         [2, 1, 3] | 3
     }
 
+    @Unroll
+    def "Validate #boolExpression expression and runnable wasRun=#wasRun"() {
+        given: "a runnable"
+        UncheckedRunnable runnable = new TestRunnable()
+
+        when: "running expression"
+        Util.validateExpression(boolExpression, runnable)
+
+        then: "the runnable was run if necessary"
+        runnable.wasRun == wasRun
+
+        where: "parameters are"
+        boolExpression      || wasRun
+        "abc".contains('b') || false
+        "abc".contains('d') || true
+
+    }
+
     private class IntegerToDouble implements Function<Integer, Double> {
         @Override
         Double apply(Integer integer) {
             return integer.doubleValue();
+        }
+    }
+
+    private class TestRunnable implements UncheckedRunnable<Exception> {
+        boolean wasRun = false;
+
+        @Override
+        void run() {
+            wasRun = true;
         }
     }
 }

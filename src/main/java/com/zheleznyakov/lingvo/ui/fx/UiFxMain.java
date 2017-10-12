@@ -25,7 +25,7 @@ public class UiFxMain extends Application {
     public void start(Stage primaryStage) {
         chooseLanguagePane = new ChooseLanguagePane();
 
-        scene = new Scene(chooseLanguagePane, 300, 300);
+        scene = new Scene(chooseLanguagePane, 350, 350);
         this.primaryStage = primaryStage;
         primaryStage.setTitle("ZhLingvo");
         primaryStage.setScene(scene);

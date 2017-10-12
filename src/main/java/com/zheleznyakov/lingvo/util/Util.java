@@ -15,6 +15,11 @@ public class Util {
             throw new IllegalArgumentException(format(messagePattern, arguments));
     }
 
+    public static <X extends Exception> void validateExpression(boolean expression, UncheckedRunnable<X> onFailure) throws X {
+        if (!expression)
+            onFailure.run();
+    }
+
     public static void validateState(boolean expression, String messagePattern, Object... arguments) {
         if (!expression)
             throw new IllegalStateException(format(messagePattern, arguments));
@@ -23,6 +28,9 @@ public class Util {
     public static String format(String messagePattern, Object... arguments) {
         if (messagePattern == null)
             return null;
+
+        if (arguments == null)
+            return format(messagePattern);
 
         String placeholder = "{}";
         StringBuilder formattedMessage = new StringBuilder();
