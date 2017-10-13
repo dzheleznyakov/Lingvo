@@ -151,7 +151,7 @@ class UtilSpeck extends Specification {
         given: "a runnable"
         UncheckedRunnable runnable = new TestRunnable()
 
-        when: "running expression"
+        when: "validating expression"
         Util.validateExpression(boolExpression, runnable)
 
         then: "the runnable was run if necessary"
@@ -161,7 +161,45 @@ class UtilSpeck extends Specification {
         boolExpression      || wasRun
         "abc".contains('b') || false
         "abc".contains('d') || true
+    }
 
+    @Unroll
+    def "Confirm #boolExpression expression and runnable wasRun=#wasRun"() {
+        given: "a runnable"
+        UncheckedRunnable runnable = new TestRunnable()
+
+        when: "confirming expression"
+        Util.confirmExpression(boolExpression, runnable)
+
+        then: "the runnable was run if necessary"
+        runnable.wasRun == wasRun
+
+        where: "parameters are"
+        boolExpression      || wasRun
+        "abc".contains('b') || true
+        "abc".contains('d') || false
+    }
+
+    def "Null string cannot be capitalised"() {
+        when: "capitalising a null string"
+        Util.capitalize(null)
+
+        then: "an IllegalArgumentException is thrown"
+        thrown(IllegalArgumentException)
+    }
+
+    @Unroll
+    def "Capitalising string \"#string\" results in \"#expected\""() {
+        expect:
+        Util.capitalize(string) == expected
+
+        where: "the parameters are"
+        string || expected
+        "abc"  || "Abc"
+        "123"  || "123"
+        ""     || ""
+        "Abc"  || "Abc"
+        "ABC"  || "ABC"
     }
 
     private class IntegerToDouble implements Function<Integer, Double> {

@@ -20,6 +20,10 @@ public class Util {
             onFailure.run();
     }
 
+    public static <X extends Exception> void confirmExpression(boolean expression, UncheckedRunnable<X> onSuccess) throws X {
+        validateExpression(!expression, onSuccess);
+    }
+
     public static void validateState(boolean expression, String messagePattern, Object... arguments) {
         if (!expression)
             throw new IllegalStateException(format(messagePattern, arguments));
@@ -83,6 +87,14 @@ public class Util {
             max = max < value ? value : max;
         }
         return max;
+    }
+
+    public static String capitalize(String word) {
+        validateArgument(word != null, "String [{}] cannot be capitalised", word);
+        if (word.length() == 0)
+            return word;
+        else
+            return word.substring(0, 1).toUpperCase() + word.substring(1);
     }
 
 }

@@ -2,21 +2,25 @@ package com.zheleznyakov.lingvo.ui.fx.panes;
 
 import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.INSETS;
 import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.MIN_SPACE;
+import static com.zheleznyakov.lingvo.util.Util.confirmExpression;
 import static com.zheleznyakov.lingvo.util.Util.max;
-import static com.zheleznyakov.lingvo.util.Util.validateExpression;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import org.jetbrains.annotations.NotNull;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -41,6 +45,7 @@ public class LoadDictionaryPane extends BorderPane {
     private final Button newButton;
     private final Button deleteButton;
     private final ListView<Node> dictionaries;
+    private final Button backButton;
 
     public LoadDictionaryPane(Language language)  {
         path = "src/main/resources/" + language.name().toLowerCase();
@@ -51,9 +56,20 @@ public class LoadDictionaryPane extends BorderPane {
         loadButton = new Button("Load");
         newButton = createNewButton();
         deleteButton = new Button("Delete");
+        backButton = getBackButton();
 
         equalizeButtons();
         setUp();
+    }
+
+    @NotNull
+    private Button getBackButton() {
+        URI fileUri = new File("src/main/resources/images/back.png").toURI();
+        Image image = new Image(fileUri.toString());
+        ImageView buttonGraphic = new ImageView(image);
+        buttonGraphic.setFitHeight(20);
+        buttonGraphic.setFitWidth(20);
+        return new Button(null, buttonGraphic);
     }
 
     @NotNull
@@ -71,16 +87,20 @@ public class LoadDictionaryPane extends BorderPane {
     }
 
     private void createNewDictionary(ActionEvent event) {
-        String dictionaryName = ((TextField) event.getSource()).getText();
+        TextField textField = (TextField) event.getSource();
+        String dictionaryName = textField.getText();
         UncheckedRunnable<IOException> crateNewFile = () -> {
             if (!dir.exists())
                 dir.mkdir();
             Dictionary dictionary = new Dictionary(language);
             PersistenceManager persistenceManager = new BasicPersistenceManager();
-            persistenceManager.persist(dictionary, dictionaryName);
+            persistenceManager.persist(dictionary, path + "/" + dictionaryName);
+            Label createdDictionary = new Label(dictionaryName);
+            int entryIndex = dictionaries.getItems().indexOf(textField);
+            dictionaries.getItems().set(entryIndex, createdDictionary);
         };
         try {
-            validateExpression(dictionaryName.matches("[0-9A-Za-z\\-_]+"), crateNewFile);
+            confirmExpression(dictionaryName.matches("[0-9A-Za-z\\-_]+"), crateNewFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,6 +147,9 @@ public class LoadDictionaryPane extends BorderPane {
         BorderPane.setAlignment(contentAndControlBox, Pos.TOP_CENTER);
         setCenter(contentAndControlBox);
 
+        BorderPane.setAlignment(backButton, Pos.BOTTOM_LEFT);
+        setLeft(backButton);
+
         setPadding(INSETS);
     }
 
@@ -138,6 +161,10 @@ public class LoadDictionaryPane extends BorderPane {
             button.setMinWidth(BUTTON_MIN_WIDTH);
             button.setPrefSize(maxWidth, maxHeight);
         }
+    }
+
+    public void setOnBack(EventHandler<ActionEvent> handler) {
+        backButton.setOnAction(handler);
     }
 
 }

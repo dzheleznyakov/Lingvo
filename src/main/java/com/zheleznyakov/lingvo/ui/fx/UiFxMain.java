@@ -10,8 +10,11 @@ import javafx.stage.Stage;
 
 import com.zheleznyakov.lingvo.ui.fx.panes.ChooseLanguagePane;
 import com.zheleznyakov.lingvo.ui.fx.panes.LoadDictionaryPane;
+import com.zheleznyakov.lingvo.util.Util;
 
 public class UiFxMain extends Application {
+
+    private static final String TITLE = "ZhLingvo";
 
     private Scene scene;
     private ChooseLanguagePane chooseLanguagePane;
@@ -27,7 +30,7 @@ public class UiFxMain extends Application {
 
         scene = new Scene(chooseLanguagePane, 350, 350);
         this.primaryStage = primaryStage;
-        primaryStage.setTitle("ZhLingvo");
+        primaryStage.setTitle(TITLE);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -45,7 +48,14 @@ public class UiFxMain extends Application {
 
     private void setLoadDictionaryPane(ActionEvent event) {
         LoadDictionaryPane loadDictionaryPane = new LoadDictionaryPane(chooseLanguagePane.getLanguage());
+        loadDictionaryPane.setOnBack(this::setChooseLanguagePane);
         scene.setRoot(loadDictionaryPane);
-        configure(chooseLanguagePane);
+        String languageForTitle = Util.capitalize(chooseLanguagePane.getLanguage().name().toLowerCase());
+        primaryStage.setTitle(TITLE + ": " + languageForTitle);
+    }
+
+    private void setChooseLanguagePane(ActionEvent event) {
+        scene.setRoot(chooseLanguagePane);
+        primaryStage.setTitle(TITLE);
     }
 }
