@@ -1,8 +1,8 @@
 package com.zheleznyakov.lingvo.ui.fx.panes;
 
-import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.DEFAULT_LANGUAGE;
-import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.INSETS;
-import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.MIN_SPACE;
+import static com.zheleznyakov.lingvo.ui.fx.Config.DEFAULT_LANGUAGE;
+import static com.zheleznyakov.lingvo.ui.fx.Config.INSETS;
+import static com.zheleznyakov.lingvo.ui.fx.Config.MIN_SPACE;
 
 import org.jetbrains.annotations.NotNull;
 

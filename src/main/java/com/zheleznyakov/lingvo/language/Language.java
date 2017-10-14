@@ -2,5 +2,9 @@ package com.zheleznyakov.lingvo.language;
 
 public enum Language {
     ENGLISH,
-    SPANISH
+    SPANISH;
+
+    public String toLowerCase() {
+        return name().toLowerCase();
+    }
 }

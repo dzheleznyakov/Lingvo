@@ -1,13 +1,14 @@
 package com.zheleznyakov.lingvo.ui.fx.panes;
 
-import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.INSETS;
-import static com.zheleznyakov.lingvo.ui.fx.panes.Layout.MIN_SPACE;
+import static com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager.DIC_EXTENSION;
+import static com.zheleznyakov.lingvo.ui.fx.Config.INSETS;
+import static com.zheleznyakov.lingvo.ui.fx.Config.MIN_SPACE;
+import static com.zheleznyakov.lingvo.ui.fx.Config.ROOT_PATH;
 import static com.zheleznyakov.lingvo.util.Util.confirmExpression;
 import static com.zheleznyakov.lingvo.util.Util.max;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,57 +20,71 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
 import com.zheleznyakov.lingvo.dictionary.persistence.BasicPersistenceManager;
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager;
+import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceUtil;
 import com.zheleznyakov.lingvo.language.Language;
+import com.zheleznyakov.lingvo.ui.fx.buttons.BackButton;
 import com.zheleznyakov.lingvo.util.UncheckedRunnable;
 
 public class LoadDictionaryPane extends BorderPane {
 
-    private static final double BUTTON_MIN_WIDTH = 75;
+    private static final double BUTTON_MIN_WIDTH = 35;
 
     private final String path;
     private final File dir;
     private final Language language;
 
     private final Label info;
-    private final Button loadButton;
-    private final Button newButton;
-    private final Button deleteButton;
-    private final ListView<Node> dictionaries;
+    private final ListView<Node> words;
     private final Button backButton;
 
-    public LoadDictionaryPane(Language language)  {
-        path = "src/main/resources/" + language.name().toLowerCase();
+    private final Button up;
+    private final Button down;
+    private final Button add;
+    private final Button delete;
+
+    public LoadDictionaryPane(Language language) throws IOException {
+        path = ROOT_PATH + language.name().toLowerCase();
         dir = new File(path);
         this.language = language;
-        dictionaries = createDictionariesList();
-        info = createInfoLabel();
-        loadButton = new Button("Load");
-        newButton = createNewButton();
-        deleteButton = new Button("Delete");
-        backButton = getBackButton();
 
+        info = createInfoLabel();
+        words = createWordList();
+        backButton = new BackButton();
+
+        up = new Button("U");
+        add = new Button("+");
+        delete = new Button("-");
+        down = new Button("D");
+
+        ensureDictionaryForThisLanguage();
         equalizeButtons();
         setUp();
     }
 
+    private void ensureDictionaryForThisLanguage() throws IOException {
+        if (!dir.exists())
+            dir.mkdir();
+        String pathToDictionary = ROOT_PATH + "/" + language.toLowerCase();
+        File dictionaryFile = new File(pathToDictionary + "." + DIC_EXTENSION);
+        if (!dictionaryFile.exists())
+            PersistenceUtil.get().persist(new Dictionary(language), pathToDictionary + "/" + language.toLowerCase());
+    }
+
     @NotNull
-    private Button getBackButton() {
-        URI fileUri = new File("src/main/resources/images/back.png").toURI();
-        Image image = new Image(fileUri.toString());
-        ImageView buttonGraphic = new ImageView(image);
-        buttonGraphic.setFitHeight(20);
-        buttonGraphic.setFitWidth(20);
-        return new Button(null, buttonGraphic);
+    private Button createDeleteButton() {
+        return new Button("Delete");
+    }
+
+    @NotNull
+    private Button createLoadButton() {
+        return new Button("Load");
     }
 
     @NotNull
@@ -82,22 +97,22 @@ public class LoadDictionaryPane extends BorderPane {
     private void onPressingNewButton(ActionEvent event) {
         TextField textField = new TextField();
         textField.setPromptText("Enter dictionary name");
-        dictionaries.getItems().add(textField);
-        textField.setOnAction(this::createNewDictionary);
+        words.getItems().add(textField);
+        textField.requestFocus();
+        textField.setOnAction(this::createNewLearningDictionary);
     }
 
-    private void createNewDictionary(ActionEvent event) {
+    private void createNewLearningDictionary(ActionEvent event) {
         TextField textField = (TextField) event.getSource();
         String dictionaryName = textField.getText();
         UncheckedRunnable<IOException> crateNewFile = () -> {
-            if (!dir.exists())
-                dir.mkdir();
+            // TODO: this should be a learning dictionary
             Dictionary dictionary = new Dictionary(language);
             PersistenceManager persistenceManager = new BasicPersistenceManager();
             persistenceManager.persist(dictionary, path + "/" + dictionaryName);
             Label createdDictionary = new Label(dictionaryName);
-            int entryIndex = dictionaries.getItems().indexOf(textField);
-            dictionaries.getItems().set(entryIndex, createdDictionary);
+            int indexInTheListOfDictionaries = words.getItems().indexOf(textField);
+            words.getItems().set(indexInTheListOfDictionaries, createdDictionary);
         };
         try {
             confirmExpression(dictionaryName.matches("[0-9A-Za-z\\-_]+"), crateNewFile);
@@ -108,41 +123,25 @@ public class LoadDictionaryPane extends BorderPane {
 
     @NotNull
     private Label createInfoLabel() {
-        return new Label("Choose dictionary:");
+        return new Label("Choose word:");
     }
 
     @NotNull
-    private ListView<Node> createDictionariesList() {
-        ListView<Node> dictionariesList = new ListView<>();
-        File[] files;
-        if (dir.exists() && (files = dir.listFiles()).length > 0)
-            setFilesToDictionaryList(dictionariesList, files);
-        return dictionariesList;
-    }
-
-    private void setFilesToDictionaryList(ListView<Node> dictionariesList, File[] files) {
-        for (File file : files)
-            dictionariesList.getItems().add(getTextForFile(file.getName()));
-    }
-
-    @NotNull
-    private Text getTextForFile(String fileName) {
-        int dotIndex = fileName.indexOf('.');
-        String pureFileName = fileName.substring(0, dotIndex);
-        Text textField = new Text(pureFileName);
-        return textField;
+    private ListView<Node> createWordList() {
+        ListView<Node> wordList = new ListView<>();
+        return wordList;
     }
 
     private void setUp() {
         BorderPane.setAlignment(info, Pos.BOTTOM_CENTER);
         setTop(info);
 
-        VBox buttonBox = new VBox(MIN_SPACE);
-        buttonBox.getChildren().addAll(newButton, loadButton, deleteButton);
+        VBox buttonBox = new VBox(add, up, down, delete);
+        buttonBox.setSpacing(MIN_SPACE);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
         HBox contentAndControlBox = new HBox(MIN_SPACE);
-        contentAndControlBox.getChildren().addAll(buttonBox, dictionaries);
+        contentAndControlBox.getChildren().addAll(buttonBox, words);
         contentAndControlBox.setAlignment(Pos.TOP_CENTER);
         BorderPane.setAlignment(contentAndControlBox, Pos.TOP_CENTER);
         setCenter(contentAndControlBox);
@@ -154,7 +153,7 @@ public class LoadDictionaryPane extends BorderPane {
     }
 
     private void equalizeButtons() {
-        Button[] buttons = {loadButton, newButton, deleteButton};
+        Button[] buttons = {up, down, add, delete};
         double maxHeight = max(Button::getHeight, buttons);
         double maxWidth = max(Button::getWidth, buttons);
         for (Button button : buttons) {

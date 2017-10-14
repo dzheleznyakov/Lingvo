@@ -12,10 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
 
-public class BasicPersistenceManager implements PersistenceManager{
-
-    public static final String DIC_EXTENSION = ".dic";
-    public static final String LD_EXTENSION = ".ldi";
+public class BasicPersistenceManager implements PersistenceManager {
 
     @Override
     public <T extends Dictionary> void persist(T dictionary, String fileName) throws IOException {
