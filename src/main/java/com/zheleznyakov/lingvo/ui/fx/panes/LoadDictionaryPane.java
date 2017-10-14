@@ -10,6 +10,7 @@ import static com.zheleznyakov.lingvo.util.Util.max;
 import java.io.File;
 import java.io.IOException;
 
+import com.zheleznyakov.lingvo.ui.fx.buttons.PlusButton;
 import org.jetbrains.annotations.NotNull;
 
 import javafx.event.ActionEvent;
@@ -59,12 +60,12 @@ public class LoadDictionaryPane extends BorderPane {
         backButton = new BackButton();
 
         up = new Button("U");
-        add = new Button("+");
+        add = new PlusButton();
         delete = new Button("-");
         down = new Button("D");
 
         ensureDictionaryForThisLanguage();
-        equalizeButtons();
+//        equalizeButtons();
         setUp();
     }
 
