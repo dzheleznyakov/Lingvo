@@ -10,7 +10,7 @@ import static com.zheleznyakov.lingvo.util.Util.max;
 import java.io.File;
 import java.io.IOException;
 
-import com.zheleznyakov.lingvo.ui.fx.buttons.PlusButton;
+import com.zheleznyakov.lingvo.ui.fx.buttons.*;
 import org.jetbrains.annotations.NotNull;
 
 import javafx.event.ActionEvent;
@@ -30,7 +30,6 @@ import com.zheleznyakov.lingvo.dictionary.persistence.BasicPersistenceManager;
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager;
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceUtil;
 import com.zheleznyakov.lingvo.language.Language;
-import com.zheleznyakov.lingvo.ui.fx.buttons.BackButton;
 import com.zheleznyakov.lingvo.util.UncheckedRunnable;
 
 public class LoadDictionaryPane extends BorderPane {
@@ -59,10 +58,10 @@ public class LoadDictionaryPane extends BorderPane {
         words = createWordList();
         backButton = new BackButton();
 
-        up = new Button("U");
+        up = new UpButton();
         add = new PlusButton();
-        delete = new Button("-");
-        down = new Button("D");
+        delete = new MinusButton();
+        down = new DownButton();
 
         ensureDictionaryForThisLanguage();
 //        equalizeButtons();

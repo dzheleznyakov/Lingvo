@@ -5,19 +5,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
-public class PlusButton extends AbstractPaneButton {
+public class MinusButton extends AbstractPaneButton {
     private static final Node ICON;
 
     static {
         Circle circle = new Circle(RADIUS, RADIUS, RADIUS);
-        Line verticalLine = new Line(RADIUS, RADIUS * 0.5, RADIUS, RADIUS * 1.5);
         Line horizontalLine = new Line(RADIUS * 0.5, RADIUS, RADIUS * 1.5, RADIUS);
 
-        styleIconShapes(circle, verticalLine, horizontalLine);
-        ICON = new Pane(circle, verticalLine, horizontalLine);
+        styleIconShapes(circle, horizontalLine);
+        ICON = new Pane(circle, horizontalLine);
     }
 
-    public PlusButton() {
+    public MinusButton() {
         super(ICON);
     }
 }
