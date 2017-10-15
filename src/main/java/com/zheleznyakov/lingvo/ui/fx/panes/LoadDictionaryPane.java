@@ -64,7 +64,6 @@ public class LoadDictionaryPane extends BorderPane {
         down = new DownButton();
 
         ensureDictionaryForThisLanguage();
-//        equalizeButtons();
         setUp();
     }
 
@@ -150,16 +149,6 @@ public class LoadDictionaryPane extends BorderPane {
         setLeft(backButton);
 
         setPadding(INSETS);
-    }
-
-    private void equalizeButtons() {
-        Button[] buttons = {up, down, add, delete};
-        double maxHeight = max(Button::getHeight, buttons);
-        double maxWidth = max(Button::getWidth, buttons);
-        for (Button button : buttons) {
-            button.setMinWidth(BUTTON_MIN_WIDTH);
-            button.setPrefSize(maxWidth, maxHeight);
-        }
     }
 
     public void setOnBack(EventHandler<ActionEvent> handler) {

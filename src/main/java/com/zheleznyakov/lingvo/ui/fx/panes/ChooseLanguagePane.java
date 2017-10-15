@@ -3,7 +3,12 @@ package com.zheleznyakov.lingvo.ui.fx.panes;
 import static com.zheleznyakov.lingvo.ui.fx.Config.DEFAULT_LANGUAGE;
 import static com.zheleznyakov.lingvo.ui.fx.Config.INSETS;
 import static com.zheleznyakov.lingvo.ui.fx.Config.MIN_SPACE;
+import static com.zheleznyakov.lingvo.util.Util.max;
 
+import com.zheleznyakov.lingvo.ui.fx.buttons.ForwardButton;
+import com.zheleznyakov.lingvo.util.Util;
+import javafx.scene.Node;
+import javafx.scene.layout.Region;
 import org.jetbrains.annotations.NotNull;
 
 import javafx.event.ActionEvent;
@@ -25,7 +30,7 @@ public class ChooseLanguagePane extends VBox {
         super(MIN_SPACE);
         info = createInfoLabel();
         languages = createLanguageBox();
-        confirmButton = createConfirmButton();
+        confirmButton = new ForwardButton();
         setUp();
     }
 
@@ -41,11 +46,6 @@ public class ChooseLanguagePane extends VBox {
             languages.getItems().add(language);
         languages.setValue(DEFAULT_LANGUAGE);
         return languages;
-    }
-
-    @NotNull
-    private Button createConfirmButton() {
-        return new Button("Ok");
     }
 
     private void setUp() {

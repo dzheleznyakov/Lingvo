@@ -1,18 +1,27 @@
 package com.zheleznyakov.lingvo.ui.fx.buttons;
 
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
-public class AbstractPaneButton extends Button {
+public abstract class AbstractControlButton extends Button {
     protected static final double RADIUS = 10;
     private static final double STROKE_WIDTH = 2;
 
-    public AbstractPaneButton(Node graphics) {
-        super(null, graphics);
+    protected final Pane ICON;
+
+    public AbstractControlButton() {
+        ICON = getIconStub();
+        fillIcon();
+        setGraphic(ICON);
+    }
+
+    private Pane getIconStub() {
+        Circle circle = new Circle(RADIUS, RADIUS, RADIUS);
+        styleIconShapes(circle);
+        return new Pane(circle);
     }
 
     protected static void styleIconShapes(Shape... shapes) {
@@ -22,4 +31,6 @@ public class AbstractPaneButton extends Button {
             shape.setFill(null);
         }
     }
+
+    protected abstract void fillIcon();
 }
