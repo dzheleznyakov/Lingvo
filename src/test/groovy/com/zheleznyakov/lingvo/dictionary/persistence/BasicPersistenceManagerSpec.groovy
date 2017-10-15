@@ -9,6 +9,9 @@ import com.zheleznyakov.lingvo.learning.LearningDictionary
 import com.zheleznyakov.lingvo.learning.WordTester
 import spock.lang.Specification
 
+import static com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager.DIC_EXTENSION
+import static com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager.LD_EXTENSION
+
 class BasicPersistenceManagerSpec extends Specification {
     static String PATH = "src/test/resources/";
 
@@ -16,58 +19,64 @@ class BasicPersistenceManagerSpec extends Specification {
         given: "a non-empty dictionary"
         Dictionary dictionary = new Dictionary(Language.ENGLISH)
         dictionary.add(EnNoun.build("word"), "слово")
+        String title = "temp"
+        dictionary.title = title
 
         and: "a basic persistence manager"
         PersistenceManager persistenceManager = new BasicPersistenceManager()
 
         expect: "that the file for persistence does not exists"
-        String fileName = PATH + "temp"
-        !new File(fileName + ".dic").exists()
+        String fileName = title + DIC_EXTENSION
+        !new File(PATH + fileName).exists()
 
         when: "the dictionary is persisted"
-        persistenceManager.persist(dictionary, fileName)
+        persistenceManager.persist(dictionary, PATH)
 
         and: "is loaded back"
-        Dictionary loadedDictionary = persistenceManager.load(Dictionary.class, fileName)
+        Dictionary loadedDictionary = persistenceManager.load(Dictionary.class, PATH, fileName)
 
         then: "the file for persistence exists"
-        new File(fileName + ".dic").exists()
+        new File(PATH + fileName).exists()
 
         and: "the loaded dictionary is the same as the original one"
         dictionary.language == loadedDictionary.language
         dictionary.asMap() == loadedDictionary.asMap()
+        dictionary.title == loadedDictionary.title
 
         cleanup: "remove the save file"
-        new File(fileName + ".dic").delete()
+        new File(PATH + fileName).delete()
     }
 
     def "Persist and load a learning dictionary"() {
         given: "a non-empty learning dictionary"
         LearningDictionary dictionary = getLearningDictionaryWithNonNullStatistics()
+        String title = "test"
+        dictionary.title = title
 
         and: "a basic persistence manager"
         PersistenceManager persistenceManager = new BasicPersistenceManager()
 
         expect: "that the file for persistence does not exists"
-        String fileName = PATH + "temp"
-        !new File(fileName + ".ldi").exists()
+        String fileName = title + LD_EXTENSION
+        !new File(PATH + fileName).exists()
 
         when: "the dictionary is persisted"
-        persistenceManager.persist(dictionary, fileName)
+        persistenceManager.persist(dictionary, PATH)
 
         and: "is loaded back"
-        Dictionary loadedDictionary = persistenceManager.load(LearningDictionary.class, fileName)
+        Dictionary loadedDictionary = persistenceManager.load(LearningDictionary.class, PATH, fileName)
 
         then: "the file for persistence exists"
-        new File(fileName + ".ldi").exists()
+        new File(PATH + fileName).exists()
 
         and: "the loaded dictionary is the same as the original one"
         dictionary.class == loadedDictionary.class
         dictionary.language == loadedDictionary.language
         dictionary.asMap() == loadedDictionary.asMap()
+        dictionary.title == loadedDictionary.title
 
         cleanup: "remove the save file"
-        new File(fileName + ".ldi").delete()
+        new File(PATH + fileName).delete()
     }
 
     private static LearningDictionary getLearningDictionaryWithNonNullStatistics() {

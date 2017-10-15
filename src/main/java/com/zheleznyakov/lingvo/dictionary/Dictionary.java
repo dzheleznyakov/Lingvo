@@ -17,6 +17,7 @@ public class Dictionary implements Serializable {
 
     private final Language language;
     private Map<Word, String> words = new HashMap<>();
+    private String title = "_";
 
     public Dictionary(Language language) {
         this.language = language;
@@ -50,7 +51,14 @@ public class Dictionary implements Serializable {
 
     public Set<Word> getWords(PartOfSpeech partOfSpeech) {
         return getWords(word -> partOfSpeech == word.getPartOfSpeech());
+    }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     private Set<Word> getWords(Predicate<Word> wordFilter) {

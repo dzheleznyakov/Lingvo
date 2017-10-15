@@ -34,11 +34,10 @@ import com.zheleznyakov.lingvo.util.UncheckedRunnable;
 
 public class LoadDictionaryPane extends BorderPane {
 
-    private static final double BUTTON_MIN_WIDTH = 35;
-
     private final String path;
     private final File dir;
     private final Language language;
+    private Dictionary dictionary;
 
     private final Label info;
     private final ListView<Node> words;
@@ -49,7 +48,7 @@ public class LoadDictionaryPane extends BorderPane {
     private final Button add;
     private final Button delete;
 
-    public LoadDictionaryPane(Language language) throws IOException {
+    public LoadDictionaryPane(Language language) throws IOException, ClassNotFoundException {
         path = ROOT_PATH + language.name().toLowerCase();
         dir = new File(path);
         this.language = language;
@@ -63,61 +62,28 @@ public class LoadDictionaryPane extends BorderPane {
         delete = new MinusButton();
         down = new DownButton();
 
+        ensureRootFolderForThisLanguaпe();
         ensureDictionaryForThisLanguage();
         setUp();
     }
 
-    private void ensureDictionaryForThisLanguage() throws IOException {
+    private void ensureRootFolderForThisLanguaпe() {
         if (!dir.exists())
             dir.mkdir();
-        String pathToDictionary = ROOT_PATH + "/" + language.toLowerCase();
-        File dictionaryFile = new File(pathToDictionary + "." + DIC_EXTENSION);
+    }
+
+    private void ensureDictionaryForThisLanguage() throws IOException, ClassNotFoundException {
+        String pathToDictionary = ROOT_PATH + "/";
+        File dictionaryFile = new File(pathToDictionary);
         if (!dictionaryFile.exists())
-            PersistenceUtil.get().persist(new Dictionary(language), pathToDictionary + "/" + language.toLowerCase());
+            createAndPersistDictionary(pathToDictionary);
+        else
+            dictionary = PersistenceUtil.get().load(Dictionary.class, pathToDictionary , language.toLowerCase() + DIC_EXTENSION);
     }
 
-    @NotNull
-    private Button createDeleteButton() {
-        return new Button("Delete");
-    }
-
-    @NotNull
-    private Button createLoadButton() {
-        return new Button("Load");
-    }
-
-    @NotNull
-    private Button createNewButton() {
-        Button button = new Button("New");
-        button.setOnAction(this::onPressingNewButton);
-        return button;
-    }
-
-    private void onPressingNewButton(ActionEvent event) {
-        TextField textField = new TextField();
-        textField.setPromptText("Enter dictionary name");
-        words.getItems().add(textField);
-        textField.requestFocus();
-        textField.setOnAction(this::createNewLearningDictionary);
-    }
-
-    private void createNewLearningDictionary(ActionEvent event) {
-        TextField textField = (TextField) event.getSource();
-        String dictionaryName = textField.getText();
-        UncheckedRunnable<IOException> crateNewFile = () -> {
-            // TODO: this should be a learning dictionary
-            Dictionary dictionary = new Dictionary(language);
-            PersistenceManager persistenceManager = new BasicPersistenceManager();
-            persistenceManager.persist(dictionary, path + "/" + dictionaryName);
-            Label createdDictionary = new Label(dictionaryName);
-            int indexInTheListOfDictionaries = words.getItems().indexOf(textField);
-            words.getItems().set(indexInTheListOfDictionaries, createdDictionary);
-        };
-        try {
-            confirmExpression(dictionaryName.matches("[0-9A-Za-z\\-_]+"), crateNewFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void createAndPersistDictionary(String pathToDictionary) throws IOException {
+        dictionary = new Dictionary(language);
+        PersistenceUtil.get().persist(dictionary, pathToDictionary + "/" + language.toLowerCase());
     }
 
     @NotNull

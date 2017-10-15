@@ -15,11 +15,17 @@ import com.zheleznyakov.lingvo.dictionary.Dictionary;
 public class BasicPersistenceManager implements PersistenceManager {
 
     @Override
-    public <T extends Dictionary> void persist(T dictionary, String fileName) throws IOException {
+    public <T extends Dictionary> void persist(T dictionary, String path) throws IOException {
         String extension = dictionary.getClass() == Dictionary.class ? DIC_EXTENSION : LD_EXTENSION;
-        try (ObjectOutputStream out = getOutputStream(fileName + extension)) {
+        String fileName = sanitizePath(path) + dictionary.getTitle() + extension;
+        try (ObjectOutputStream out = getOutputStream(fileName)) {
             out.writeObject(dictionary);
         }
+    }
+
+    @NotNull
+    private String sanitizePath(String path) {
+        return path + (path.endsWith("/") ? "" : "/");
     }
 
     @NotNull
@@ -29,9 +35,9 @@ public class BasicPersistenceManager implements PersistenceManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Dictionary> T load(Class<T> dictionaryClass, String fileName) throws IOException, ClassNotFoundException {
-        String extension = dictionaryClass == Dictionary.class ? DIC_EXTENSION : LD_EXTENSION;
-        try (ObjectInputStream input = getInputStream(fileName + extension)) {
+    public <T extends Dictionary> T load(Class<T> dictionaryClass, String path, String fileName) throws IOException, ClassNotFoundException {
+        String pathToFile = sanitizePath(path) + fileName;
+        try (ObjectInputStream input = getInputStream(pathToFile)) {
             return (T) input.readObject();
         }
     }

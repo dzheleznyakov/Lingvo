@@ -54,7 +54,7 @@ public class UiFxMain extends Application {
         Language language = chooseLanguagePane.getLanguage();
         try {
             loadDictionaryPane = new LoadDictionaryPane(language);
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println(Util.format("Failed to create LoadDictionaryPane for [{}]", language));
         }
         loadDictionaryPane.setOnBack(this::setChooseLanguagePane);
