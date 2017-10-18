@@ -53,6 +53,10 @@ public class Dictionary implements Serializable {
         return getWords(word -> partOfSpeech == word.getPartOfSpeech());
     }
 
+    public Set<Word> getWords() {
+        return getWords(word -> true);
+    }
+
     public String getTitle() {
         return title;
     }

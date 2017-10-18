@@ -1,7 +1,6 @@
 package com.zheleznyakov.lingvo.learning;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,10 +41,6 @@ public class LearningDictionary extends Dictionary {
 
     public boolean isLearned(Word word) {
         return wordsToStatistics.get(word).getCount() == maxLearningCount;
-    }
-
-    public Collection<Word> getWords() {
-        return wordsToStatistics.keySet();
     }
 
     public static class Statistics implements Serializable {

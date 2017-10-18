@@ -27,10 +27,10 @@ class DictionarySpec extends Specification {
         !dictionary.contains(NOUN_1)
         !dictionary.getMeaning(NOUN_1)
 
-        when: "the word is added to the dictionary"
+        when: "a noun is added to the dictionary"
         dictionary.add(NOUN_1, MEANING_1)
 
-        then: "the word and its meaning are in the dictionary"
+        then: "the noun and its meaning are in the dictionary"
         dictionary.contains NOUN_1
         dictionary.getMeaning(NOUN_1) == MEANING_1
     }
@@ -70,6 +70,16 @@ class DictionarySpec extends Specification {
         then: "nouns and verbs can be extracted separately"
         dictionary.getWords(PartOfSpeech.NOUN) == ImmutableSet.of(NOUN_1, NOUN_2)
         dictionary.getWords(PartOfSpeech.VERB) == ImmutableSet.of(VERB_1)
+    }
+
+    def "Test get all words from the dictionary"() {
+        when: "words of different parts of speed are added to the dictionary"
+        dictionary.add(NOUN_1, MEANING_1)
+        dictionary.add(NOUN_2, MEANING_2)
+        dictionary.add(VERB_1, MEANING_3)
+
+        then: "all words can be extracted together"
+        dictionary.getWords() == ImmutableSet.of(NOUN_1, NOUN_2, VERB_1)
     }
 
 }

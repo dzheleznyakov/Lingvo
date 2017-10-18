@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.ui.fx;
 
+import static com.zheleznyakov.lingvo.ui.fx.Config.DEFAULT_LANGUAGE;
 import static com.zheleznyakov.lingvo.ui.fx.Config.MIN_SPACE;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import com.zheleznyakov.lingvo.language.Language;
-import com.zheleznyakov.lingvo.ui.fx.panes.ChooseLanguagePane;
+import com.zheleznyakov.lingvo.ui.fx.panes.ChoosePane;
 import com.zheleznyakov.lingvo.ui.fx.panes.LoadDictionaryPane;
 import com.zheleznyakov.lingvo.util.Util;
 
@@ -20,7 +21,7 @@ public class UiFxMain extends Application {
     private static final String TITLE = "ZhLingvo";
 
     private Scene scene;
-    private ChooseLanguagePane chooseLanguagePane;
+    private ChoosePane<Language> chooseLanguagePane;
     private Stage primaryStage;
 
     public static void main(String[] args) {
@@ -29,7 +30,7 @@ public class UiFxMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        chooseLanguagePane = new ChooseLanguagePane();
+        chooseLanguagePane = new ChoosePane<>("Choose language:", Language.values(), DEFAULT_LANGUAGE);
 
         scene = new Scene(chooseLanguagePane, 350, 350);
         this.primaryStage = primaryStage;
@@ -50,12 +51,13 @@ public class UiFxMain extends Application {
     }
 
     private void setLoadDictionaryPane(ActionEvent event) {
-        LoadDictionaryPane loadDictionaryPane = null;
-        Language language = chooseLanguagePane.getLanguage();
+        LoadDictionaryPane loadDictionaryPane;
+        Language language = chooseLanguagePane.getChosen();
         try {
             loadDictionaryPane = new LoadDictionaryPane(language);
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(Util.format("Failed to create LoadDictionaryPane for [{}]", language));
+            return;
         }
         loadDictionaryPane.setOnBack(this::setChooseLanguagePane);
         scene.setRoot(loadDictionaryPane);
