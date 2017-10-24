@@ -11,4 +11,9 @@ public class UpButton extends AbstractControlButton {
                 RADIUS * 0.6, RADIUS * 1.2);
         ICON.getChildren().add(triangle);
     }
+
+    @Override
+    protected String createId() {
+        return "upButton";
+    }
 }

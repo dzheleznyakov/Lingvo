@@ -11,4 +11,9 @@ public class PlusButton extends AbstractControlButton {
         styleIconShapes(verticalLine, horizontalLine);
         ICON.getChildren().addAll(verticalLine, horizontalLine);
     }
+
+    @Override
+    protected String createId() {
+        return "plusButton";
+    }
 }

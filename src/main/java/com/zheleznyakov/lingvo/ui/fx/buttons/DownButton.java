@@ -11,4 +11,9 @@ public class DownButton extends AbstractControlButton {
                 RADIUS * 0.6, RADIUS * 0.8);
         ICON.getChildren().add(triangle);
     }
+
+    @Override
+    protected String createId() {
+        return "downButton";
+    }
 }

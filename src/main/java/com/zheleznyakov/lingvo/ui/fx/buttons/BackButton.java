@@ -14,4 +14,9 @@ public class BackButton extends AbstractControlButton {
         styleIconShapes(arrowMiddle, arrowTop, arrowBottom);
         ICON.getChildren().addAll(arrowMiddle, arrowTop, arrowBottom);
     }
+
+    @Override
+    protected String createId() {
+        return "backButton";
+    }
 }

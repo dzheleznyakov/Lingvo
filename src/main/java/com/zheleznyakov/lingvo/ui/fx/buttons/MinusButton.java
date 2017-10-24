@@ -10,4 +10,9 @@ public class MinusButton extends AbstractControlButton {
         styleIconShapes(horizontalLine);
         ICON.getChildren().add(horizontalLine);
     }
+
+    @Override
+    protected String createId() {
+        return "minusButton";
+    }
 }

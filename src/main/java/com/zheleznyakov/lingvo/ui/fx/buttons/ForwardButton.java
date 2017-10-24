@@ -13,5 +13,12 @@ public class ForwardButton extends AbstractControlButton {
 
         styleIconShapes(arrowMiddle, arrowTop, arrowBottom);
         ICON.getChildren().addAll(arrowMiddle, arrowTop, arrowBottom);
+
+
+    }
+
+    @Override
+    protected String createId() {
+        return "forwardButton";
     }
 }

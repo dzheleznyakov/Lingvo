@@ -7,7 +7,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
 public abstract class AbstractControlButton extends Button {
-    protected static final double RADIUS = 10;
+    protected static final double RADIUS = 13;
     private static final double STROKE_WIDTH = 2;
 
     protected final Pane ICON;
@@ -16,6 +16,7 @@ public abstract class AbstractControlButton extends Button {
         ICON = getIconStub();
         fillIcon();
         setGraphic(ICON);
+        setId(createId());
     }
 
     private Pane getIconStub() {
@@ -33,4 +34,7 @@ public abstract class AbstractControlButton extends Button {
     }
 
     protected abstract void fillIcon();
+
+
+    protected abstract String createId();
 }

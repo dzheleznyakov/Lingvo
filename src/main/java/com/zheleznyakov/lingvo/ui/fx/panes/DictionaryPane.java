@@ -7,6 +7,10 @@ import static com.zheleznyakov.lingvo.ui.fx.Config.ROOT_PATH;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,13 +24,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import com.zheleznyakov.lingvo.basic.PartOfSpeech;
+import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceUtil;
+import com.zheleznyakov.lingvo.endpoints.EnglishEndpoint;
 import com.zheleznyakov.lingvo.language.Language;
+import com.zheleznyakov.lingvo.language.en.word.EnNoun;
 import com.zheleznyakov.lingvo.ui.fx.buttons.BackButton;
 import com.zheleznyakov.lingvo.ui.fx.buttons.DownButton;
 import com.zheleznyakov.lingvo.ui.fx.buttons.MinusButton;
@@ -34,7 +41,7 @@ import com.zheleznyakov.lingvo.ui.fx.buttons.PlusButton;
 import com.zheleznyakov.lingvo.ui.fx.buttons.UpButton;
 import com.zheleznyakov.lingvo.util.Util;
 
-public class LoadDictionaryPane extends BorderPane {
+public class DictionaryPane extends BorderPane {
 
     private final String path;
     private final File dir;
@@ -50,7 +57,7 @@ public class LoadDictionaryPane extends BorderPane {
     private final Button add;
     private final Button delete;
 
-    public LoadDictionaryPane(Language language) throws IOException, ClassNotFoundException {
+    public DictionaryPane(Language language) throws IOException, ClassNotFoundException {
         path = ROOT_PATH + language.name().toLowerCase();
         dir = new File(path);
         this.language = language;
@@ -78,12 +85,10 @@ public class LoadDictionaryPane extends BorderPane {
         String pathToDictionary = ROOT_PATH + language.toLowerCase();
         String fileName = language.toLowerCase() + DIC_EXTENSION;
         File dictionaryFile = new File(pathToDictionary + fileName);
-        if (!dictionaryFile.exists()) {
+        if (!dictionaryFile.exists())
             createAndPersistDictionary(pathToDictionary);
-        }
-        else {
+        else
             dictionary = PersistenceUtil.get().load(Dictionary.class, pathToDictionary , fileName);
-        }
     }
 
     private void createAndPersistDictionary(String pathToDictionary) throws IOException {
@@ -100,11 +105,14 @@ public class LoadDictionaryPane extends BorderPane {
     @NotNull
     private ListView<Node> createWordList() {
         ListView<Node> wordList = new ListView<>();
-        dictionary.getWords().forEach(word -> {
-            Label wordLabel = new Label(word.getMainForm());
-            wordList.getItems().add(wordLabel);
-        });
+        dictionary.getWords()
+                .forEach(word -> setWordToList(wordList, word));
         return wordList;
+    }
+
+    private void setWordToList(ListView<Node> wordList, Word word) {
+        Label wordLabel = new Label(word.getMainForm());
+        wordList.getItems().add(wordLabel);
     }
 
     private void setUp() {
@@ -128,16 +136,49 @@ public class LoadDictionaryPane extends BorderPane {
         setPadding(INSETS);
     }
 
+    private Word[] futureWord = new Word[1];
     private void setControlButtonsOnAction() {
         add.setOnAction(event -> {
-            Pane newWordPane = new NewWordPane();
+            ChoosePane<PartOfSpeech> newWordPane = new ChoosePane<>("Choose part of speech:", new EnglishEndpoint().getPartsOfSpeeches(), null);
 
             Scene scene = new Scene(newWordPane, 350, 350);
             Stage stage = new Stage();
             stage.setTitle("ZhLingvo: " + Util.capitalize(language.toLowerCase()) + " - New Word");
             stage.setScene(scene);
             stage.show();
+
+            newWordPane.setOnExit(exitEvent -> stage.close());
+            newWordPane.setOnForward(fireEvent -> futureWord[0] = EnNoun.build("word"));
+            new Thread(() -> {
+                ExecutorService executor = Executors.newCachedThreadPool();
+                Future<Word> futureWordGetter = executor.submit(this::getFutureWord);
+                Word newWord = extractWordFromFuture(futureWordGetter);
+                futureWord[0] = null;
+                setWordToList(words, newWord);
+            }).start();
         });
+    }
+
+    private Word extractWordFromFuture(Future<Word> futureWordGetter) {
+        try {
+            return futureWordGetter.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to get new word", e);
+        }
+    }
+
+    private Word getFutureWord() {
+        while (futureWord[0] == null)
+            sleep(50);
+        return futureWord[0];
+    }
+
+    private void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            System.out.println("Thread " + Thread.currentThread().getName() + " has been interrupted");
+        }
     }
 
     public void setOnBack(EventHandler<ActionEvent> handler) {
