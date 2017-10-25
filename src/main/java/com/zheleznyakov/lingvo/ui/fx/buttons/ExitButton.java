@@ -2,7 +2,6 @@ package com.zheleznyakov.lingvo.ui.fx.buttons;
 
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 public class ExitButton extends AbstractControlButton {
     @Override
@@ -15,7 +14,7 @@ public class ExitButton extends AbstractControlButton {
         Line bottomBar = new Line(startX, startY, RADIUS * 1.1, RADIUS * 1.3);
 
         styleIconShapes(rectangle, horizontalBar, upperBar, bottomBar);
-        ((Shape) ICON.getChildren().get(0)).setOpacity(0);
+        ICON.getChildren().get(0).setOpacity(0);
         ICON.getChildren().addAll(rectangle, horizontalBar, upperBar, bottomBar);
     }
 

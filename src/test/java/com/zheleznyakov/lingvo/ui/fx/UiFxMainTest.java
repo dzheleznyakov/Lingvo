@@ -2,15 +2,11 @@ package com.zheleznyakov.lingvo.ui.fx;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
 import java.security.Permission;
-import java.util.concurrent.TimeoutException;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.testfx.service.finder.NodeFinder;
 import org.testfx.service.finder.impl.NodeFinderImpl;
@@ -20,18 +16,6 @@ import javafx.scene.control.ComboBox;
 
 public class UiFxMainTest extends BaseTest {
 
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        System.setSecurityManager(new NoExitSecurityManager());
-    }
-
-    @After
-    public void tearDown() throws TimeoutException {
-        System.setSecurityManager(null);
-        super.tearDown();
-    }
-
     @Test
     public void should_contain_label() {
         NodeFinder nodeFinder = new NodeFinderImpl(new WindowFinderImpl());
@@ -40,11 +24,13 @@ public class UiFxMainTest extends BaseTest {
 
     @Test
     public void test_exit_when_clicking_on_exit_button() throws InterruptedException {
-        assertNotNull(stage);
+        System.setSecurityManager(new NoExitSecurityManager());
         try {
             rightClickOn("#exitButton");
         } catch (ExitException e) {
             assertEquals(1, e.status);
+        } finally {
+            System.setSecurityManager(null);
         }
     }
 
