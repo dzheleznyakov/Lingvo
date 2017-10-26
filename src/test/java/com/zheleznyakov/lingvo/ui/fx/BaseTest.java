@@ -1,5 +1,11 @@
 package com.zheleznyakov.lingvo.ui.fx;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.util.NodeQueryUtils.hasText;
+
 import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
@@ -8,6 +14,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
@@ -38,13 +45,23 @@ public class BaseTest extends ApplicationTest {
         return (T) lookup(query).queryAll().iterator().next();
     }
 
-    protected void sleepUninterruptibly(long time) {
+    protected void sleepUninterruptibly(long millis) {
         long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < time)
+        while (System.currentTimeMillis() - startTime < millis)
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 System.out.println("The thread was interrupted");
             }
+    }
+
+    protected <T> void assertChoosePaneLayout(String labelText, Class<T> dropBoxElementsClass) {
+        ComboBox dropBox = find("#dropBox");
+
+        verifyThat(".label", hasText(labelText));
+        assertFalse(dropBox.getItems().isEmpty());
+        assertTrue(dropBoxElementsClass.isInstance(dropBox.getItems().get(0)));
+        assertNotNull(find("#forwardButton"));
+        assertNotNull(find("#exitButton"));
     }
 }

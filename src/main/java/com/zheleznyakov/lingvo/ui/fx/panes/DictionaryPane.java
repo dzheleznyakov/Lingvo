@@ -73,7 +73,8 @@ public class DictionaryPane extends BorderPane {
         delete = new MinusButton();
         down = new DownButton();
 
-        setUp();
+        setUpLayout();
+        setId("dictionaryPane-" + language.name().toLowerCase());
     }
 
     private void ensureRootFolderForThisLanguaпe() {
@@ -115,7 +116,7 @@ public class DictionaryPane extends BorderPane {
         wordList.getItems().add(wordLabel);
     }
 
-    private void setUp() {
+    private void setUpLayout() {
         BorderPane.setAlignment(info, Pos.BOTTOM_CENTER);
         setTop(info);
 

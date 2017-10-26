@@ -31,14 +31,15 @@ public class ChoosePane<T> extends BorderPane {
 
     public ChoosePane(String text, T[] objects, T defaultObject) {
         info = new Label(text);
-        objectsBox = createLanguageBox(Arrays.asList(objects), defaultObject);
+        objectsBox = createDropBox(Arrays.asList(objects), defaultObject);
         confirmButton = new ForwardButton();
         exitButton = new ExitButton();
-        setUp();
+        setUpLayout();
+        setId("choosePane-" + defaultObject.getClass().getSimpleName().toLowerCase());
     }
 
     @NotNull
-    private ComboBox<T> createLanguageBox(List<T> objects, T defaultObject) {
+    private ComboBox<T> createDropBox(List<T> objects, T defaultObject) {
         validateArgument(objects.contains(defaultObject) || defaultObject == null,
                 "List [{}] does not contain [{}]", objects, defaultObject);
         ComboBox<T> objectsBox = new ComboBox<>(FXCollections.observableArrayList(objects));
@@ -48,7 +49,7 @@ public class ChoosePane<T> extends BorderPane {
         return objectsBox;
     }
 
-    private void setUp() {
+    private void setUpLayout() {
         HBox controlBox = new HBox(MIN_SPACE);
         controlBox.getChildren().addAll(objectsBox, confirmButton);
         controlBox.setAlignment(Pos.CENTER);

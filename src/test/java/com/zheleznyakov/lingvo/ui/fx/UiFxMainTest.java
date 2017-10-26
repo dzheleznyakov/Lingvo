@@ -1,25 +1,18 @@
 package com.zheleznyakov.lingvo.ui.fx;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.util.NodeQueryUtils.hasText;
 
 import java.security.Permission;
 
 import org.junit.Test;
-import org.testfx.service.finder.NodeFinder;
-import org.testfx.service.finder.impl.NodeFinderImpl;
-import org.testfx.service.finder.impl.WindowFinderImpl;
 
-import javafx.scene.control.ComboBox;
+import com.zheleznyakov.lingvo.language.Language;
 
 public class UiFxMainTest extends BaseTest {
 
     @Test
-    public void should_contain_label() {
-        NodeFinder nodeFinder = new NodeFinderImpl(new WindowFinderImpl());
-        verifyThat(".label", hasText("Choose language:"));
+    public void main_page_is_a_choose_pain() {
+        assertChoosePaneLayout("Choose language:", Language.class);
     }
 
     @Test
@@ -34,11 +27,8 @@ public class UiFxMainTest extends BaseTest {
         }
     }
 
-    @Test
-    public void language_drop_box_is_not_empty() {
-        ComboBox dropBox = find("#dropBox");
-        assertFalse(dropBox.getItems().isEmpty());
-    }
+//    @Test
+//    public void test_clicking
 
     private static class ExitException extends SecurityException {
         public final int status;
