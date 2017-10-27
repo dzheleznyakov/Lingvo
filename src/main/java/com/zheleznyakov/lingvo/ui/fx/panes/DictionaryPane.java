@@ -7,39 +7,36 @@ import static com.zheleznyakov.lingvo.ui.fx.Config.ROOT_PATH;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.jetbrains.annotations.NotNull;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-import com.zheleznyakov.lingvo.basic.PartOfSpeech;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceUtil;
-import com.zheleznyakov.lingvo.endpoints.EnglishEndpoint;
 import com.zheleznyakov.lingvo.language.Language;
+import com.zheleznyakov.lingvo.language.en.EnWord;
 import com.zheleznyakov.lingvo.language.en.word.EnNoun;
 import com.zheleznyakov.lingvo.ui.fx.buttons.BackButton;
 import com.zheleznyakov.lingvo.ui.fx.buttons.DownButton;
 import com.zheleznyakov.lingvo.ui.fx.buttons.MinusButton;
 import com.zheleznyakov.lingvo.ui.fx.buttons.PlusButton;
 import com.zheleznyakov.lingvo.ui.fx.buttons.UpButton;
-import com.zheleznyakov.lingvo.util.Util;
 
 public class DictionaryPane extends BorderPane {
 
@@ -49,7 +46,7 @@ public class DictionaryPane extends BorderPane {
     private Dictionary dictionary;
 
     private final Label info;
-    private final ListView<Node> words;
+    private final TableView<WordEntry> words;
     private final Button backButton;
 
     private final Button up;
@@ -65,7 +62,7 @@ public class DictionaryPane extends BorderPane {
         ensureDictionaryForThisLanguage();
 
         info = createInfoLabel();
-        words = createWordList();
+        words = createWordView();
         backButton = new BackButton();
 
         up = new UpButton();
@@ -90,6 +87,9 @@ public class DictionaryPane extends BorderPane {
             createAndPersistDictionary(pathToDictionary);
         else
             dictionary = PersistenceUtil.get().load(Dictionary.class, pathToDictionary , fileName);
+
+        EnWord word = EnNoun.build("word");
+        dictionary.add(word, "слово");
     }
 
     private void createAndPersistDictionary(String pathToDictionary) throws IOException {
@@ -104,16 +104,24 @@ public class DictionaryPane extends BorderPane {
     }
 
     @NotNull
-    private ListView<Node> createWordList() {
-        ListView<Node> wordList = new ListView<>();
+    private TableView<WordEntry> createWordView() {
+        ObservableList<WordEntry> wordEntries = FXCollections.observableArrayList();
         dictionary.getWords()
-                .forEach(word -> setWordToList(wordList, word));
-        return wordList;
+                .stream()
+                .map(WordEntry::new)
+                .forEach(wordEntries::add);
+        TableView<WordEntry> wordView = new TableView<>(wordEntries);
+        TableColumn<WordEntry, String> mainFormColumn = getWordViewColumn("Word", "mainForm");
+        TableColumn<WordEntry, String> partOfSpeechColumn = getWordViewColumn("p.o.s", "partOfSpeech");
+        TableColumn<WordEntry, String> meaningColumn = getWordViewColumn("Meaning", "meaning");
+        return wordView;
     }
 
-    private void setWordToList(ListView<Node> wordList, Word word) {
-        Label wordLabel = new Label(word.getMainForm());
-        wordList.getItems().add(wordLabel);
+    @NotNull
+    private TableColumn<WordEntry, String> getWordViewColumn(String columnTitle, String propertyName) {
+        TableColumn<WordEntry, String> mainFormColumn = new TableColumn<>(columnTitle);
+        mainFormColumn.setCellValueFactory(new PropertyValueFactory<>(propertyName));
+        return mainFormColumn;
     }
 
     private void setUpLayout() {
@@ -123,7 +131,7 @@ public class DictionaryPane extends BorderPane {
         VBox buttonBox = new VBox(add, up, down, delete);
         buttonBox.setSpacing(MIN_SPACE);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        setControlButtonsOnAction();
+//        setControlButtonsOnAction();
 
         HBox contentAndControlBox = new HBox(MIN_SPACE);
         contentAndControlBox.getChildren().addAll(buttonBox, words);
@@ -137,53 +145,77 @@ public class DictionaryPane extends BorderPane {
         setPadding(INSETS);
     }
 
-    private Word[] futureWord = new Word[1];
-    private void setControlButtonsOnAction() {
-        add.setOnAction(event -> {
-            ChoosePane<PartOfSpeech> newWordPane = new ChoosePane<>("Choose part of speech:", new EnglishEndpoint().getPartsOfSpeeches(), null);
+//    private Word[] futureWord = new Word[1];
+//    private void setControlButtonsOnAction() {
+//        add.setOnAction(event -> {
+//            ChoosePane<PartOfSpeech> newWordPane = new ChoosePane<>("Choose part of speech:", new EnglishEndpoint().getPartsOfSpeeches(), null);
+//
+//            Scene scene = new Scene(newWordPane, 350, 350);
+//            Stage stage = new Stage();
+//            stage.setTitle("ZhLingvo: " + Util.capitalize(language.toLowerCase()) + " - New Word");
+//            stage.setScene(scene);
+//            stage.show();
+//
+//            newWordPane.setOnExit(exitEvent -> stage.close());
+//            newWordPane.setOnForward(fireEvent -> futureWord[0] = EnNoun.build("word"));
+//            new Thread(() -> {
+//                ExecutorService executor = Executors.newCachedThreadPool();
+//                Future<Word> futureWordGetter = executor.submit(this::getFutureWord);
+//                Word newWord = extractWordFromFuture(futureWordGetter);
+//                futureWord[0] = null;
+//                setWordToList(words, newWord);
+//            }).start();
+//        });
+//    }
 
-            Scene scene = new Scene(newWordPane, 350, 350);
-            Stage stage = new Stage();
-            stage.setTitle("ZhLingvo: " + Util.capitalize(language.toLowerCase()) + " - New Word");
-            stage.setScene(scene);
-            stage.show();
+//    private Word extractWordFromFuture(Future<Word> futureWordGetter) {
+//        try {
+//            return futureWordGetter.get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            throw new RuntimeException("Failed to get new word", e);
+//        }
+//    }
 
-            newWordPane.setOnExit(exitEvent -> stage.close());
-            newWordPane.setOnForward(fireEvent -> futureWord[0] = EnNoun.build("word"));
-            new Thread(() -> {
-                ExecutorService executor = Executors.newCachedThreadPool();
-                Future<Word> futureWordGetter = executor.submit(this::getFutureWord);
-                Word newWord = extractWordFromFuture(futureWordGetter);
-                futureWord[0] = null;
-                setWordToList(words, newWord);
-            }).start();
-        });
-    }
+//    private Word getFutureWord() {
+//        while (futureWord[0] == null)
+//            sleep(50);
+//        return futureWord[0];
+//    }
 
-    private Word extractWordFromFuture(Future<Word> futureWordGetter) {
-        try {
-            return futureWordGetter.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to get new word", e);
-        }
-    }
-
-    private Word getFutureWord() {
-        while (futureWord[0] == null)
-            sleep(50);
-        return futureWord[0];
-    }
-
-    private void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            System.out.println("Thread " + Thread.currentThread().getName() + " has been interrupted");
-        }
-    }
+//    private void sleep(long millis) {
+//        try {
+//            Thread.sleep(millis);
+//        } catch (InterruptedException e) {
+//            System.out.println("Thread " + Thread.currentThread().getName() + " has been interrupted");
+//        }
+//    }
 
     public void setOnBack(EventHandler<ActionEvent> handler) {
         backButton.setOnAction(handler);
+    }
+
+    public class WordEntry {
+        private final StringProperty mainForm;
+        private final StringProperty partOfSpeech;
+        private final StringProperty meaning;
+
+        public WordEntry(Word word) {
+            mainForm = new SimpleStringProperty(word.getMainForm());
+            partOfSpeech = new SimpleStringProperty(word.getPartOfSpeech().brief);
+            meaning = new SimpleStringProperty(dictionary.getMeaning(word));
+        }
+
+        public String getMainForm() {
+            return mainForm.get();
+        }
+
+        public String getPartOfSpeech() {
+            return partOfSpeech.get();
+        }
+
+        public String getMeaning() {
+            return meaning.get();
+        }
     }
 
 }

@@ -1,11 +1,17 @@
 package com.zheleznyakov.lingvo.basic;
 
 public enum PartOfSpeech {
-    NOUN,
-    VERB,
-    ADJECTIVE,
-    ADVERB,
-    PREPOSITION,
-    CONJUNCTION,
-    ARTICLE
+    NOUN("n"),
+    VERB("v"),
+    ADJECTIVE("adj"),
+    ADVERB("adv"),
+    PREPOSITION("prep"),
+    CONJUNCTION("conj"),
+    ARTICLE("art");
+
+    public final String brief;
+
+    PartOfSpeech(String brief) {
+        this.brief = brief;
+    }
 }

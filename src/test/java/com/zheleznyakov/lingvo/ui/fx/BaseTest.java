@@ -14,10 +14,13 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+
+import com.zheleznyakov.lingvo.ui.fx.panes.ChoosePane;
 
 public class BaseTest extends ApplicationTest {
     protected Stage stage;
@@ -56,8 +59,10 @@ public class BaseTest extends ApplicationTest {
     }
 
     protected <T> void assertChoosePaneLayout(String labelText, Class<T> dropBoxElementsClass) {
+        Parent root = stage.getScene().getRoot();
         ComboBox dropBox = find("#dropBox");
 
+        assertTrue(root instanceof ChoosePane);
         verifyThat(".label", hasText(labelText));
         assertFalse(dropBox.getItems().isEmpty());
         assertTrue(dropBoxElementsClass.isInstance(dropBox.getItems().get(0)));
