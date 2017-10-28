@@ -88,6 +88,10 @@ public class DictionaryPane extends BorderPane {
         else
             dictionary = PersistenceUtil.get().load(Dictionary.class, pathToDictionary , fileName);
 
+        addTestWord();
+    }
+
+    private void addTestWord() {
         EnWord word = EnNoun.build("word");
         dictionary.add(word, "слово");
     }
@@ -114,6 +118,8 @@ public class DictionaryPane extends BorderPane {
         TableColumn<WordEntry, String> mainFormColumn = getWordViewColumn("Word", "mainForm");
         TableColumn<WordEntry, String> partOfSpeechColumn = getWordViewColumn("p.o.s", "partOfSpeech");
         TableColumn<WordEntry, String> meaningColumn = getWordViewColumn("Meaning", "meaning");
+        wordView.getColumns().addAll(mainFormColumn, partOfSpeechColumn, meaningColumn);
+        wordView.setId("wordView");
         return wordView;
     }
 
