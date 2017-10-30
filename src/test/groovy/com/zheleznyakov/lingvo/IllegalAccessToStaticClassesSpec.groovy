@@ -3,6 +3,7 @@ package com.zheleznyakov.lingvo
 import com.zheleznyakov.lingvo.basic.util.WordFormatter
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceUtil
 import com.zheleznyakov.lingvo.language.en.word.EnSpellingHelper
+import com.zheleznyakov.lingvo.util.ZhConfigFactory
 import com.zheleznyakov.lingvo.util.Util
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -25,5 +26,6 @@ class IllegalAccessToStaticClassesSpec extends Specification {
         WordFormatter.class    | _
         Util.class             | _
         PersistenceUtil.class  | _
+        ZhConfigFactory.class  | _
     }
 }

@@ -86,7 +86,7 @@ public class DictionaryPane extends BorderPane {
         if (!dictionaryFile.exists())
             createAndPersistDictionary(pathToDictionary);
         else
-            dictionary = PersistenceUtil.get().load(Dictionary.class, pathToDictionary , fileName);
+            dictionary = PersistenceUtil.get().load(Dictionary.class, language, fileName);
 
         addTestWord();
     }
@@ -99,7 +99,7 @@ public class DictionaryPane extends BorderPane {
     private void createAndPersistDictionary(String pathToDictionary) throws IOException {
         dictionary = new Dictionary(language);
         dictionary.setTitle(language.toLowerCase());
-        PersistenceUtil.get().persist(dictionary, pathToDictionary);
+        PersistenceUtil.get().persist(dictionary);
     }
 
     @NotNull
