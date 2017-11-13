@@ -15,6 +15,10 @@ import static com.zheleznyakov.lingvo.language.Language.ENGLISH
 class BasicPersistenceManagerSpec extends Specification {
     static String ROOT_PATH = "src/test/resources/dictionaries/";
 
+    def cleanup() {
+        PersistenceHelper.removeFolder(ROOT_PATH)
+    }
+
     def "Persist and load a dictionary"() {
         given: "a non-empty dictionary"
         Dictionary dictionary = new Dictionary(ENGLISH)
@@ -43,9 +47,6 @@ class BasicPersistenceManagerSpec extends Specification {
         dictionary.language == loadedDictionary.language
         dictionary.asMap() == loadedDictionary.asMap()
         dictionary.title == loadedDictionary.title
-
-        cleanup: "remove the save file"
-        new File(path + fileName).delete()
     }
 
     def "Persist and load a learning dictionary"() {
@@ -76,9 +77,6 @@ class BasicPersistenceManagerSpec extends Specification {
         dictionary.language == loadedDictionary.language
         dictionary.asMap() == loadedDictionary.asMap()
         dictionary.title == loadedDictionary.title
-
-        cleanup: "remove the persisted file"
-        new File(path + fileName).delete()
     }
 
     private static LearningDictionary getLearningDictionaryWithNonNullStatistics() {

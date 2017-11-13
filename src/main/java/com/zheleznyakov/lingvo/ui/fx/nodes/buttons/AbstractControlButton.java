@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.ui.fx.buttons;
+package com.zheleznyakov.lingvo.ui.fx.nodes.buttons;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;

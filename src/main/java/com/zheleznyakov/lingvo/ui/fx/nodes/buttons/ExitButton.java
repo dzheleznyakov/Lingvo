@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.ui.fx.buttons;
+package com.zheleznyakov.lingvo.ui.fx.nodes.buttons;
 
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;

@@ -7,8 +7,6 @@ import javafx.geometry.Insets;
 import com.zheleznyakov.lingvo.language.Language;
 
 public interface Config {
-    String ROOT_PATH = "src/main/resources/";
-
     double MIN_SPACE = 5;
     Insets INSETS = new Insets(10);
     Language DEFAULT_LANGUAGE = ENGLISH;

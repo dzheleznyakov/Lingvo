@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.ui.fx.panes;
+package com.zheleznyakov.lingvo.ui.fx.nodes.panes;
 
 import static com.zheleznyakov.lingvo.ui.fx.Config.INSETS;
 import static com.zheleznyakov.lingvo.ui.fx.Config.MIN_SPACE;
@@ -20,8 +20,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import com.zheleznyakov.lingvo.ui.fx.buttons.ExitButton;
-import com.zheleznyakov.lingvo.ui.fx.buttons.ForwardButton;
+import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.ExitButton;
+import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.ForwardButton;
 
 public class ChoosePane<T> extends BorderPane {
     private final Label info;
@@ -69,12 +69,12 @@ public class ChoosePane<T> extends BorderPane {
         return objectsBox.getValue();
     }
 
-    public void setOnForward(EventHandler<ActionEvent> event) {
-        confirmButton.setOnAction(event);
+    public void setOnForward(EventHandler<ActionEvent> handler) {
+        confirmButton.setOnAction(handler);
     }
 
-    public void setOnExit(EventHandler<ActionEvent> event) {
-        exitButton.setOnAction(event);
+    public void setOnExit(EventHandler<ActionEvent> handler) {
+        exitButton.setOnAction(handler);
     }
 
 }

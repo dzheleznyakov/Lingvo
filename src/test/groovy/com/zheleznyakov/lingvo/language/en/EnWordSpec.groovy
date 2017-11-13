@@ -40,7 +40,7 @@ class EnWordSpec extends Specification {
     }
 
     @Unroll
-    def "Test basic properties of complex English parts of speech -- #expectedPartOfSpeech -- #word"() {
+    def "Test basic properties of complex English parts of speech -- #expectedPartOfSpeect -- #word"() {
         when: "an English word is created"
         EnWord enWord = builder(word)
 

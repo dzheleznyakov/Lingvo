@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
@@ -17,7 +18,7 @@ import org.testfx.matcher.control.ComboBoxMatchers;
 import javafx.scene.control.ComboBox;
 
 import com.zheleznyakov.lingvo.language.Language;
-import com.zheleznyakov.lingvo.ui.fx.buttons.ForwardButton;
+import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.ForwardButton;
 
 public class MainPageTest extends AbstractUiFxTest {
 
@@ -37,6 +38,7 @@ public class MainPageTest extends AbstractUiFxTest {
         System.setSecurityManager(new NoExitSecurityManager());
         try {
             rightClickOn(EXIT_BUTTON_ID);
+            fail();
         } catch (ExitException e) {
             assertEquals(1, e.status);
         } finally {
@@ -68,6 +70,11 @@ public class MainPageTest extends AbstractUiFxTest {
         assertNotNull(find("#dictionaryPane-english"));
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void start_main_method() {
+        UiFxMain.main(null);
+    }
+
     private static class ExitException extends SecurityException {
         public final int status;
 
@@ -87,7 +94,6 @@ public class MainPageTest extends AbstractUiFxTest {
 
         @Override
         public void checkExit(int status) {
-            super.checkExit(status);
             throw new ExitException(status);
         }
     }
