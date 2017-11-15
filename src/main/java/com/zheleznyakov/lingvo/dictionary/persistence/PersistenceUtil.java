@@ -1,5 +1,7 @@
 package com.zheleznyakov.lingvo.dictionary.persistence;
 
+import com.google.common.annotations.VisibleForTesting;
+
 public class PersistenceUtil {
     private static PersistenceManager INSTANCE;
 
@@ -11,5 +13,10 @@ public class PersistenceUtil {
         if (INSTANCE == null)
             INSTANCE = new BasicPersistenceManager();
         return INSTANCE;
+    }
+
+    @VisibleForTesting
+    static void setPersistenceManager(PersistenceManager persistenceManager) {
+        INSTANCE = persistenceManager;
     }
 }

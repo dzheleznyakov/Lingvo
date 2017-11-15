@@ -16,11 +16,9 @@ public class MainPageController {
         this.stage = stage;
     }
 
-    public void exitApp() {
-        System.exit(1);
-    }
+    public void exitApp() { System.exit(1); }
 
-    public void onLanguageChoosen(Language language) {
+    public void onLanguageChosen(Language language) {
         DictionaryPane dictionaryPane;
         try {
             dictionaryPane = new DictionaryPane(language);

@@ -19,9 +19,7 @@ public class UiFxMain extends Application {
     private Stage primaryStage;
     private MainPageController mainPageController;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) { launch(args); }
 
     @Override
     public void start(Stage primaryStage) {
@@ -35,7 +33,7 @@ public class UiFxMain extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        chooseLanguagePane.setOnForward(event -> mainPageController.onLanguageChoosen(chooseLanguagePane.getChosen()));
+        chooseLanguagePane.setOnForward(event -> mainPageController.onLanguageChosen(chooseLanguagePane.getChosen()));
         chooseLanguagePane.setOnExit(event -> mainPageController.exitApp());
     }
 

@@ -1,7 +1,9 @@
 package com.zheleznyakov.lingvo.ui.fx
 
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceHelper
+import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager
 import com.zheleznyakov.lingvo.language.Language
+import com.zheleznyakov.lingvo.ui.fx.exceptions.UiFxException
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 import javafx.scene.control.ComboBox
 import org.testfx.matcher.control.ComboBoxMatchers
@@ -15,6 +17,7 @@ import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.util.NodeQueryUtils.hasText
 
 class MainPageSpec extends FxGuiSpecification {
+    private static final String ROOT_DIR = ZhConfigFactory.get().getString("languageDirRoot")
 
     def "Verify the elements of the main page"() {
         expect: "main page to have all necessary elements"
@@ -60,19 +63,24 @@ class MainPageSpec extends FxGuiSpecification {
         assertThat(comboBox, ComboBoxMatchers.hasSelectedItem(SPANISH))
     }
 
-    def "Clicking on the Forward button loads the dictionary page"() {
-        given: "the language combo box from the ui main page"
-        ComboBox<Language> comboBox = find("#dropBox")
+    def "If dictionary file does not exist, then clicking on the Forward button loads the dictionary page and create the file"() {
+        expect: "the dictionary file does not exists"
+        File file = new File(ROOT_DIR + "/english/english.dic")
+        !file.exists()
 
         when: "English language is chosen and the forward button is clicked"
-        chooseValueInComboBox(comboBox, ENGLISH.name())
-        clickOn(FORWARD_BUTTON_ID)
+        loadDictionaryPane(ENGLISH)
 
         then: "the English dictionary page is loaded"
         find("#dictionaryPane-english")
+        file.exists()
 
         cleanup: "remove the dictionary folder"
-        PersistenceHelper.removeFolder(ZhConfigFactory.get().getString("languageDirRoot"))
+        PersistenceHelper.removeFolder(ROOT_DIR)
+    }
+
+    def "If the dictionary file exists, load it when clicking on the Forward button"() {
+
     }
 
     def "When starting the second instance, an exception is thrown"() {
@@ -81,6 +89,29 @@ class MainPageSpec extends FxGuiSpecification {
 
         then: "an IllegalStateException is thrown"
         thrown(IllegalStateException)
+    }
+
+    def "When DictionaryPane fails to load the dictionary, throw"() {
+        given: "a Persistence Manager that will throw"
+        PersistenceManager persistenceManager = Mock()
+        persistenceManager.persist(_) >> {throw new IOException("Mock Exception")}
+        PersistenceHelper.mockPersistenceManager(persistenceManager)
+
+        expect: "when loading English dictionary pane, an UiFxException is thrown"
+        try {
+            loadDictionaryPane(ENGLISH)
+        } catch (UiFxException ex) {
+            ex.message.startsWith "Failed to create DictionaryPane"
+        }
+
+        cleanup: "remove the dictionary folder"
+        PersistenceHelper.removeFolder(ROOT_DIR)
+    }
+
+    private loadDictionaryPane(Language language) {
+        ComboBox<Language> comboBox = find("#dropBox")
+        chooseValueInComboBox(comboBox, language.name())
+        clickOn(FORWARD_BUTTON_ID)
     }
 
     private static class ExitException extends SecurityException {
