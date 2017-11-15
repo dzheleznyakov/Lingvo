@@ -13,8 +13,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,8 +27,6 @@ import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceUtil;
 import com.zheleznyakov.lingvo.language.Language;
-import com.zheleznyakov.lingvo.language.en.EnWord;
-import com.zheleznyakov.lingvo.language.en.word.EnNoun;
 import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.BackButton;
 import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.DownButton;
 import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.MinusButton;
@@ -79,14 +75,13 @@ public class DictionaryPane extends BorderPane {
             createAndPersistDictionary(path);
         else
             dictionary = PersistenceUtil.get().load(Dictionary.class, language, fileName);
-
-        addTestWord();
+//        addTestWord();
     }
 
-    private void addTestWord() {
-        EnWord word = EnNoun.build("word");
-        dictionary.add(word, "слово");
-    }
+//    private void addTestWord() {
+//        EnWord word = EnNoun.build("word");
+//        dictionary.add(word, "слово");
+//    }
 
     private void createAndPersistDictionary(String pathToDictionary) throws IOException {
         dictionary = new Dictionary(language);
@@ -142,9 +137,13 @@ public class DictionaryPane extends BorderPane {
         setPadding(INSETS);
     }
 
-    public void setOnBack(EventHandler<ActionEvent> handler) {
-        backButton.setOnAction(handler);
+    public Dictionary getDictionary() {
+        return dictionary;
     }
+
+    //    public void setOnBack(EventHandler<ActionEvent> handler) {
+//        backButton.setOnAction(handler);
+//    }
 
     public class WordEntry {
         private final StringProperty mainForm;

@@ -1,10 +1,9 @@
 package com.zheleznyakov.lingvo.dictionary.persistence
 
+import com.zheleznyakov.lingvo.basic.Word
 import com.zheleznyakov.lingvo.dictionary.Dictionary
 import com.zheleznyakov.lingvo.language.Language
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
-
-import static com.zheleznyakov.lingvo.language.Language.ENGLISH
 
 class PersistenceHelper {
     static void removeFolder(String folderName) {
@@ -28,7 +27,7 @@ class PersistenceHelper {
             queue.offer(file)
     }
 
-    static void ensureDictionaryExistence(Language language) {
+    static void ensureDictionaryExistence(Language language, Word... words) {
         String dirName = ZhConfigFactory.get().getString("languageDirRoot") + "/" + language.toLowerCase()
         File dir = new File(dirName)
         if (!dir.exists())
@@ -36,7 +35,16 @@ class PersistenceHelper {
         String fileName = dirName + "/" + language.toLowerCase() + PersistenceManager.DIC_EXTENSION
         File file = new File(fileName)
         if (!file.exists())
-            new BasicPersistenceManager().persist(new Dictionary(ENGLISH))
+            new BasicPersistenceManager().persist(createDictionary(language, words))
+    }
+
+    private static Dictionary createDictionary(Language language, Word[] words) {
+        Dictionary dictionary = new Dictionary(language)
+        words.each {
+            assert it.language == language
+            dictionary.add(it, it.mainForm)
+        }
+        return dictionary
     }
 
     static void mockPersistenceManager(PersistenceManager persistenceManager) {
