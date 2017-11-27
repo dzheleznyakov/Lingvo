@@ -5,7 +5,7 @@ import com.zheleznyakov.lingvo.dictionary.Dictionary
 import com.zheleznyakov.lingvo.language.Language
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 
-class PersistenceHelper {
+class PersistenceTestHelper {
     static void removeFolder(String folderName) {
         File rootDir = new File(folderName)
         Queue<File> filesToDelete = new LinkedList<>([rootDir])

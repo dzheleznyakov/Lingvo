@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.ui.fx
 
-import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceHelper
+import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceTestHelper
 import com.zheleznyakov.lingvo.language.Language
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 import javafx.scene.Node
@@ -34,7 +34,7 @@ class FxGuiSpecification extends Specification {
     @After
     def generalCleanup() {
         fx.tearDown()
-        PersistenceHelper.removeFolder(ROOT_DIR)
+        PersistenceTestHelper.removeFolder(ROOT_DIR)
     }
 
     protected <T extends Node> T find(String query) {

@@ -1,7 +1,7 @@
 package com.zheleznyakov.lingvo.ui.fx
 
 import com.zheleznyakov.lingvo.dictionary.Dictionary
-import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceHelper
+import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceTestHelper
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager
 import com.zheleznyakov.lingvo.language.en.EnWord
 import com.zheleznyakov.lingvo.language.en.word.EnNoun
@@ -27,7 +27,7 @@ class DictionaryPaneSpec extends FxGuiSpecification {
     def "If the dictionary file exists, load it when clicking on the Forward button"() {
         given: "a persisted English dictionary"
         EnWord word = EnNoun.build("word")
-        PersistenceHelper.ensureDictionaryExistence(ENGLISH, word)
+        PersistenceTestHelper.ensureDictionaryExistence(ENGLISH, word)
 
         when: "English Dictionary Page is loaded"
         loadDictionaryPane(ENGLISH)
@@ -42,7 +42,7 @@ class DictionaryPaneSpec extends FxGuiSpecification {
         given: "a Persistence Manager that will throw"
         PersistenceManager persistenceManager = Mock()
         persistenceManager.persist(_) >> {throw new IOException("Mock Exception")}
-        PersistenceHelper.mockPersistenceManager(persistenceManager)
+        PersistenceTestHelper.mockPersistenceManager(persistenceManager)
 
         expect: "when loading English dictionary pane, an UiFxException is thrown"
         try {

@@ -16,7 +16,7 @@ class BasicPersistenceManagerSpec extends Specification {
     static String ROOT_PATH = "src/test/resources/dictionaries/";
 
     def cleanup() {
-        PersistenceHelper.removeFolder(ROOT_PATH)
+        PersistenceTestHelper.removeFolder(ROOT_PATH)
     }
 
     def "Persist and load a dictionary"() {
