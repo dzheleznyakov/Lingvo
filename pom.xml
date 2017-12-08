@@ -5,8 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.zheleznyakov.lingvo</groupId>
-    <artifactId>Lingvo</artifactId>
+    <artifactId>ZhLingvo</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>Core</module>
+        <module>Temp</module>
+    </modules>
+
     <build>
         <plugins>
             <plugin>
@@ -16,6 +22,12 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -25,7 +37,8 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>compile</goal>
+                            <goal>addTestSources</goal>
+                            <!--<goal>compile</goal>-->
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
@@ -33,15 +46,58 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
+                <version>2.20</version>
                 <configuration>
-                    <useFile>false</useFile>
                     <includes>
                         <include>**/*Spec.java</include>
                     </includes>
                 </configuration>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.2</version>
+                    <configuration>
+                        <shadedArtifactAttached>true</shadedArtifactAttached>
+                        <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                        <artifactSet>
+                            <includes>
+                                <include>*:*</include>
+                            </includes>
+                        </artifactSet>
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/*.SF</exclude>
+                                    <exclude>META-INF/*.DSA</exclude>
+                                    <exclude>META-INF/*.RSA</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                        <!--<transformers>-->
+                            <!--<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+                                <!--<manifestEntries>-->
+                                    <!--<Main-Class>com.ocado.rainbow.botconfig.BotConfigMain</Main-Class>-->
+                                <!--</manifestEntries>-->
+                            <!--</transformer>-->
+                        <!--</transformers>-->
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencies>
@@ -73,11 +129,13 @@
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
             <version>4.0.7-alpha</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
             <version>4.0.7-alpha</version>
+            <scope>test</scope>
         </dependency>
         <dependency> <!-- enables mocking of classes (in addition to interfaces) -->
             <groupId>cglib</groupId>
@@ -98,6 +156,16 @@
             <version>1.3.0</version>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.zheleznyakov.lingvo</groupId>
+                <artifactId>Core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
