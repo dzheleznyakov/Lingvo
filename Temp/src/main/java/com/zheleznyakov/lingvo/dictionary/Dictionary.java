@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.zheleznyakov.lingvo.basic.Language;
-import com.zheleznyakov.lingvo.basic.PartOfSpeech;
+import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.util.Util;
 

@@ -1,16 +1,13 @@
 package com.zheleznyakov.lingvo.learning
 
+import com.zheleznyakov.lingvo.basic.Language
 import com.zheleznyakov.lingvo.basic.Word
-import Language
-import com.zheleznyakov.lingvo.language.en.word.EnNoun
-import com.zheleznyakov.lingvo.language.en.word.EnVerb
+import com.zheleznyakov.lingvo.en.word.EnVerb
 import com.zheleznyakov.lingvo.learning.WordTester.Mode
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.zheleznyakov.lingvo.learning.WordTester.Mode.FORWARD
-import static com.zheleznyakov.lingvo.learning.WordTester.Mode.BACKWARD
-import static com.zheleznyakov.lingvo.learning.WordTester.Mode.TOGGLE
+import static com.zheleznyakov.lingvo.learning.WordTester.Mode.*
 
 class WordTesterSpec extends Specification {
     static final int maxLearningCount = 10

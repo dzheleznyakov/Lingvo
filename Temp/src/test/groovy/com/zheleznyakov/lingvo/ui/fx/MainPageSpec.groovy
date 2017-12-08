@@ -1,14 +1,14 @@
 package com.zheleznyakov.lingvo.ui.fx
 
-import Language
+import com.zheleznyakov.lingvo.basic.Language
 import javafx.scene.control.ComboBox
 import org.testfx.matcher.control.ComboBoxMatchers
 import spock.lang.Unroll
 
 import java.security.Permission
 
-import static Language.ENGLISH
-import static Language.SPANISH
+import static com.zheleznyakov.lingvo.basic.Language.ENGLISH
+import static com.zheleznyakov.lingvo.basic.Language.SPANISH
 import static org.junit.Assert.assertThat
 import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.util.NodeQueryUtils.hasText

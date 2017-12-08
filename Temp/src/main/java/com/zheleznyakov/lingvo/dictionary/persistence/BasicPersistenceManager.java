@@ -11,8 +11,8 @@ import java.io.ObjectOutputStream;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.zheleznyakov.lingvo.basic.Language;
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
-import com.zheleznyakov.lingvo.language.Language;
 import com.zheleznyakov.lingvo.util.ZhConfigFactory;
 
 public class BasicPersistenceManager implements PersistenceManager {

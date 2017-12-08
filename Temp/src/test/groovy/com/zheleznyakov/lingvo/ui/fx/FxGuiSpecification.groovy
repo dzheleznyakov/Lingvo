@@ -1,7 +1,7 @@
 package com.zheleznyakov.lingvo.ui.fx
 
-import PersistenceTestHelper
-import Language
+import com.zheleznyakov.lingvo.basic.Language
+import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceTestHelper
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 import javafx.scene.Node
 import javafx.scene.control.ComboBox

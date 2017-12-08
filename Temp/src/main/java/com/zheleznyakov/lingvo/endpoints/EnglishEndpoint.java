@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.endpoints;
 
-import com.zheleznyakov.lingvo.basic.PartOfSpeech;
+import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech;
 
 public class EnglishEndpoint {
     public PartOfSpeech[] getPartsOfSpeeches() {

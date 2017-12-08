@@ -4,12 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.zheleznyakov.lingvo</groupId>
+    <groupId>com.zheleznyakov.com.zheleznyakov.lingvo</groupId>
     <artifactId>ZhLingvo</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>Core</module>
+        <module>Languages</module>
         <module>Temp</module>
     </modules>
 
@@ -79,13 +80,6 @@
                                 </excludes>
                             </filter>
                         </filters>
-                        <!--<transformers>-->
-                            <!--<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-                                <!--<manifestEntries>-->
-                                    <!--<Main-Class>com.ocado.rainbow.botconfig.BotConfigMain</Main-Class>-->
-                                <!--</manifestEntries>-->
-                            <!--</transformer>-->
-                        <!--</transformers>-->
                     </configuration>
                     <executions>
                         <execution>
@@ -155,12 +149,16 @@
             <artifactId>config</artifactId>
             <version>1.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.zheleznyakov.com.zheleznyakov.lingvo</groupId>
+            <artifactId>Core</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.zheleznyakov.lingvo</groupId>
+                <groupId>com.zheleznyakov.com.zheleznyakov.lingvo</groupId>
                 <artifactId>Core</artifactId>
                 <version>${project.version}</version>
             </dependency>

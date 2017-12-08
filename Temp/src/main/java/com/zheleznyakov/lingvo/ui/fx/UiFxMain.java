@@ -6,7 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import com.zheleznyakov.lingvo.language.Language;
+import com.zheleznyakov.lingvo.basic.Language;
 import com.zheleznyakov.lingvo.ui.fx.controllers.MainPageController;
 import com.zheleznyakov.lingvo.ui.fx.nodes.panes.ChoosePane;
 

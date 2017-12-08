@@ -23,10 +23,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import com.zheleznyakov.lingvo.basic.Language;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceUtil;
-import com.zheleznyakov.lingvo.language.Language;
 import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.BackButton;
 import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.DownButton;
 import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.MinusButton;

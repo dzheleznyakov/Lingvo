@@ -2,13 +2,13 @@ package com.zheleznyakov.lingvo.endpoints
 
 import spock.lang.Specification
 
-import static com.zheleznyakov.lingvo.basic.PartOfSpeech.NOUN
-import static com.zheleznyakov.lingvo.basic.PartOfSpeech.VERB
-import static com.zheleznyakov.lingvo.basic.PartOfSpeech.ADVERB
-import static com.zheleznyakov.lingvo.basic.PartOfSpeech.ADJECTIVE
-import static com.zheleznyakov.lingvo.basic.PartOfSpeech.PREPOSITION
-import static com.zheleznyakov.lingvo.basic.PartOfSpeech.CONJUNCTION
-import static com.zheleznyakov.lingvo.basic.PartOfSpeech.ARTICLE
+import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.NOUN
+import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.VERB
+import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.ADVERB
+import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.ADJECTIVE
+import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.PREPOSITION
+import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.CONJUNCTION
+import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.ARTICLE
 
 class EnglishEndpointSpec extends Specification {
 

@@ -1,13 +1,13 @@
 package com.zheleznyakov.lingvo.ui.fx
 
 import com.zheleznyakov.lingvo.dictionary.Dictionary
-import PersistenceTestHelper
 import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager
-import com.zheleznyakov.lingvo.language.en.EnWord
-import com.zheleznyakov.lingvo.language.en.word.EnNoun
+import com.zheleznyakov.lingvo.dictionary.persistence.PersistenceTestHelper
+import com.zheleznyakov.lingvo.en.EnWord
+import com.zheleznyakov.lingvo.en.word.EnNoun
 import com.zheleznyakov.lingvo.ui.fx.exceptions.UiFxException
 
-import static Language.ENGLISH
+import static com.zheleznyakov.lingvo.basic.Language.ENGLISH
 
 class DictionaryPaneSpec extends FxGuiSpecification {
 

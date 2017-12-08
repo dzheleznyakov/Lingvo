@@ -1,8 +1,8 @@
 package com.zheleznyakov.lingvo.dictionary.persistence
 
+import com.zheleznyakov.lingvo.basic.Language
 import com.zheleznyakov.lingvo.basic.Word
 import com.zheleznyakov.lingvo.dictionary.Dictionary
-import Language
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 
 class PersistenceTestHelper {

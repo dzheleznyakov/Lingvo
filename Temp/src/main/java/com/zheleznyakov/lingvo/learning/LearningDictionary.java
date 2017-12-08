@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zheleznyakov.lingvo.basic.Language;
 import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.dictionary.Dictionary;
-import com.zheleznyakov.lingvo.language.Language;
 
 public class LearningDictionary extends Dictionary {
 

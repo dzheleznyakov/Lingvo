@@ -1,11 +1,11 @@
 package com.zheleznyakov.lingvo.dictionary
 
 import com.google.common.collect.ImmutableSet
-import com.zheleznyakov.lingvo.basic.PartOfSpeech
+import com.zheleznyakov.lingvo.basic.Language
 import com.zheleznyakov.lingvo.basic.Word
-import Language
-import com.zheleznyakov.lingvo.language.en.word.EnNoun
-import com.zheleznyakov.lingvo.language.en.word.EnVerb
+import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech
+import com.zheleznyakov.lingvo.en.word.EnNoun
+import com.zheleznyakov.lingvo.en.word.EnVerb
 import spock.lang.Specification
 
 class DictionarySpec extends Specification {

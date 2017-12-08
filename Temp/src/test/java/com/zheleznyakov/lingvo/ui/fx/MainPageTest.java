@@ -1,7 +1,7 @@
 package com.zheleznyakov.lingvo.ui.fx;
 
-import static com.zheleznyakov.lingvo.language.Language.ENGLISH;
-import static com.zheleznyakov.lingvo.language.Language.SPANISH;
+import static com.zheleznyakov.lingvo.basic.Language.ENGLISH;
+import static com.zheleznyakov.lingvo.basic.Language.SPANISH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -17,7 +17,7 @@ import org.testfx.matcher.control.ComboBoxMatchers;
 
 import javafx.scene.control.ComboBox;
 
-import com.zheleznyakov.lingvo.language.Language;
+import com.zheleznyakov.lingvo.basic.Language;
 import com.zheleznyakov.lingvo.ui.fx.nodes.buttons.ForwardButton;
 
 public class MainPageTest extends AbstractUiFxTest {

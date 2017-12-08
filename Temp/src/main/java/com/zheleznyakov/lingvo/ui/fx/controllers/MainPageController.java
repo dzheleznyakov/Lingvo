@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javafx.stage.Stage;
 
-import com.zheleznyakov.lingvo.language.Language;
+import com.zheleznyakov.lingvo.basic.Language;
 import com.zheleznyakov.lingvo.ui.fx.exceptions.UiFxException;
 import com.zheleznyakov.lingvo.ui.fx.nodes.panes.DictionaryPane;
 import com.zheleznyakov.lingvo.util.Util;

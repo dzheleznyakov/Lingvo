@@ -2,15 +2,15 @@ package com.zheleznyakov.lingvo.dictionary.persistence
 
 import com.zheleznyakov.lingvo.basic.Word
 import com.zheleznyakov.lingvo.dictionary.Dictionary
-import com.zheleznyakov.lingvo.language.en.word.EnAdjective
-import com.zheleznyakov.lingvo.language.en.word.EnNoun
+import com.zheleznyakov.lingvo.en.word.EnAdjective
+import com.zheleznyakov.lingvo.en.word.EnNoun
 import com.zheleznyakov.lingvo.learning.LearningDictionary
 import com.zheleznyakov.lingvo.learning.WordTester
 import spock.lang.Specification
 
+import static com.zheleznyakov.lingvo.basic.Language.ENGLISH
 import static com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager.DIC_EXTENSION
 import static com.zheleznyakov.lingvo.dictionary.persistence.PersistenceManager.LD_EXTENSION
-import static Language.ENGLISH
 
 class BasicPersistenceManagerSpec extends Specification {
     static String ROOT_PATH = "src/test/resources/dictionaries/";
@@ -26,7 +26,7 @@ class BasicPersistenceManagerSpec extends Specification {
         String title = "temp"
         dictionary.title = title
 
-        and: "a com.zheleznyakov.lingvo.basic persistence manager"
+        and: "a com.zheleznyakov.com.zheleznyakov.lingvo.basic persistence manager"
         PersistenceManager persistenceManager = new BasicPersistenceManager()
 
         expect: "that the file for persistence does not exists"
@@ -55,7 +55,7 @@ class BasicPersistenceManagerSpec extends Specification {
         String title = "test"
         dictionary.title = title
 
-        and: "a com.zheleznyakov.lingvo.basic persistence manager"
+        and: "a com.zheleznyakov.com.zheleznyakov.lingvo.basic persistence manager"
         PersistenceManager persistenceManager = new BasicPersistenceManager()
 
         expect: "that the file for persistence does not exists"
