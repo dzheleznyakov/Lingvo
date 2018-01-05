@@ -4,14 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.zheleznyakov.com.zheleznyakov.lingvo</groupId>
+    <groupId>com.zheleznyakov.lingvo</groupId>
     <artifactId>ZhLingvo</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>Core</module>
         <module>Languages</module>
-        <module>Temp</module>
+        <module>Util</module>
+        <module>Extended</module>
+        <module>UiFx</module>
     </modules>
 
     <build>
@@ -19,6 +21,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -39,20 +42,66 @@
                     <execution>
                         <goals>
                             <goal>addTestSources</goal>
-                            <!--<goal>compile</goal>-->
+                            <goal>compile</goal>
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.20</version>
                 <configuration>
+                    <useFile>false</useFile>
                     <includes>
                         <include>**/*Spec.java</include>
                     </includes>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                    <artifactSet>
+                        <includes>
+                            <include>*:*</include>
+                        </includes>
+                    </artifactSet>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <!--<manifestEntries>-->
+                                <!--<Main-Class>com.ocado.rainbow.botconfigui.Main</Main-Class>-->
+                            <!--</manifestEntries>-->
+                        </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>reference.conf</resource>
+                        </transformer>
+                    </transformers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
@@ -102,64 +151,82 @@
             <version>4.12</version>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>15.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>22.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
             <version>1.1-groovy-2.4-rc-2</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.testfx</groupId>
-            <artifactId>testfx-core</artifactId>
-            <version>4.0.7-alpha</version>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.12</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testfx</groupId>
-            <artifactId>testfx-junit</artifactId>
-            <version>4.0.7-alpha</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency> <!-- enables mocking of classes (in addition to interfaces) -->
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>3.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency> <!-- enables mocking of classes without default constructor (together with
-				CGLIB) -->
-            <groupId>org.objenesis</groupId>
-            <artifactId>objenesis</artifactId>
-            <version>2.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe</groupId>
-            <artifactId>config</artifactId>
-            <version>1.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.zheleznyakov.com.zheleznyakov.lingvo</groupId>
-            <artifactId>Core</artifactId>
         </dependency>
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.zheleznyakov.com.zheleznyakov.lingvo</groupId>
+                <groupId>com.zheleznyakov.lingvo</groupId>
                 <artifactId>Core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zheleznyakov.lingvo</groupId>
+                <artifactId>Util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zheleznyakov.lingvo</groupId>
+                <artifactId>Languages</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zheleznyakov.lingvo</groupId>
+                <artifactId>Extended</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.typesafe</groupId>
+                <artifactId>config</artifactId>
+                <version>1.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>22.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>15.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testfx</groupId>
+                <artifactId>testfx-core</artifactId>
+                <version>4.0.8-alpha</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency> <!-- enables mocking of classes (in addition to interfaces) -->
+                <groupId>cglib</groupId>
+                <artifactId>cglib-nodep</artifactId>
+                <version>3.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency> <!-- enables mocking of classes without default constructor (together with
+				CGLIB) -->
+                <groupId>org.objenesis</groupId>
+                <artifactId>objenesis</artifactId>
+                <version>2.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.zheleznyakov.lingvo</groupId>
+                <artifactId>Util</artifactId>
+                <type>test-jar</type>
+                <scope>test</scope>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

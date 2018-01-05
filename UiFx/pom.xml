@@ -8,7 +8,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>Languages</artifactId>
+    <artifactId>UiFx</artifactId>
 
     <dependencies>
         <dependency>
@@ -17,14 +17,22 @@
         </dependency>
         <dependency>
             <groupId>com.zheleznyakov.lingvo</groupId>
-            <artifactId>Util</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
+            <artifactId>Languages</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.ocado.baggingandconnections</groupId>
-            <artifactId>Container</artifactId>
-            <version>1.1.2-SNAPSHOT</version>
+            <groupId>com.zheleznyakov.lingvo</groupId>
+            <artifactId>Extended</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zheleznyakov.lingvo</groupId>
+            <artifactId>Util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+    
 </project>

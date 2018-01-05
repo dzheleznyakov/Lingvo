@@ -1,7 +1,7 @@
 package com.zheleznyakov.lingvo.en.word;
 
-import com.zheleznyakov.lingvo.basic.parts.Preposition;
 import com.zheleznyakov.lingvo.en.EnWord;
+import com.zheleznyakov.lingvo.basic.parts.Preposition;
 
 public class EnPreposition extends EnWord implements Preposition {
 

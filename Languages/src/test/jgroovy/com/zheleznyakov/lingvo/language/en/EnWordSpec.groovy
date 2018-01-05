@@ -17,11 +17,11 @@ import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.VERB
 class EnWordSpec extends Specification {
 
     @Unroll
-    def "Test com.zheleznyakov.com.zheleznyakov.lingvo.basic properties of simple English parts of speech -- #expectedPartOfSpeech -- #word"() {
+    def "Test basic properties of simple English parts of speech -- #expectedPartOfSpeech -- #word"() {
         when: "an English word is created"
         EnWord enWord = builder(word)
 
-        then: "all its com.zheleznyakov.com.zheleznyakov.lingvo.basic properties are correct"
+        then: "all its basic properties are correct"
         with(enWord) {
             language == Language.ENGLISH
             partOfSpeech == expectedPartOfSpeech
@@ -41,11 +41,11 @@ class EnWordSpec extends Specification {
     }
 
     @Unroll
-    def "Test com.zheleznyakov.com.zheleznyakov.lingvo.basic properties of complex English parts of speech -- #expectedPartOfSpeect -- #word"() {
+    def "Test basic properties of complex English parts of speech -- #expectedPartOfSpeect -- #word"() {
         when: "an English word is created"
         EnWord enWord = builder(word)
 
-        then: "all its com.zheleznyakov.com.zheleznyakov.lingvo.basic properties are correct"
+        then: "all its basic properties are correct"
         with(enWord) {
             language == Language.ENGLISH
             partOfSpeech == expectedPartOfSpeect
