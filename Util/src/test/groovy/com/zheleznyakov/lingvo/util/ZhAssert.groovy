@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 
 import static org.junit.Assert.assertTrue
-import static org.junit.Assert.fail
 
 class ZhAssert {
 
@@ -13,7 +12,7 @@ class ZhAssert {
         constructor.setAccessible(true)
         try {
             constructor.newInstance()
-            fail()
+            assert false
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause()
             assertTrue(cause instanceof IllegalAccessException)

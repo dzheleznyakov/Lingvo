@@ -10,12 +10,20 @@
 
     <artifactId>Core</artifactId>
 
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>com.zheleznyakov.lingvo</groupId>
             <artifactId>Util</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.zheleznyakov.lingvo</groupId>
+            <artifactId>Util</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
         <dependency>
             <groupId>com.zheleznyakov.lingvo</groupId>
             <artifactId>Util</artifactId>

@@ -18,7 +18,14 @@
         <dependency>
             <groupId>com.zheleznyakov.lingvo</groupId>
             <artifactId>Util</artifactId>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
         </dependency>
     </dependencies>
 
