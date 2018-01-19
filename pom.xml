@@ -9,8 +9,7 @@
     <modules>
         <module>Util</module>
         <module>Core</module>
-        <!--<module>Util</module>-->
-        <!--<module>Languages</module>-->
+        <module>Languages</module>
         <!--<module>Extended</module>-->
         <!--<module>UiFx</module>-->
     </modules>

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.zheleznyakov.lingvo.en.EnWord;
 
-class EnSpellingHelper {
+public class EnSpellingHelper {
 
     private EnSpellingHelper() throws IllegalAccessException {
         throw new IllegalAccessException("This class is a static helper; it is not supposed to be instantiated");

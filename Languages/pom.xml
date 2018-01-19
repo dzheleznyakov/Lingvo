@@ -10,6 +10,8 @@
 
     <artifactId>Languages</artifactId>
 
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>com.zheleznyakov.lingvo</groupId>

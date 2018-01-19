@@ -5,7 +5,7 @@ import spock.lang.Unroll
 
 import java.util.function.Function
 
-class UtilSpeck extends Specification {
+class UtilSpec extends Specification {
 
     def "When expression is true, then validateArgument passes"() {
         expect: "validation to pass"

@@ -16,8 +16,4 @@ class IllegalAccessToStaticClassesSpec extends Specification {
         clazz               | _
         WordFormatter.class | _
     }
-
-    def "Fail"() {
-        expect: false
-    }
 }
