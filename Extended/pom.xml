@@ -10,6 +10,8 @@
 
     <artifactId>Extended</artifactId>
 
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>com.zheleznyakov.lingvo</groupId>
@@ -20,6 +22,10 @@
             <artifactId>Util</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.zheleznyakov.lingvo</groupId>
+            <artifactId>Languages</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
@@ -27,7 +33,11 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.zheleznyakov.lingvo</groupId>
+            <artifactId>Util</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
-    
 </project>

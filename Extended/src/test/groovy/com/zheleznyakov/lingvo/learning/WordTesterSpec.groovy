@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo.learning
 
 import com.zheleznyakov.lingvo.basic.Language
 import com.zheleznyakov.lingvo.basic.Word
+import com.zheleznyakov.lingvo.en.word.EnNoun
 import com.zheleznyakov.lingvo.en.word.EnVerb
 import com.zheleznyakov.lingvo.learning.WordTester.Mode
 import spock.lang.Specification

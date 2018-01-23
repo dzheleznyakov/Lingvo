@@ -5,6 +5,8 @@ import spock.lang.Unroll
 
 import java.util.function.Function
 
+import static com.zheleznyakov.lingvo.util.ZhAssert.assertIllegalAccess
+
 class UtilSpec extends Specification {
 
     def "When expression is true, then validateArgument passes"() {
@@ -200,6 +202,16 @@ class UtilSpec extends Specification {
         ""     || ""
         "Abc"  || "Abc"
         "ABC"  || "ABC"
+    }
+
+    @Unroll
+    def "Throw when trying to create instance for a static class -- #clazz.simpleName"() {
+        expect:
+        assertIllegalAccess(clazz, "This class is a static helper; it is not supposed to be instantiated")
+
+        where:
+        clazz               | _
+        Util.class | _
     }
 
     private class IntegerToDouble implements Function<Integer, Double> {

@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.en.word;
 
+
 import org.jetbrains.annotations.NotNull;
 
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
