@@ -8,9 +8,9 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>Util</module>
-        <module>Core</module>
-        <module>Languages</module>
-        <module>Extended</module>
+        <!--<module>Core</module>-->
+        <!--<module>Languages</module>-->
+        <!--<module>Extended</module>-->
         <!--<module>UiFx</module>-->
     </modules>
 

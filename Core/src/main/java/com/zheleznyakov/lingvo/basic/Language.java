@@ -1,10 +1,8 @@
 package com.zheleznyakov.lingvo.basic;
 
-public enum Language {
-    ENGLISH,
-    SPANISH;
+public interface Language {
 
-    public String toLowerCase() {
-        return name().toLowerCase();
-    }
+    String name();
+    String code();
+    boolean isStringLegitimate(String string);
 }
