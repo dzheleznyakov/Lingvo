@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.language
 
-import com.zheleznyakov.lingvo.en.word.EnSpellingHelper
+
 import com.zheleznyakov.lingvo.util.ZhAssert
 import spock.lang.Specification
 import spock.lang.Unroll

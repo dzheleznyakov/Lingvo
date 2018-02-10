@@ -1,8 +1,6 @@
 package com.zheleznyakov.lingvo.language.en.word
 
-import com.zheleznyakov.lingvo.en.word.EnNoun
-import com.zheleznyakov.lingvo.en.word.EnNoun.EnNounFormName
-import com.zheleznyakov.lingvo.en.word.EnProperNoun.EnProperNounFormName
+
 import spock.lang.Specification
 import spock.lang.Unroll
 
