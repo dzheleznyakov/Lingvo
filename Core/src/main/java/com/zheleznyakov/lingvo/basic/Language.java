@@ -4,5 +4,5 @@ public interface Language {
 
     String name();
     String code();
-    boolean isStringLegitimate(String string);
+    boolean isStringLegal(String string);
 }

@@ -24,7 +24,9 @@ public class EnglishLanguage implements Language {
     }
 
     @Override
-    public boolean isStringLegitimate(String string) {
-        return false;
+    public boolean isStringLegal(String string) {
+        String letters = "[a-zA-Z]*";
+        String atLeastOneLetter = "[a-zA-Z]+";
+        return string.matches("'?" + atLeastOneLetter + "(-" + atLeastOneLetter +")?'?" + letters);
     }
 }
