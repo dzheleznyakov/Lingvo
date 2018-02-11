@@ -20,6 +20,10 @@
         <dependency>
             <groupId>com.zheleznyakov.lingvo</groupId>
             <artifactId>Util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zheleznyakov.lingvo</groupId>
+            <artifactId>Util</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
