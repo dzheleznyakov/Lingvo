@@ -19,19 +19,21 @@ class EnglishLanguageSpec extends Specification {
         ENGLISH.isStringLegal(string) == legal
 
         where: "the parameters are as follows"
-        string  || legal
-        "abc"   || true
-        "ab1"   || false
-        "Abc"   || true
-        "ab's"  || true
-        "ab''s" || false
-        "'abc"  || true
-        "'ABC"  || true
-        "ab-cd" || true
-        "-abc"  || false
-        "ab-'"  || false
-        "ab'-c" || false
-        "abc-"  || false
+        string   || legal
+        "abc"    || true
+        "Abc"    || true
+        "ab's"   || true
+        "abc'"   || true
+        "'abc"   || true
+        "'ABC"   || true
+        "ab-cd"  || true
+        "ab-c's" || true
+        "ab1"    || false
+        "ab''s"  || false
+        "-abc"   || false
+        "ab-'"   || false
+        "ab'-c"  || false
+        "abc-"   || false
     }
 
 }
