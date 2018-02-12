@@ -11,11 +11,16 @@ class WordFormatterSpec extends Specification {
         given: "the main form of a word"
         String mainForm = "word"
 
+        and: "expected forms"
+        def expectedForms = [
+                (FakeFormName.MAIN_FORM) : "worda",
+                (FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR) : "wordc"]
+
         when: "getting forms from WordFormatter"
-        def actualForms = WordFormatter.getForms(mainForm, [:], FakeFormName.values()).toList().toSet()
+        def actualForms = WordFormatter.getForms(mainForm, [:], FakeFormName.values())
 
         then: "only mandatory forms are returned"
-        actualForms == ["worda", "wordc"].toSet()
+        actualForms == expectedForms
     }
 
     def "WordFormatter returns mandatory irregular forms correctly if such exist"() {
@@ -26,11 +31,11 @@ class WordFormatterSpec extends Specification {
         def irregularForms = [(FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR) : "wordcc"]
 
         when: "getting forms from WordFormatter"
-        def actualForms = WordFormatter.getForms(mainForm, irregularForms, FakeFormName.values()).toList().toSet()
+        def actualForms = WordFormatter.getForms(mainForm, irregularForms, FakeFormName.values())
 
         then: "irregular form is returned correctly"
-        actualForms.contains("wordcc")
-        !actualForms.contains("wordc")
+        actualForms.containsValue("wordcc")
+        !actualForms.containsValue("wordc")
     }
 
     def "Test getting a specific regular word form"() {

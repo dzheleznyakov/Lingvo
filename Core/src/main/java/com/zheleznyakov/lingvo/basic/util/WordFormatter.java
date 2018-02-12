@@ -1,9 +1,10 @@
 package com.zheleznyakov.lingvo.basic.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 
+import com.google.common.collect.ImmutableMap;
 import com.zheleznyakov.lingvo.basic.FormName;
 
 public class WordFormatter {
@@ -16,16 +17,9 @@ public class WordFormatter {
         return irregularForms.getOrDefault(formName, formName.getStandardConverter().apply(mainForm));
     }
 
-    public static <F extends FormName> String[] getForms(String mainForm, Map<F, String> irregularForms, F[] formNames) {
-        List<String> forms = new ArrayList<>();
-        for (F formName : formNames)
-            appendFormToList(mainForm, irregularForms, formName, forms);
-        return forms.toArray(new String[forms.size()]);
+    public static <F extends FormName> ImmutableMap<F, String> getForms(String mainForm, Map<F, String> irregularForms, F[] formNames) {
+        return Arrays.stream(formNames)
+                .filter(FormName::isMandatory)
+                .collect(ImmutableMap.toImmutableMap(Function.identity(), formName -> getForm(mainForm, irregularForms, formName)));
     }
-
-    private static <F extends FormName> void appendFormToList(String mainForm, Map<F, String> irregularForms, F formName, List<String> forms) {
-        if (formName.isMandatory())
-            forms.add(getForm(mainForm, irregularForms, formName));
-    }
-
 }
