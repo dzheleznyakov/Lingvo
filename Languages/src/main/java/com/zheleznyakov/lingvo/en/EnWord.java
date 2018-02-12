@@ -5,7 +5,7 @@ import com.zheleznyakov.lingvo.basic.Word;
 import com.zheleznyakov.lingvo.util.Util;
 
 public abstract class EnWord implements Word {
-    private final String mainForm;
+    protected final String mainForm;
 
     protected EnWord(String mainForm) {
         Util.validateArgument(EnglishLanguage.get().isStringLegal(mainForm), "String [{}] is illegal for English");
@@ -20,5 +20,15 @@ public abstract class EnWord implements Word {
     @Override
     public String getMainForm() {
         return mainForm;
+    }
+
+    public static abstract class Builder<T extends EnWord> {
+        protected String mainForm;
+
+        protected Builder(String mainForm) {
+            this.mainForm = mainForm;
+        }
+
+        public abstract T build();
     }
 }

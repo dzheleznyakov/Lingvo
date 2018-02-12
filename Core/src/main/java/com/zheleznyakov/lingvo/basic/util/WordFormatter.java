@@ -12,19 +12,20 @@ public class WordFormatter {
         throw new IllegalAccessException("This class is a static helper; it is not supposed to be instantiated");
     }
 
-    public static String[] getForms(String mainForm, Map<FormName, String> irregularForms, FormName[] formNames) {
+    public static <F extends FormName> String getForm(String mainForm, Map<F, String> irregularForms, F formName) {
+        return irregularForms.getOrDefault(formName, formName.getStandardConverter().apply(mainForm));
+    }
+
+    public static <F extends FormName> String[] getForms(String mainForm, Map<F, String> irregularForms, F[] formNames) {
         List<String> forms = new ArrayList<>();
-        for (FormName formName : formNames)
-            appendFormToList(irregularForms, mainForm, formName, forms);
+        for (F formName : formNames)
+            appendFormToList(mainForm, irregularForms, formName, forms);
         return forms.toArray(new String[forms.size()]);
     }
 
-    private static void appendFormToList(Map<FormName, String> irregularForms, String mainForm, FormName formName, List<String> forms) {
-        String irregularForm = irregularForms.get(formName);
-        if (irregularForm != null)
-            forms.add(irregularForm);
-        else if (formName.isMandatory())
-            forms.add(formName.getStandardConverter().apply(mainForm));
+    private static <F extends FormName> void appendFormToList(String mainForm, Map<F, String> irregularForms, F formName, List<String> forms) {
+        if (formName.isMandatory())
+            forms.add(getForm(mainForm, irregularForms, formName));
     }
 
 }

@@ -2,6 +2,9 @@ package com.zheleznyakov.lingvo.en
 
 import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech
 import spock.lang.Specification
+import spock.lang.Unroll
+
+import static com.zheleznyakov.lingvo.en.EnNoun.EnNounFormName.NOMINATIVE_PLURAL
 
 class EnNounSpeck extends Specification {
 
@@ -18,14 +21,35 @@ class EnNounSpeck extends Specification {
         !noun.properNoun
     }
 
-//    @Unroll
-//    def "Get plural forms for regular English noun #noun"() {
-//        given: "an English noun"
-//        EnNoun noun = EnNoun.build(noun)
-//
-////        where: "the parameters are"
-////        noun   |
-////        "word" |
-//    }
+    @Unroll
+    def "The plural form of regular noun [#mainForm] is [#plural]"() {
+        given: "an English noun"
+        EnNoun enNoun = EnNoun.build(mainForm)
+
+        expect: "the main form to be built correctly"
+        enNoun.getForm(NOMINATIVE_PLURAL) == plural
+
+        where: "the parameters are"
+        mainForm   || plural
+        "word"     || "words"
+        "box"      || "boxes"
+        "sandwich" || "sandwiches"
+        "parish"   || "parishes"
+        "miss"     || "misses"
+        "toy"      || "toys"
+        "thief"    || "thieves"
+        "wife"     || "wives"
+        "cliff"    || "cliffs"
+    }
+
+    def "The plural of irregular noun [man] is [men]"() {
+        given: "an English noun 'man'"
+        EnNoun man = EnNoun.builder("man")
+                .withPlural("men")
+                .build()
+
+        expect:
+        man.getForm(NOMINATIVE_PLURAL) == "men"
+    }
 
 }

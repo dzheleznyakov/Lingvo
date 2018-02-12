@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface MultiFormWord extends Word {
 
-    String getForm(FormName formName);
+    <F extends FormName> String getForm(F formName);
 
     default <F extends FormName> String getForm(F formName, Map<F, String> irregularForms) {
         if (irregularForms.containsKey(formName))

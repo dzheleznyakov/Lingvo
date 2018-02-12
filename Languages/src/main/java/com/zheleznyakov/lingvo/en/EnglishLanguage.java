@@ -1,8 +1,12 @@
 package com.zheleznyakov.lingvo.en;
 
+import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.Language;
 
 public class EnglishLanguage implements Language {
+    public static final ImmutableSet<String> SIBILANTS = ImmutableSet.of(
+            "x","ch", "sh", "s");
+
     private static EnglishLanguage INSTANCE;
 
     private EnglishLanguage() {}

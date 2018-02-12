@@ -32,6 +32,31 @@ class WordFormatterSpec extends Specification {
         actualForms.contains("wordcc")
         !actualForms.contains("wordc")
     }
+
+    def "Test getting a specific regular word form"() {
+        given: "the main form of a word"
+        String mainForm  = "word"
+
+        when: "getting a form with WordFormatter"
+        def actualForm = WordFormatter.getForm(mainForm, [:], FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR)
+
+        then: "the form is returned correctly"
+        actualForm == "wordc"
+    }
+
+    def "Test getting a specific irregular word form"() {
+        given: "the main form of a word"
+        String mainForm  = "word"
+
+        and: "irregular forms"
+        def irregularForms = [(FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR) : "wordcc"]
+
+        when: "getting a form with WordFormatter"
+        def actualForm = WordFormatter.getForm(mainForm, irregularForms, FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR)
+
+        then: "the form is returned correctly"
+        actualForm == "wordcc"
+    }
 }
 
 enum FakeFormName implements FormName {
