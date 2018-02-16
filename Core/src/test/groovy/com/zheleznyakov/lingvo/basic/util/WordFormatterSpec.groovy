@@ -1,9 +1,9 @@
 package com.zheleznyakov.lingvo.basic.util
 
-import com.zheleznyakov.lingvo.basic.FormName
+import com.zheleznyakov.lingvo.basic.implementations.FakeFormName
 import spock.lang.Specification
 
-import java.util.function.Function
+import static com.zheleznyakov.lingvo.basic.implementations.FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR
 
 class WordFormatterSpec extends Specification {
 
@@ -13,8 +13,8 @@ class WordFormatterSpec extends Specification {
 
         and: "expected forms"
         def expectedForms = [
-                (FakeFormName.MAIN_FORM) : "worda",
-                (FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR) : "wordc"]
+                (FakeFormName.MAIN_FORM)                       : "worda",
+                (MANDATORY_AND_POSSIBLE_IRREGULAR): "wordc"]
 
         when: "getting forms from WordFormatter"
         def actualForms = WordFormatter.getForms(mainForm, [:], FakeFormName.values())
@@ -28,7 +28,7 @@ class WordFormatterSpec extends Specification {
         String mainForm = "word"
 
         and: "irregular forms"
-        def irregularForms = [(FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR) : "wordcc"]
+        def irregularForms = [(MANDATORY_AND_POSSIBLE_IRREGULAR) : "wordcc"]
 
         when: "getting forms from WordFormatter"
         def actualForms = WordFormatter.getForms(mainForm, irregularForms, FakeFormName.values())
@@ -43,7 +43,7 @@ class WordFormatterSpec extends Specification {
         String mainForm  = "word"
 
         when: "getting a form with WordFormatter"
-        def actualForm = WordFormatter.getForm(mainForm, [:], FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR)
+        def actualForm = WordFormatter.getForm(mainForm, [:], MANDATORY_AND_POSSIBLE_IRREGULAR)
 
         then: "the form is returned correctly"
         actualForm == "wordc"
@@ -54,43 +54,12 @@ class WordFormatterSpec extends Specification {
         String mainForm  = "word"
 
         and: "irregular forms"
-        def irregularForms = [(FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR) : "wordcc"]
+        def irregularForms = [(MANDATORY_AND_POSSIBLE_IRREGULAR) : "wordcc"]
 
         when: "getting a form with WordFormatter"
-        def actualForm = WordFormatter.getForm(mainForm, irregularForms, FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR)
+        def actualForm = WordFormatter.getForm(mainForm, irregularForms, MANDATORY_AND_POSSIBLE_IRREGULAR)
 
         then: "the form is returned correctly"
         actualForm == "wordcc"
     }
-}
-
-enum FakeFormName implements FormName {
-    MAIN_FORM(true, 'a'),
-    NOT_MANDATORY_FORM(false, 'b'),
-    MANDATORY_AND_POSSIBLE_IRREGULAR(true, 'c'),
-    NOT_MANDATORY_AND_IRREGULAR(false, 'd')
-
-    final boolean isMandatory
-    final String regularSuffix
-
-    FakeFormName(boolean isMandatory, String regularSuffix) {
-        this.isMandatory = isMandatory
-        this.regularSuffix = regularSuffix
-    }
-
-    @Override
-    boolean isMandatory() {
-        return isMandatory
-    }
-
-    @Override
-    Function<String, String> getStandardConverter() {
-        return { it -> it + regularSuffix }
-    }
-
-    @Override
-    FormName getRoot() {
-        return null
-    }
-
 }

@@ -5,6 +5,9 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import static com.zheleznyakov.lingvo.en.EnNoun.EnNounFormName.NOMINATIVE_PLURAL
+import static com.zheleznyakov.lingvo.en.EnNoun.EnNounFormName.NOMINATIVE_SINGLE
+import static com.zheleznyakov.lingvo.en.EnNoun.EnNounFormName.POSSESSIVE_PLURAL
+import static com.zheleznyakov.lingvo.en.EnNoun.EnNounFormName.POSSESSIVE_SINGLE
 
 class EnNounSpeck extends Specification {
 
@@ -27,7 +30,10 @@ class EnNounSpeck extends Specification {
         EnNoun enNoun = EnNoun.build(mainForm)
 
         expect: "the main form to be built correctly"
-        enNoun.getForm(NOMINATIVE_PLURAL) == plural
+        with (enNoun) {
+            getForm(NOMINATIVE_PLURAL) == plural
+            regular
+        }
 
         where: "the parameters are"
         mainForm   || plural
@@ -49,7 +55,29 @@ class EnNounSpeck extends Specification {
                 .build()
 
         expect:
-        man.getForm(NOMINATIVE_PLURAL) == "men"
+        with(man) {
+            getForm(NOMINATIVE_PLURAL) == "men"
+            !regular
+        }
+    }
+
+    @Unroll
+    def "Get all forms of a regular English noun -- #mainForm"() {
+        given: "an English noun"
+        EnNoun enNoun = EnNoun.build(mainForm)
+
+        expect: "the noun forms are computed correctly"
+        enNoun.getForms() == [
+                (NOMINATIVE_SINGLE) : mainForm,
+                (NOMINATIVE_PLURAL) : plural,
+                (POSSESSIVE_SINGLE) : possessiveSingle,
+                (POSSESSIVE_PLURAL) : possesivePlural]
+
+        where: "the parameters are"
+        mainForm || plural   | possessiveSingle | possesivePlural
+        "word"   || "words"  | "word's"         | "words'"
+        "box"    || "boxes"  | "box'"           | "boxes'"
+        "boss"   || "bosses" | "boss'"          | "bosses'"
     }
 
 }

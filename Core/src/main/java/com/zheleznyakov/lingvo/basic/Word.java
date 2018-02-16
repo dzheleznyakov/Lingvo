@@ -16,11 +16,6 @@ public interface Word extends Serializable {
 
     String getMainForm();
 
-    default String[] getForms() {
-        return new String[]{getMainForm()};
-    }
+    <E extends FormName> Map<E, String> getForms();
 
-    default String[] getFormsFull() {
-        return getForms();
-    };
 }

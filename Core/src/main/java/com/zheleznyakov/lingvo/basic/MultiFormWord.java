@@ -2,16 +2,15 @@ package com.zheleznyakov.lingvo.basic;
 
 import java.util.Map;
 
+import com.zheleznyakov.lingvo.basic.util.WordFormatter;
+
 public interface MultiFormWord extends Word {
 
-    <F extends FormName> String getForm(F formName);
+    default <F extends FormName> String getForm(Map<F, String> irregularForms, F formName) {
+        return WordFormatter.getForm(getMainForm(), irregularForms, formName);
+    }
 
-    default <F extends FormName> String getForm(F formName, Map<F, String> irregularForms) {
-        if (irregularForms.containsKey(formName))
-            return irregularForms.get(formName);
-        else if (formName.getRoot() != null)
-            return getForm((F) formName.getRoot(), irregularForms);
-        else
-            return formName.getStandardConverter().apply(getMainForm());
+    default <F extends FormName> Map<F, String> getForms(Map<F, String> irregularForms, F[] formNames) {
+        return WordFormatter.getForms(getMainForm(), irregularForms, formNames);
     }
 }

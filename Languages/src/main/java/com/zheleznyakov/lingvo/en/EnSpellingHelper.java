@@ -40,4 +40,8 @@ public class EnSpellingHelper {
     private static String cut(String form, int endPos) {
         return form.substring(0, form.length() - endPos);
     }
+
+    public static String makePossessive(String form) {
+        return form + (endsInOneOf(form, EnglishLanguage.SIBILANTS) ? "'" : "'s");
+    }
 }

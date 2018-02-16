@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.en
 
+import com.zheleznyakov.lingvo.basic.FormName
 import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech
 import spock.lang.Specification
 
@@ -40,8 +41,8 @@ class EnWordSpeck extends Specification {
         }
 
         @Override
-        String[] getForms() {
-            return new String[0]
+        Map<FormName, String> getForms() {
+            return [:]
         }
 
         @Override

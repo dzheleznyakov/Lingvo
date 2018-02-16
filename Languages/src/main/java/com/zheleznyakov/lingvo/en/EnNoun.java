@@ -5,10 +5,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.zheleznyakov.lingvo.basic.FormName;
+import com.zheleznyakov.lingvo.basic.MultiFormWord;
 import com.zheleznyakov.lingvo.basic.parts.Noun;
 import com.zheleznyakov.lingvo.basic.util.WordFormatter;
 
-public class EnNoun extends EnWord implements Noun {
+public class EnNoun extends EnWord implements Noun, MultiFormWord {
     private final Map<EnNounFormName, String> irregularForms = new HashMap<>();
 
     private EnNoun(EnNounBuilder builder) {
@@ -24,7 +25,7 @@ public class EnNoun extends EnWord implements Noun {
 
     @Override
     public boolean isRegular() {
-        return true;
+        return irregularForms.isEmpty();
     }
 
     @Override
@@ -38,6 +39,11 @@ public class EnNoun extends EnWord implements Noun {
 
     public static EnNounBuilder builder(String mainForm) {
         return new EnNounBuilder(mainForm);
+    }
+
+    @Override
+    public Map<EnNounFormName, String> getForms() {
+        return getForms(irregularForms, EnNounFormName.values());
     }
 
     public static class EnNounBuilder extends EnWord.Builder<EnNoun> {
@@ -59,8 +65,11 @@ public class EnNoun extends EnWord implements Noun {
     }
 
 
-    public enum  EnNounFormName implements FormName {
-        NOMINATIVE_PLURAL(EnSpellingHelper::appendSEnding);
+    public enum EnNounFormName implements FormName {
+        NOMINATIVE_SINGLE(Function.identity()),
+        NOMINATIVE_PLURAL(EnSpellingHelper::appendSEnding),
+        POSSESSIVE_SINGLE(EnSpellingHelper::makePossessive),
+        POSSESSIVE_PLURAL(NOMINATIVE_PLURAL.standardConverter.andThen(POSSESSIVE_SINGLE.standardConverter));
 
         private final Function<String, String > standardConverter;
 
