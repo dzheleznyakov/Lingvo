@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.en.word;
 
-import com.zheleznyakov.lingvo.basic.parts.Adverb;
+import com.zheleznyakov.lingvo.basic.words.parts.Adverb;
 import com.zheleznyakov.lingvo.en.EnWord;
 
 public class EnAdverb extends EnWord implements Adverb {

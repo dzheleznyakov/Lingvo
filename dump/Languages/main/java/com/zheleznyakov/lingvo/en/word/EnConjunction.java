@@ -2,7 +2,7 @@ package com.zheleznyakov.lingvo.en.word;
 
 import com.zheleznyakov.lingvo.en.EnWord;
 
-import com.zheleznyakov.lingvo.basic.parts.Conjunction;
+import com.zheleznyakov.lingvo.basic.words.parts.Conjunction;
 
 public class EnConjunction extends EnWord implements Conjunction {
 

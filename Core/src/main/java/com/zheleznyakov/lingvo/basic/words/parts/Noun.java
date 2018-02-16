@@ -1,8 +1,8 @@
-package com.zheleznyakov.lingvo.basic.parts;
+package com.zheleznyakov.lingvo.basic.words.parts;
 
-import com.zheleznyakov.lingvo.basic.Word;
+import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
 
-public interface Noun extends Word {
+public interface Noun extends GrammaticalWord {
 
     boolean isRegular();
 

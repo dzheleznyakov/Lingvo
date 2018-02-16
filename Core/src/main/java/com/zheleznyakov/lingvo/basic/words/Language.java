@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.basic;
+package com.zheleznyakov.lingvo.basic.words;
 
 public interface Language {
 

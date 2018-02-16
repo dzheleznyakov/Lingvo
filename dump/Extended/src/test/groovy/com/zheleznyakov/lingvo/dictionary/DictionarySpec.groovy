@@ -3,7 +3,7 @@ package com.zheleznyakov.lingvo.dictionary
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.Language
 import com.zheleznyakov.lingvo.basic.Word
-import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech
+import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
 import com.zheleznyakov.lingvo.en.word.EnNoun
 import com.zheleznyakov.lingvo.en.word.EnVerb
 import spock.lang.Specification

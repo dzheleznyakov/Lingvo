@@ -10,8 +10,6 @@
         <module>Util</module>
         <module>Core</module>
         <module>Languages</module>
-        <!--<module>Extended</module>-->
-        <!--<module>UiFx</module>-->
     </modules>
 
     <properties>

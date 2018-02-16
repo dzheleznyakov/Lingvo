@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.en
 
-import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech
+import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -9,7 +9,7 @@ import static com.zheleznyakov.lingvo.en.EnNoun.EnNounFormName.NOMINATIVE_SINGLE
 import static com.zheleznyakov.lingvo.en.EnNoun.EnNounFormName.POSSESSIVE_PLURAL
 import static com.zheleznyakov.lingvo.en.EnNoun.EnNounFormName.POSSESSIVE_SINGLE
 
-class EnNounSpeck extends Specification {
+class EnNounSpec extends Specification {
 
     def "Test default properties of English Noun"() {
         given: "an English noun"

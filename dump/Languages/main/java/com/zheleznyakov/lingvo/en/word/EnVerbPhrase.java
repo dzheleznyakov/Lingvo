@@ -3,7 +3,7 @@ package com.zheleznyakov.lingvo.en.word;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.zheleznyakov.lingvo.basic.util.WordFormatter;
+import com.zheleznyakov.lingvo.basic.words.util.WordFormatter;
 import com.zheleznyakov.lingvo.en.EnWord;
 
 public class EnVerbPhrase extends EnVerb {

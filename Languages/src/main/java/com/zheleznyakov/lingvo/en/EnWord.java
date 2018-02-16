@@ -1,10 +1,10 @@
 package com.zheleznyakov.lingvo.en;
 
-import com.zheleznyakov.lingvo.basic.Language;
-import com.zheleznyakov.lingvo.basic.Word;
+import com.zheleznyakov.lingvo.basic.words.Language;
+import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
 import com.zheleznyakov.lingvo.util.Util;
 
-public abstract class EnWord implements Word {
+public abstract class EnWord implements GrammaticalWord {
     protected final String mainForm;
 
     protected EnWord(String mainForm) {

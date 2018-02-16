@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.basic.util
+package com.zheleznyakov.lingvo.basic.words.util
 
 import com.zheleznyakov.lingvo.basic.implementations.FakeFormName
 import spock.lang.Specification

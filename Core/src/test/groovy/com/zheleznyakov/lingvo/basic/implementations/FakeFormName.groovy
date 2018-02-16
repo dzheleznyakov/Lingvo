@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.basic.implementations
 
-import com.zheleznyakov.lingvo.basic.FormName
+import com.zheleznyakov.lingvo.basic.words.FormName
 
 import java.util.function.Function
 

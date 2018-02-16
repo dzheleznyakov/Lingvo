@@ -1,11 +1,11 @@
-package com.zheleznyakov.lingvo.basic.util;
+package com.zheleznyakov.lingvo.basic.words.util;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableMap;
-import com.zheleznyakov.lingvo.basic.FormName;
+import com.zheleznyakov.lingvo.basic.words.FormName;
 
 public class WordFormatter {
 

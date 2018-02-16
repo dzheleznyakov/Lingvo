@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.basic.parts;
+package com.zheleznyakov.lingvo.basic.words.parts;
 
 public enum PartOfSpeech {
     NOUN("n"),

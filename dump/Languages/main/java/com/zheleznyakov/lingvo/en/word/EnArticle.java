@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.en.word;
 
-import com.zheleznyakov.lingvo.basic.parts.Article;
+import com.zheleznyakov.lingvo.basic.words.parts.Article;
 import com.zheleznyakov.lingvo.en.EnWord;
 
 public class EnArticle extends EnWord implements Article {

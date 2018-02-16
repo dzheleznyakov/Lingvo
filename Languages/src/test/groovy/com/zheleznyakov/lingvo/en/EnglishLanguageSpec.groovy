@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.en
 
-import com.zheleznyakov.lingvo.basic.Language
+import com.zheleznyakov.lingvo.basic.words.Language
 import spock.lang.Specification
 import spock.lang.Unroll
 

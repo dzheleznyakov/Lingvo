@@ -1,8 +1,8 @@
 package com.zheleznyakov.lingvo.basic.implementations
 
-import com.zheleznyakov.lingvo.basic.Language
-import com.zheleznyakov.lingvo.basic.MultiFormWord
-import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech
+import com.zheleznyakov.lingvo.basic.words.Language
+import com.zheleznyakov.lingvo.basic.words.MultiFormWord
+import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
 
 class TestableMultiFormWord implements MultiFormWord {
     private final String mainForm;

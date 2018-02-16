@@ -1,10 +1,10 @@
-package com.zheleznyakov.lingvo.basic;
+package com.zheleznyakov.lingvo.basic.words;
 
 import java.util.Map;
 
-import com.zheleznyakov.lingvo.basic.util.WordFormatter;
+import com.zheleznyakov.lingvo.basic.words.util.WordFormatter;
 
-public interface MultiFormWord extends Word {
+public interface MultiFormWord extends GrammaticalWord {
 
     default <F extends FormName> String getForm(Map<F, String> irregularForms, F formName) {
         return WordFormatter.getForm(getMainForm(), irregularForms, formName);

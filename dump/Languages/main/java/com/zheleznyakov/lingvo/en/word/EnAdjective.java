@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.en.word;
 
-import com.zheleznyakov.lingvo.basic.parts.Adjective;
+import com.zheleznyakov.lingvo.basic.words.parts.Adjective;
 import com.zheleznyakov.lingvo.en.EnWord;
 
 public class EnAdjective extends EnWord implements Adjective {

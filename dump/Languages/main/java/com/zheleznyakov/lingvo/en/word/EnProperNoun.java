@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.zheleznyakov.lingvo.basic.FormName;
 import com.zheleznyakov.lingvo.basic.Word;
-import com.zheleznyakov.lingvo.basic.util.WordFormatter;
+import com.zheleznyakov.lingvo.basic.words.util.WordFormatter;
 
 public class EnProperNoun extends EnNoun {
 

@@ -6,13 +6,13 @@ import com.zheleznyakov.lingvo.en.word.*
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.ADJECTIVE
-import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.ADVERB
-import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.ARTICLE
-import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.CONJUNCTION
-import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.NOUN
-import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.PREPOSITION
-import static com.zheleznyakov.lingvo.basic.parts.PartOfSpeech.VERB
+import static com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech.ADJECTIVE
+import static com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech.ADVERB
+import static com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech.ARTICLE
+import static com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech.CONJUNCTION
+import static com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech.NOUN
+import static com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech.PREPOSITION
+import static com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech.VERB
 
 class EnWordSpec extends Specification {
 

@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo
 
-import com.zheleznyakov.lingvo.basic.util.WordFormatter
+import com.zheleznyakov.lingvo.basic.words.util.WordFormatter
 import com.zheleznyakov.lingvo.util.ZhAssert
 import spock.lang.Specification
 import spock.lang.Unroll

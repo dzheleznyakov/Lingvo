@@ -6,9 +6,9 @@ import java.util.function.Function;
 
 import com.zheleznyakov.lingvo.basic.FormName;
 import com.zheleznyakov.lingvo.basic.MultiFormWord;
-import com.zheleznyakov.lingvo.basic.parts.Verb;
+import com.zheleznyakov.lingvo.basic.words.parts.Verb;
 import com.zheleznyakov.lingvo.basic.Word;
-import com.zheleznyakov.lingvo.basic.util.WordFormatter;
+import com.zheleznyakov.lingvo.basic.words.util.WordFormatter;
 import com.zheleznyakov.lingvo.en.EnWord;
 
 public class EnVerb extends EnWord implements Verb, MultiFormWord {

@@ -1,10 +1,10 @@
 package com.zheleznyakov.lingvo.en
 
-import com.zheleznyakov.lingvo.basic.FormName
-import com.zheleznyakov.lingvo.basic.parts.PartOfSpeech
+import com.zheleznyakov.lingvo.basic.words.FormName
+import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
 import spock.lang.Specification
 
-class EnWordSpeck extends Specification {
+class EnWordSpec extends Specification {
 
     def "An English word determines its language as English"() {
         given: "an English word"
