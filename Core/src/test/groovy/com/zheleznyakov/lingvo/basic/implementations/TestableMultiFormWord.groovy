@@ -13,7 +13,7 @@ class TestableMultiFormWord implements MultiFormWord {
 
     @Override
     Language getLanguage() {
-        return null
+        return FakeEnglish.FIXED_LANGUAGE
     }
 
     @Override
