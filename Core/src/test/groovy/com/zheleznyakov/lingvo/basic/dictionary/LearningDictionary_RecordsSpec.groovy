@@ -19,7 +19,7 @@ class LearningDictionary_RecordsSpec extends Specification {
     /*
     (-) A dictionary is bound to a particular language
     (-) Add a record to the dictionary
-    - Be able to update a record in the dictionary
+    (-) Be able to update a record in the dictionary
     - Learn in different modes (forward, backward, toggle)
     - Learn only those words, that are not completed
     - Check statistics (percentage)
@@ -169,11 +169,42 @@ class LearningDictionary_RecordsSpec extends Specification {
         "update" | example           | { dic, rec, ex -> dic.updateExample(rec, ex, newExample) } || [newExample]
     }
 
+    def "When updating a usage example, it keeps its position in the example list"() {
+        given: "a dictionary with one record with three usage examples"
+        UsageExample example1 = ["1", "1"]
+        UsageExample example2 = ["2", "2"]
+        UsageExample example3 = ["3", "3"]
+        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
+        dictionary.record(word, description)
+                .withUsageExamples([example1, example2, example3])
+                .add()
+
+        when: "the second example is updated"
+        UsageExample updatedExample2 = ["2'", "2'"]
+        dictionary.updateExample(getRecord(dictionary), example2, updatedExample2)
+
+        then: "the updated example is on the second position of the example list in the record"
+        getRecord(dictionary).examples == [example1, updatedExample2, example3]
+    }
+
+    def "Remove a record from the dictionary"() {
+        given: "a dictionary with one record"
+        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
+        addFullRecordToDictionary(dictionary)
+
+        when: "the record is removed from the dictionary"
+        dictionary.remove(getRecord(dictionary))
+
+        then: "the dictionary contains no records"
+        dictionary.records.isEmpty()
+    }
+
     private def addFullRecordToDictionary(LearningDictionary dictionary) {
         dictionary.record(word, description)
                 .withTranscription(transcription)
                 .withUsageExample(example)
                 .add()
+        assert dictionary.records.size() == 1
     }
 
     private def getRecord(dictionary) {

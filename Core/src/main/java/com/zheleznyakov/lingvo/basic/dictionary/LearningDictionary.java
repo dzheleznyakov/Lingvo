@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.dictionary.Record.UsageExample;
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
 import com.zheleznyakov.lingvo.basic.words.Language;
@@ -22,8 +23,12 @@ public class LearningDictionary {
         return new RecordAdder(word, description);
     }
 
-    public Set<Record> getRecords() {
-        return records;
+    public void remove(Record record) {
+        records.remove(record);
+    }
+
+    public ImmutableSet<Record> getRecords() {
+        return ImmutableSet.copyOf(records);
     }
 
     public void updateDescription(Record record, String description) {
