@@ -114,7 +114,7 @@ class WordLearnerSpec extends Specification {
         learner.state == WordLearner.State.STARTED
     }
 
-    def "When trying to start a learner that has been already started, throw"() {
+    def "When trying to start a learner in STARTED state, throw"() {
         given: "a started word learner"
         addRecordsToDictionary(1)
         WordLearner learner = [dictionary]
@@ -131,7 +131,7 @@ class WordLearnerSpec extends Specification {
         e.message == "Failed to start: the learner has state [${WordLearner.State.STARTED}], expected [${WordLearner.State.INITIALISED}]"
     }
 
-    def "When trying to start a stopped learner, throw"() {
+    def "When trying to start a learner in STOPPED state, throw"() {
         given: "a word learner"
         WordLearner learner = [dictionary]
         learner.start()
@@ -273,7 +273,7 @@ class WordLearnerSpec extends Specification {
         thrown(ExerciseException)
     }
 
-    def "Test exercising ten words"() {
+    def "Exercising ten words"() {
         given: "a dictionary with ten records"
         addRecordsToDictionary(10)
 
