@@ -48,9 +48,9 @@ public class LearningDictionary {
         }
 
         public void add() {
-            Record record = new Record(this);
-            Util.validateArgument(record.word.getLanguage() == language, "");
-            records.add(record);
+            Util.validateArgument(word.getLanguage() == language,
+                    "Illegal language of a word: required [{}], found [{}]", language, word.getLanguage());
+            records.add(new Record(this));
         }
     }
 }

@@ -8,15 +8,19 @@ import spock.lang.Specification
 
 class LearningDictionarySpec extends Specification {
     private static final Language LANGUAGE = FakeEnglish.FIXED_LANGUAGE
+
+    private GrammaticalWord word = new TestableMultiFormWord("word")
+    private String meaning = "слово"
+
     /*
-    - A dictionary is bound to a particular language
-    - Add a record to the dictionary
+    (-) A dictionary is bound to a particular language
+    (-) Add a record to the dictionary
+    - Be able to update a record in the dictionary
     - Learn in different modes (forward, backward, toggle)
     - Learn only those words, that are not completed
     - Check statistics (percentage)
     - Configure (set learned count)
-    - See all records
-    - Be able to update a record in the dictionary
+    (-) See all records
 
     - Record
         = word : Word
@@ -35,11 +39,7 @@ class LearningDictionarySpec extends Specification {
      */
 
     def "Create a dictionary and add a simple record to it"() {
-        given: "a word and its meaning"
-        GrammaticalWord word = new TestableMultiFormWord("word")
-        String meaning = "слово"
-
-        and: "a dictionary"
+        given: "a dictionary"
         LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
 
         expect: "the dictionary has not records"
@@ -59,9 +59,7 @@ class LearningDictionarySpec extends Specification {
     }
 
     def "Create a dictionary and add a full record to it"() {
-        given: "a word, its meaning, transcription and usage example"
-        GrammaticalWord word = new TestableMultiFormWord("word")
-        String meaning = "слово"
+        given: "the word transcription and usage example"
         String transcription = "wəːd"
         Record.UsageExample example = ["To give a word", "Дать слово"]
 
@@ -84,23 +82,29 @@ class LearningDictionarySpec extends Specification {
     }
 
     def "When adding a record with a word of a wrong language throw"() {
-        given: "a language"
-        Language anotherLanguage = new FakeEnglish()
+        given: "a new language"
+        def dictionaryLanguage = new FakeEnglish("New Fake English", "NFE")
 
-        and: "a word and its meaning"
-        def word = new TestableMultiFormWord("word")
-        def meaning = "слово"
-
-        and: "a dictionary for the language"
-        LearningDictionary dictionary = new LearningDictionary(anotherLanguage)
+        and: "a dictionary"
+        LearningDictionary dictionary = new LearningDictionary(dictionaryLanguage)
 
         expect: "the languages of the word and dictionary are different"
-        word.language != anotherLanguage
+        word.language != dictionaryLanguage
 
         when: "a record is added to the dictionary"
         dictionary.record(word, meaning).add()
 
         then: "an IllegalArgumentException is thrown"
         IllegalArgumentException exception = thrown()
+        exception.message == "Illegal language of a word: required [${dictionaryLanguage}], found [${LANGUAGE}]"
+    }
+
+    def "Test updating a record"() {
+        given: "the word transcription and usage example"
+        String transcription = "wəːd"
+        Record.UsageExample example = ["To give a word", "Дать слово"]
+
+        and: "a dictionary"
+        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
     }
 }

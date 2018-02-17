@@ -1,8 +1,13 @@
 package com.zheleznyakov.lingvo.basic.words;
 
-public interface Language {
+public abstract class Language {
 
-    String name();
-    String code();
-    boolean isStringLegal(String string);
+    public abstract String name();
+    public abstract String code();
+    public abstract boolean isStringLegal(String string);
+
+    @Override
+    public String toString() {
+        return name() + " [" + code() + "]";
+    }
 }
