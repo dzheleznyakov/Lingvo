@@ -7,6 +7,7 @@ import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
 public class WordLearner {
     private final LearningDictionary dictionary;
     private State state = State.INITIALISED;
+    private boolean readyForNext = true;
 
     private Iterator<Record> recordIterator;
 
@@ -18,20 +19,32 @@ public class WordLearner {
         return state;
     }
 
-    public void start() {
+    public void start() throws ExerciseException {
+        assertCurrentState(State.INITIALISED, "Failed to start");
         recordIterator = dictionary.getRecords().iterator();
         state = recordIterator.hasNext() ? State.STARTED : State.STOPPED;
     }
 
     public GrammaticalWord next() throws ExerciseException {
-        if (state != State.STARTED)
-            throw new ExerciseException("Failed to exercise: the learner has state [{}], expected [{}]", state, State.STARTED);
+        assertCurrentState(State.STARTED, "Failed to start next exercise");
+        if (!readyForNext)
+            throw new ExerciseException("Cannot go to the next exercise: please submit the answer first");
+        readyForNext = false;
         return recordIterator.next().word;
     }
 
-    public void submitAnswer(String answer) {
+    public void submitAnswer(String answer) throws ExerciseException {
+        assertCurrentState(State.STARTED, "Failed to submit the answer");
+        if (readyForNext)
+            throw new ExerciseException("Cannot submit an answer: please start the new exercise first");
+        readyForNext = true;
         if (!hasNext())
             state = State.STOPPED;
+    }
+
+    private void assertCurrentState(State expectedState, String reason) throws ExerciseException {
+        if (state != expectedState)
+            throw new ExerciseException(reason + ": the learner has state [{}], expected [{}]", state, expectedState);
     }
 
     public boolean hasNext() {

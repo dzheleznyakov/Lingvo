@@ -19,14 +19,14 @@ class WordLearnerSpec extends Specification {
     - Configure (set learned count)
 
     - Word learner
-        = needs to be started
-        = works then in an interactive mode
-        = starts with out-state, returning a word from the dictionary (from a record)
-        = then goes into in-state, expecting a string (description)
+        (=) needs to be started
+        (=) works then in an interactive mode
+        (=) starts with out-state, returning a word from the dictionary (from a record)
+        (=) then goes into in-state, expecting a string (description)
         = checks the answer and update the statistics of the record in the dictionary accordingly
-        = then goes into in-state and return the next word from the dictionary
-        = and it goes on like this until it through with the words
-        = after it finishes, it stops automatically
+        (=) then goes into in-state and return the next word from the dictionary
+        (=) and it goes on like this until it through with the words
+        (=) after it finishes, it stops automatically
         = it goes through the words in an arbitrary order
      */
 
@@ -114,6 +114,39 @@ class WordLearnerSpec extends Specification {
         learner.state == WordLearner.State.STARTED
     }
 
+    def "When trying to start a learner that has been already started, throw"() {
+        given: "a started word learner"
+        addRecordsToDictionary(1)
+        WordLearner learner = [dictionary]
+        learner.start()
+
+        expect: "it to be in STARTED state"
+        learner.state == WordLearner.State.STARTED
+
+        when: "trying it to start the second time"
+        learner.start()
+
+        then: "an ExerciseException is thrown"
+        def e = thrown(ExerciseException)
+        e.message == "Failed to start: the learner has state [${WordLearner.State.STARTED}], expected [${WordLearner.State.INITIALISED}]"
+    }
+
+    def "When trying to start a stopped learner, throw"() {
+        given: "a word learner"
+        WordLearner learner = [dictionary]
+        learner.start()
+
+        expect: "it to be in STOPPED state"
+        learner.state == WordLearner.State.STOPPED
+
+        when: "trying to start the learner"
+        learner.start()
+
+        then: "an ExerciseException is thrown"
+        def e = thrown(ExerciseException)
+        e.message == "Failed to start: the learner has state [${WordLearner.State.STOPPED}], expected [${WordLearner.State.INITIALISED}]"
+    }
+
     def "When checking whether there are next words to learn while in INITIALISED state, return true"() {
         given: "a word learner"
         WordLearner learner = [dictionary]
@@ -138,9 +171,9 @@ class WordLearnerSpec extends Specification {
         when: "trying to get the next word"
         learner.next()
 
-        then: "the ExerciseException is thrown"
+        then: "an ExerciseException is thrown"
         def e = thrown(ExerciseException)
-        e.message == "Failed to exercise: the learner has state [${WordLearner.State.INITIALISED}], expected [${WordLearner.State.STARTED}]"
+        e.message == "Failed to start next exercise: the learner has state [${WordLearner.State.INITIALISED}], expected [${WordLearner.State.STARTED}]"
     }
 
     def "When trying to get the next word while in STOPPED state, throw"() {
@@ -154,9 +187,108 @@ class WordLearnerSpec extends Specification {
         when: "trying to get the next word to exercise"
         learner.next()
 
-        then: "a ExerciseException is thrown"
+        then: "an ExerciseException is thrown"
         def e = thrown(ExerciseException)
-        e.message == "Failed to exercise: the learner has state [${WordLearner.State.STOPPED}], expected [${WordLearner.State.STARTED}]"
+        e.message == "Failed to start next exercise: the learner has state [${WordLearner.State.STOPPED}], expected [${WordLearner.State.STARTED}]"
+    }
+
+    def "When trying to submit an answer while in INITIALISED state, throw"() {
+        given: "a word learner"
+        WordLearner learner = [dictionary]
+
+        expect: "it is in INITIALISED state"
+        learner.state == WordLearner.State.INITIALISED
+
+        when: "trying to submit an answer"
+        learner.submitAnswer("some answer")
+
+        then: "an ExerciseException is thrown"
+        def e = thrown(ExerciseException)
+        e.message == "Failed to submit the answer: the learner has state [${WordLearner.State.INITIALISED}], expected [${WordLearner.State.STARTED}]"
+    }
+
+    def "When trying to submit an answer while in STOPPED state, throw"() {
+        given: "a stopped word learner"
+        WordLearner learner = [dictionary]
+        learner.start()
+
+        expect: "it to be in STOPPED state"
+        learner.state == WordLearner.State.STOPPED
+
+        when: "trying to submit an answer"
+        learner.submitAnswer("some answer")
+
+        then: "an ExerciseException is thrown"
+        def e = thrown(ExerciseException)
+        e.message == "Failed to submit the answer: the learner has state [${WordLearner.State.STOPPED}], expected [${WordLearner.State.STARTED}]"
+    }
+
+    def "When trying to get the next word two times in a row, throw"() {
+        given: "a dictionary with two records"
+        addRecordsToDictionary(2)
+
+        and: "a started word learner"
+        WordLearner learner = [dictionary]
+        learner.start()
+
+        when: "trying to get the next word twice in a row"
+        learner.next()
+        learner.next()
+
+        then: "an ExerciseException is thrown"
+        def e = thrown(ExerciseException)
+        e.message == "Cannot go to the next exercise: please submit the answer first"
+    }
+
+    def "When trying to submit an answer right after starting the dictionary, throw"() {
+        given: "a non-empty dictionary"
+        addRecordsToDictionary(1)
+
+        and: "a started word learner"
+        WordLearner learner = [dictionary]
+        learner.start()
+
+        when: "trying to submit an answer"
+        learner.submitAnswer("some answer")
+
+        then: "an ExerciseException is thrown"
+        def e = thrown(ExerciseException)
+        e.message == "Cannot submit an answer: please start the new exercise first"
+    }
+
+    def "When trying to submit an answer two ties in a row, throw"() {
+        given: "a non-empty dictionary"
+        addRecordsToDictionary(1)
+
+        and: "a started word learner"
+        WordLearner learner = [dictionary]
+        learner.start()
+
+        when: "the next exercise is got and two answers in a row are submitted"
+        def next = learner.next()
+        learner.submitAnswer("some answer")
+        learner.submitAnswer("another answer")
+
+        then: "an ExerciseException is thrown"
+        thrown(ExerciseException)
+    }
+
+    def "Test exercising ten words"() {
+        given: "a dictionary with ten records"
+        addRecordsToDictionary(10)
+
+        and: "a started word learner"
+        WordLearner learner = [dictionary]
+        learner.start()
+
+        when: "all words are exercised"
+        exerciseWords(learner, 10)
+
+        then: "the learner has not more words to exercise"
+        !learner.hasNext()
+
+        and: "it is in STOPPED state"
+        learner.state == WordLearner.State.STOPPED
     }
 
     private def addRecordsToDictionary(int numberOfRecords) {
