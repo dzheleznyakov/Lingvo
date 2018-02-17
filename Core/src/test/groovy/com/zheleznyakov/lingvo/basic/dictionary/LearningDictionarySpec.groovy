@@ -8,39 +8,13 @@ import com.zheleznyakov.lingvo.basic.words.Language
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class LearningDictionary_RecordsSpec extends Specification {
+class LearningDictionarySpec extends Specification {
     private static final Language LANGUAGE = FakeEnglish.FIXED_LANGUAGE
     private static final GrammaticalWord word = new TestableMultiFormWord("word")
     private static final String description = "слово"
     private static final String transcription = "wəːd"
     private static final Record.UsageExample example = ["To give a word", "Дать слово"]
     private static final UsageExample newExample = ["He gave me the word to start", "Он дал мне команду начинать"]
-
-    /*
-    (-) A dictionary is bound to a particular language
-    (-) Add a record to the dictionary
-    (-) Be able to update a record in the dictionary
-    - Learn in different modes (forward, backward, toggle)
-    - Learn only those words, that are not completed
-    - Check statistics (percentage)
-    - Configure (set learned count)
-    (-) See all records
-
-    - Record
-        = word : Word
-        = description : String
-        = examples : (String, String)[]
-        = transcription : String
-
-    - DictionaryConfig
-        = maxCount : int
-        = mode : Mode
-
-    - Dictionary
-        = records : Record[]
-        = statistics : Record -> int
-        = config : DictionaryConfig
-     */
 
     def "Create a dictionary and add a simple record to it"() {
         given: "a dictionary"
