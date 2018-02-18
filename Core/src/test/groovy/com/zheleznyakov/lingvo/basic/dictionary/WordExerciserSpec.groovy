@@ -240,7 +240,7 @@ class WordExerciserSpec extends Specification {
         e.message == "Cannot go to the next exercise: please submit the answer first"
     }
 
-    def "When trying to submit an answer right after starting the dictionary, throw"() {
+    def "When trying to submit an answer right after starting the exerciser, throw"() {
         given: "a non-empty dictionary"
         addRecordsToDictionary(1)
 
@@ -256,7 +256,7 @@ class WordExerciserSpec extends Specification {
         e.message == "Cannot submit an answer: please start the new exercise first"
     }
 
-    def "When trying to submit an answer two ties in a row, throw"() {
+    def "When trying to submit an answer two times in a row, throw"() {
         given: "a non-empty dictionary"
         addRecordsToDictionary(1)
 
