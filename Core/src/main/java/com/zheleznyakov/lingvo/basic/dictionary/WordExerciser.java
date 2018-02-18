@@ -1,5 +1,7 @@
 package com.zheleznyakov.lingvo.basic.dictionary;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
@@ -21,7 +23,9 @@ public abstract class WordExerciser {
 
     public void start() throws ExerciseException {
         assertCurrentState(State.INITIALISED, "Failed to start");
-        recordIterator = dictionary.getRecords().iterator();
+        ArrayList<Record> records = new ArrayList<>(dictionary.getRecords());
+        Collections.shuffle(records);
+        recordIterator = records.iterator();
         state = recordIterator.hasNext() ? State.STARTED : State.STOPPED;
     }
 

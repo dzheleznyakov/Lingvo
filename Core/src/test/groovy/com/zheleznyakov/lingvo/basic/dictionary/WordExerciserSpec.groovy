@@ -1,6 +1,7 @@
 package com.zheleznyakov.lingvo.basic.dictionary
 
 import com.google.common.collect.ImmutableMap
+import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.basic.implementations.FakeWordExerciser
 import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormWord
@@ -18,16 +19,6 @@ class WordExerciserSpec extends Specification {
     - Learn only those words, that are not completed
     - Check statistics (percentage)
     - Configure (set learned count)
-
-    - exerciser
-        (=) needs to be started
-        (=) works then in an interactive mode
-        (=) starts with out-state, returning a word from the dictionary (from a record)
-        (=) then goes into in-state, expecting a string (description)
-        (=) then goes into in-state and return the next word from the dictionary
-        (=) and it goes on like this until it through with the words
-        (=) after it finishes, it stops automatically
-        = it goes through the words in an arbitrary order
      */
 
     def "A newly created exerciser is in the INITIALISED state"() {
@@ -291,6 +282,20 @@ class WordExerciserSpec extends Specification {
         exerciser.state == WordExerciser.State.STOPPED
     }
 
+    def "The exerciser goes through the records in arbitrary order"() {
+        given: "the dictionary has 1000 records"
+        addRecordsToDictionary(50)
+
+        when: "exercising the dictionary 100 times"
+        def numberOfDistinctOrders = IntStream.range(0, 100)
+                .mapToObj() { getExercisingOrder() }
+                .collect(ImmutableSet.toImmutableSet())
+                .size()
+
+        then: "the number of distinct orders is close to 100"
+        numberOfDistinctOrders > 95
+    }
+
     private def addRecordsToDictionary(int numberOfRecords) {
         IntStream.range(0, numberOfRecords)
                 .forEach { addRecord(it) }
@@ -313,5 +318,16 @@ class WordExerciserSpec extends Specification {
     private def exerciseOneWord(WordExerciser wordexerciser) {
         def answer = wordsToDescriptions[wordexerciser.next()]
         wordexerciser.submitAnswer(answer)
+    }
+
+    private List<Record> getExercisingOrder() {
+        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser.start()
+        List<Record> exercisingOrder = []
+        while (exerciser.hasNext()) {
+            exercisingOrder += [exerciser.next()]
+            exerciser.submitAnswer("answer")
+        }
+        return exercisingOrder
     }
 }
