@@ -4,14 +4,14 @@ import java.util.Iterator;
 
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
 
-public class WordLearner {
+public abstract class WordExerciser {
     private final LearningDictionary dictionary;
     private State state = State.INITIALISED;
     private boolean readyForNext = true;
 
     private Iterator<Record> recordIterator;
 
-    public WordLearner(LearningDictionary dictionary) {
+    protected WordExerciser(LearningDictionary dictionary) {
         this.dictionary = dictionary;
     }
 
@@ -44,7 +44,7 @@ public class WordLearner {
 
     private void assertCurrentState(State expectedState, String reason) throws ExerciseException {
         if (state != expectedState)
-            throw new ExerciseException(reason + ": the learner has state [{}], expected [{}]", state, expectedState);
+            throw new ExerciseException(reason + ": the exerciser has state [{}], expected [{}]", state, expectedState);
     }
 
     public boolean hasNext() {
