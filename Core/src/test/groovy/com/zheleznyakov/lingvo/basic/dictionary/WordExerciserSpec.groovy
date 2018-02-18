@@ -264,24 +264,6 @@ class WordExerciserSpec extends Specification {
         thrown(ExerciseException)
     }
 
-    def "Exercising ten words"() {
-        given: "a dictionary with ten records"
-        addRecordsToDictionary(10)
-
-        and: "a started exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
-        exerciser.start()
-
-        when: "all words are exercised"
-        exerciseWords(exerciser, 10)
-
-        then: "the exerciser has not more words to exercise"
-        !exerciser.hasNext()
-
-        and: "it is in STOPPED state"
-        exerciser.state == WordExerciser.State.STOPPED
-    }
-
     def "The exerciser goes through the records in arbitrary order"() {
         given: "the dictionary has 1000 records"
         addRecordsToDictionary(50)
@@ -295,7 +277,7 @@ class WordExerciserSpec extends Specification {
         then: "the number of distinct orders is close to 100"
         numberOfDistinctOrders > 95
     }
-
+    
     private def addRecordsToDictionary(int numberOfRecords) {
         IntStream.range(0, numberOfRecords)
                 .forEach { addRecord(it) }
