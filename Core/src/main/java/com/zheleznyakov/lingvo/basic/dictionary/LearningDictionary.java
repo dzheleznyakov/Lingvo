@@ -14,9 +14,18 @@ import com.zheleznyakov.lingvo.util.Util;
 public class LearningDictionary {
     private final Language language;
     private Set<Record> records = new HashSet<>();
+    private LearningDictionaryConfig config = LearningDictionaryConfig.getDefault();
 
     public LearningDictionary(Language language) {
         this.language = language;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public LearningDictionaryConfig getConfig() {
+        return config;
     }
 
     public RecordAdder record(GrammaticalWord word, String description) {

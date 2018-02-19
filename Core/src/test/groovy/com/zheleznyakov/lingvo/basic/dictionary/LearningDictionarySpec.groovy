@@ -23,6 +23,9 @@ class LearningDictionarySpec extends Specification {
         expect: "the dictionary has not records"
         dictionary.getRecords().size() == 0
 
+        and: "the dictionary language to be correct"
+        dictionary.language == LANGUAGE
+
         when: "a (simple) record is added to the dictionary"
         dictionary.record(word, description).add()
 
@@ -171,6 +174,14 @@ class LearningDictionarySpec extends Specification {
 
         then: "the dictionary contains no records"
         dictionary.records.isEmpty()
+    }
+
+    def "A newly created dictionary has default config"() {
+        given: "a newly created learning dictionary"
+        LearningDictionary dictionary = [LANGUAGE]
+
+        expect: "the dictionary config to be default"
+        dictionary.config == LearningDictionaryConfig.default
     }
 
     private def addFullRecordToDictionary(LearningDictionary dictionary) {
