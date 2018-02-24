@@ -1,8 +1,10 @@
-package com.zheleznyakov.lingvo.basic.dictionary
+package com.zheleznyakov.lingvo.basic.exercisers
 
-import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
+import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
+import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
+import com.zheleznyakov.lingvo.basic.implementations.FakeExercise
 import com.zheleznyakov.lingvo.basic.implementations.FakeWordExerciser
 import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormWord
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
@@ -12,26 +14,19 @@ import java.util.stream.IntStream
 
 class WordExerciserSpec extends Specification {
     private final LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE]
-    private Map<GrammaticalWord, String> wordsToDescriptions
-
-    /*
-    - Learn in different modes (forward, backward, toggle)
-    - Learn only those words, that are not completed
-    - Check statistics (percentage)
-    - Configure (set learned count)
-     */
+    private WordExerciser<FakeExercise, Answer> exerciser
 
     def "A newly created exerciser is in the INITIALISED state"() {
         when: "an exerciser is created"
-        WordExerciser exerciser = new FakeWordExerciser(dictionary)
+        exerciser = new FakeWordExerciser(dictionary)
 
         then: "it is in the INITIALISED state"
-        exerciser.state == WordExerciser.State.INITIALISED
+        this.exerciser.state == WordExerciser.State.INITIALISED
     }
 
     def "When an exerciser is started on the non-empty dictionary, it is in the STARTED state"() {
         given: "an exerciser"
-        WordExerciser exerciser = new FakeWordExerciser(dictionary)
+        exerciser = new FakeWordExerciser(dictionary)
 
         and: "the non-empty dictionary"
         addRecordsToDictionary(1)
@@ -45,7 +40,7 @@ class WordExerciserSpec extends Specification {
 
     def "When starting an exerciser on the empty dictionary, it goes directly to STOPPED state"() {
         given: "an exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
 
         expect: "the dictionary to have no records"
         dictionary.records.isEmpty()
@@ -62,14 +57,14 @@ class WordExerciserSpec extends Specification {
         addRecordsToDictionary(1)
 
         and: "a started exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         expect: "the exerciser has words to learn"
         exerciser.hasNext()
 
-        when: "the exerciser returns a question"
-        GrammaticalWord word = exerciser.next();
+        when: "the next exercise is returned"
+        GrammaticalWord word = exerciser.next().word;
 
         then: "this is the word from the dictionary"
         word == dictionary.records.iterator().next().word
@@ -78,7 +73,7 @@ class WordExerciserSpec extends Specification {
         exerciser.state == WordExerciser.State.STARTED
 
         when: "the correct answer is submitted"
-        exerciser.submitAnswer(wordsToDescriptions[word])
+        exerciser.submitAnswer(Stub(Answer))
 
         then: "the exerciser is in the STOPPED state"
         exerciser.state == WordExerciser.State.STOPPED
@@ -92,11 +87,11 @@ class WordExerciserSpec extends Specification {
         addRecordsToDictionary(2)
 
         and: "a started exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         when: "one word is exercised"
-        exerciseWords(exerciser, 1)
+        exerciseWords(1)
 
         then: "the exerciser still has more words to learn"
         exerciser.hasNext()
@@ -108,7 +103,7 @@ class WordExerciserSpec extends Specification {
     def "When trying to start an exerciser in STARTED state, throw"() {
         given: "a started exerciser"
         addRecordsToDictionary(1)
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         expect: "it to be in STARTED state"
@@ -124,7 +119,7 @@ class WordExerciserSpec extends Specification {
 
     def "When trying to start an exerciser in STOPPED state, throw"() {
         given: "an exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         expect: "it to be in STOPPED state"
@@ -140,7 +135,7 @@ class WordExerciserSpec extends Specification {
 
     def "When checking whether there are next words to learn while in INITIALISED state, return true"() {
         given: "an exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
 
         expect: "it to be in INITIALISED state"
         exerciser.state == WordExerciser.State.INITIALISED
@@ -154,7 +149,7 @@ class WordExerciserSpec extends Specification {
 
     def "When trying to get the next word while in INITIALISED state, throw"() {
         given: "an exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
 
         expect: "it to be in INITIALISED state"
         exerciser.state == WordExerciser.State.INITIALISED
@@ -169,7 +164,7 @@ class WordExerciserSpec extends Specification {
 
     def "When trying to get the next word while in STOPPED state, throw"() {
         given: "a stopped exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         expect: "it to be in STOPPED state"
@@ -185,13 +180,13 @@ class WordExerciserSpec extends Specification {
 
     def "When trying to submit an answer while in INITIALISED state, throw"() {
         given: "an exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
 
         expect: "it is in INITIALISED state"
         exerciser.state == WordExerciser.State.INITIALISED
 
         when: "trying to submit an answer"
-        exerciser.submitAnswer("some answer")
+        exerciser.submitAnswer(Stub(Answer))
 
         then: "an ExerciseException is thrown"
         def e = thrown(ExerciseException)
@@ -200,14 +195,14 @@ class WordExerciserSpec extends Specification {
 
     def "When trying to submit an answer while in STOPPED state, throw"() {
         given: "a stopped exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         expect: "it to be in STOPPED state"
         exerciser.state == WordExerciser.State.STOPPED
 
         when: "trying to submit an answer"
-        exerciser.submitAnswer("some answer")
+        exerciser.submitAnswer(Stub(Answer))
 
         then: "an ExerciseException is thrown"
         def e = thrown(ExerciseException)
@@ -219,7 +214,7 @@ class WordExerciserSpec extends Specification {
         addRecordsToDictionary(2)
 
         and: "a started exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         when: "trying to get the next word twice in a row"
@@ -236,11 +231,11 @@ class WordExerciserSpec extends Specification {
         addRecordsToDictionary(1)
 
         and: "a started exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         when: "trying to submit an answer"
-        exerciser.submitAnswer("some answer")
+        exerciser.submitAnswer(Stub(Answer))
 
         then: "an ExerciseException is thrown"
         def e = thrown(ExerciseException)
@@ -252,13 +247,13 @@ class WordExerciserSpec extends Specification {
         addRecordsToDictionary(1)
 
         and: "a started exerciser"
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
 
         when: "the next exercise is got and two answers in a row are submitted"
         def next = exerciser.next()
-        exerciser.submitAnswer("some answer")
-        exerciser.submitAnswer("another answer")
+        exerciser.submitAnswer(Stub(Answer))
+        exerciser.submitAnswer(Stub(Answer))
 
         then: "an ExerciseException is thrown"
         thrown(ExerciseException)
@@ -282,8 +277,6 @@ class WordExerciserSpec extends Specification {
         IntStream.range(0, numberOfRecords)
                 .forEach { addRecord(it) }
         assert dictionary.records.size() == numberOfRecords
-        wordsToDescriptions = dictionary.records.stream()
-                .collect(ImmutableMap.toImmutableMap( { it.word }, { it.description } ))
     }
 
     private def addRecord(def num) {
@@ -292,23 +285,24 @@ class WordExerciserSpec extends Specification {
         dictionary.record(word, "meaning${suffix}").add()
     }
 
-    private def exerciseWords(WordExerciser wordexerciser, int numberOfWords) {
+    private def exerciseWords(int numberOfWords) {
         IntStream.range(0, numberOfWords)
-                .forEach { exerciseOneWord(wordexerciser) }
+                .forEach { exerciseWord() }
     }
 
-    private def exerciseOneWord(WordExerciser wordexerciser) {
-        def answer = wordsToDescriptions[wordexerciser.next()]
-        wordexerciser.submitAnswer(answer)
+    private exerciseWord() {
+        exerciser.next()
+        exerciser.submitAnswer(Stub(Answer))
     }
+
 
     private List<Record> getExercisingOrder() {
-        WordExerciser exerciser = [dictionary] as FakeWordExerciser
+        exerciser = [dictionary] as FakeWordExerciser
         exerciser.start()
         List<Record> exercisingOrder = []
         while (exerciser.hasNext()) {
             exercisingOrder += [exerciser.next()]
-            exerciser.submitAnswer("answer")
+            exerciser.submitAnswer(Stub(Answer))
         }
         return exercisingOrder
     }

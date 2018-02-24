@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.basic.dictionary;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary.RecordAdder;
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
@@ -18,14 +19,30 @@ public class Record {
     }
 
     public static class UsageExample {
-        public final String example;
-        public final String translation;
+        final String example;
+        final String translation;
 
         public UsageExample(String example, String translation) {
             this.example = example;
             this.translation = translation;
         }
+
+        @Override
+        public String toString() {
+            return MoreObjects.toStringHelper(this)
+                    .add("example", example)
+                    .add("translation", translation)
+                    .toString();
+        }
     }
 
-
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("word", word)
+                .add("description", description)
+                .add("transcription", transcription)
+                .add("examples", examples)
+                .toString();
+    }
 }

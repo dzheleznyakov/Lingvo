@@ -5,6 +5,7 @@ import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormWord
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import com.zheleznyakov.lingvo.basic.words.Language
+import com.zheleznyakov.lingvo.helpers.LearningDictionaryConfigHelper
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -16,12 +17,14 @@ class LearningDictionarySpec extends Specification {
     private static final Record.UsageExample example = ["To give a word", "Дать слово"]
     private static final UsageExample newExample = ["He gave me the word to start", "Он дал мне команду начинать"]
 
-    def "Create a dictionary and add a simple record to it"() {
-        given: "a dictionary"
-        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
+    private LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
 
+    def "Create a dictionary and add a simple record to it"() {
         expect: "the dictionary has not records"
         dictionary.getRecords().size() == 0
+
+        and: "the dictionary language to be correct"
+        dictionary.language == LANGUAGE
 
         when: "a (simple) record is added to the dictionary"
         dictionary.record(word, description).add()
@@ -37,11 +40,8 @@ class LearningDictionarySpec extends Specification {
     }
 
     def "Create a dictionary and add a full record to it"() {
-        given: "a dictionary"
-        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
-
         when: "a (full) record is added to the dictionary"
-        addFullRecordToDictionary(dictionary)
+        addFullRecordToDictionary()
 
         then: "the record contains the given word, its description, transcription and usage example"
         with(getRecord(dictionary)) {
@@ -57,7 +57,7 @@ class LearningDictionarySpec extends Specification {
         def dictionaryLanguage = new FakeEnglish("New Fake English", "NFE")
 
         and: "a dictionary"
-        LearningDictionary dictionary = new LearningDictionary(dictionaryLanguage)
+        dictionary = new LearningDictionary(dictionaryLanguage)
 
         expect: "the languages of the word and dictionary are different"
         word.language != dictionaryLanguage
@@ -72,8 +72,7 @@ class LearningDictionarySpec extends Specification {
 
     def "Test updating a record description"() {
         given: "a dictionary with the record"
-        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
-        addFullRecordToDictionary(dictionary)
+        addFullRecordToDictionary()
 
         and: "a new description"
         String newDescription = "слово; комманда, сигнал"
@@ -95,8 +94,7 @@ class LearningDictionarySpec extends Specification {
 
     def "Test updating a record transcription"() {
         given: "a dictionary with the record"
-        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
-        addFullRecordToDictionary(dictionary)
+        addFullRecordToDictionary()
 
         and: "a new transcription"
         String newTranscription = "ворд"
@@ -119,8 +117,7 @@ class LearningDictionarySpec extends Specification {
     @Unroll
     def "Test updating a record usage examples -- #test"() {
         given: "a dictionary with the record"
-        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
-        addFullRecordToDictionary(dictionary)
+        addFullRecordToDictionary()
 
         when: "the record examples are updated"
         updateFunction(dictionary, getRecord(dictionary), exampleInQuestion)
@@ -148,7 +145,6 @@ class LearningDictionarySpec extends Specification {
         UsageExample example1 = ["1", "1"]
         UsageExample example2 = ["2", "2"]
         UsageExample example3 = ["3", "3"]
-        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
         dictionary.record(word, description)
                 .withUsageExamples([example1, example2, example3])
                 .add()
@@ -163,8 +159,7 @@ class LearningDictionarySpec extends Specification {
 
     def "Remove a record from the dictionary"() {
         given: "a dictionary with one record"
-        LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
-        addFullRecordToDictionary(dictionary)
+        addFullRecordToDictionary()
 
         when: "the record is removed from the dictionary"
         dictionary.remove(getRecord(dictionary))
@@ -173,7 +168,35 @@ class LearningDictionarySpec extends Specification {
         dictionary.records.isEmpty()
     }
 
-    private def addFullRecordToDictionary(LearningDictionary dictionary) {
+    def "A newly created dictionary has default config"() {
+        expect: "the config of a newly created dictionary is to be default"
+        LearningDictionaryConfigHelper.areConfigsEqual(dictionary.config, LearningDictionaryConfig.default)
+    }
+
+    def "Test Record.toString method"() {
+        given: "the record parameters"
+        def mainForm = "word"
+        def description = "description"
+        def transcription = "transcription"
+        def usageExample1 = ["example 1", "translation 1"] as UsageExample
+        def usageExample2 = ["example 2", "translation 2"] as UsageExample
+
+        and: "a record"
+        dictionary.record([mainForm] as TestableMultiFormWord, description)
+                .withTranscription(transcription)
+                .withUsageExamples([usageExample1,usageExample2])
+                .add()
+        Record record = dictionary.records.iterator().next()
+
+        expect: "the String representation of the record to be as expected"
+        record.toString() ==
+                "Record{word=${record.word.toString()}, description=${description}, transcription=${transcription}, " +
+                "examples=[UsageExample{example=${usageExample1.example}, translation=${usageExample1.translation}}, " +
+                          "UsageExample{example=${usageExample2.example}, translation=${usageExample2.translation}}]" +
+                "}"
+    }
+
+    private def addFullRecordToDictionary() {
         dictionary.record(word, description)
                 .withTranscription(transcription)
                 .withUsageExample(example)
