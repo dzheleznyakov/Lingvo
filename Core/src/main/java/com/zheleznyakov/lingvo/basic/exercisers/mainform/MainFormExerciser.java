@@ -9,6 +9,7 @@ import com.zheleznyakov.lingvo.basic.exercisers.WordExerciser;
 public class MainFormExerciser extends WordExerciser<MainFormExercise, MainFormAnswer> {
     private Mode mode;
     private Record exercisedRecord;
+    private boolean isInForwardMode;
 
     public MainFormExerciser(LearningDictionary dictionary) {
         super(dictionary);
@@ -18,12 +19,13 @@ public class MainFormExerciser extends WordExerciser<MainFormExercise, MainFormA
     public void start() throws ExerciseException {
         super.start();
         mode = dictionary.getConfig().getMode();
+        isInForwardMode = mode != Mode.BACKWARD;
     }
 
     @Override
     protected MainFormExercise getNextExercise(Record record) {
         exercisedRecord = record;
-        return new MainFormExercise(record);
+        return new MainFormExercise(record, isInForwardMode);
     }
 
     @Override
@@ -32,10 +34,20 @@ public class MainFormExerciser extends WordExerciser<MainFormExercise, MainFormA
             dictionary.registerCorrectAnswer(exercisedRecord);
         else
             dictionary.registerIncorrectAnswer(exercisedRecord);
+        setNextMode();
     }
 
     private boolean answerIsCorrect(MainFormAnswer answer) {
-        return exercisedRecord.description.equals(answer.answer);
+        String stringAnswer = answer.answer;
+        return isInForwardMode
+                ? exercisedRecord.description.equals(stringAnswer)
+                : exercisedRecord.word.getMainForm().equals(stringAnswer);
+    }
+
+    private void setNextMode() {
+        if (mode == Mode.TOGGLE)
+            isInForwardMode = !isInForwardMode;
+
     }
 
     public Mode getMode() {

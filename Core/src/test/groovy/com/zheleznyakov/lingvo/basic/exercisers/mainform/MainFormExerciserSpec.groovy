@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.basic.exercisers.mainform
 
+import com.google.common.collect.ImmutableList
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig
 import com.zheleznyakov.lingvo.basic.dictionary.Record
@@ -7,11 +8,23 @@ import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
 import com.zheleznyakov.lingvo.helpers.LearningDictionaryConfigHelper
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.util.stream.IntStream
 
+import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode.BACKWARD
+import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode.FORWARD
+import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode.TOGGLE
+
 class MainFormExerciserSpec extends Specification {
     private LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE]
+
+    /*
+   - Learn in different modes (forward, backward, toggle)
+   (-) Learn only those words, that are not completed
+   (-) Check statistics (percentage)
+   (-) Configure (set learned count)
+    */
 
     def setup() {
         dictionary.config.maxLearnCount = 10
@@ -30,16 +43,68 @@ class MainFormExerciserSpec extends Specification {
         exerciser.mode == dictionary.config.mode
     }
 
-    /*
-   - Learn in different modes (forward, backward, toggle)
-   - Learn only those words, that are not completed
-   - Check statistics (percentage)
-   - Configure (set learned count)
-    */
-
-    def "Test Exercise for main form exerciser in FORWARD mode"() {
-        given: "a dictionary with one record"
+    @Unroll
+    def "Test one word exercise in #mode mode"() {
+        given: "the dictionary has one record"
         dictionary = [FakeEnglish.FIXED_LANGUAGE]
+        def mainForm = "word"
+        def description = "description"
+        dictionary.record([mainForm] as TestableMultiFormNoun, description).add()
+
+        and: "that the dictionary is in #mode mode"
+        dictionary.getConfig().setMode(mode)
+
+        and: "a started exerciser"
+        MainFormExerciser exerciser = [dictionary]
+        exerciser.start()
+
+        when: "the word is exercised"
+        exerciser.next()
+        exerciser.submitAnswer([answer] as MainFormAnswer)
+
+        then:
+        allRecordsHaveCount(1)
+
+        where: "the parameters are"
+        mode     | answer
+        FORWARD  | "description"
+        BACKWARD | "word"
+    }
+
+    def "Test one word exercise in TOGGLE mode"() {
+        given: "the dictionary has four words"
+        dictionary = [FakeEnglish.FIXED_LANGUAGE]
+        addRecordsToDictionary(4)
+
+        and: "is in TOGGLE mode"
+        dictionary.getConfig().setMode(TOGGLE)
+
+        and: "a started exerciser"
+        MainFormExerciser exerciser = [dictionary]
+        exerciser.start()
+
+        when: "the words are exercised toggling modes (FORWARD/BACKWARD)"
+        def exercise = exerciser.next()
+        exerciser.submitAnswer(getCorrectAnswerInForwardMode(exercise))
+
+        exercise = exerciser.next()
+        exerciser.submitAnswer(getCorrectAnswerInBackwardMode(exercise))
+
+        exercise = exerciser.next()
+        exerciser.submitAnswer(getCorrectAnswerInForwardMode(exercise))
+
+        exercise = exerciser.next()
+        exerciser.submitAnswer(getCorrectAnswerInBackwardMode(exercise))
+
+        then: "all records have count 1"
+        allRecordsHaveCount(1)
+    }
+
+    @Unroll
+    def "Test Exercise for main form exerciser in #mode mode"() {
+        given: "a dictionary with one record in #mode mode"
+        dictionary = [FakeEnglish.FIXED_LANGUAGE]
+        dictionary.getConfig().setMode(mode)
         addRecordsToDictionary(1)
 
         and: "a started main form exerciser"
@@ -50,14 +115,21 @@ class MainFormExerciserSpec extends Specification {
         def exercise = exerciser.next()
         def record = dictionary.records.iterator().next()
 
-        then:
+        then: "the exercise is as expected"
         with(exercise) {
-            mainForm == record.word.getMainForm()
-            partOfSpeech == record.word.partOfSpeech.brief
-            description == null
-            transcription == record.transcription
-            usageExamples == record.examples
+            mainForm == expectedMainForm.call(record)
+            partOfSpeech == expectedPartOfSpeech.call(record)
+            description == expectedDescription.call(record)
+            transcription == expectedTranscription.call(record)
+            usageExamples == record.examples.stream()
+                    .map(exampleMapper)
+                    .collect(ImmutableList.toImmutableList())
         }
+
+        where: "the parameters are"
+        mode     || expectedMainForm     | expectedPartOfSpeech           | expectedDescription | expectedTranscription | exampleMapper
+        FORWARD  || { it.word.mainForm } | { it.word.partOfSpeech.brief } | { null }            | { it.transcription }  | { it.example }
+        BACKWARD || { null }             | { null }                       | { it.description }  | { null }              | { it.translation }
     }
 
     def "Records in a newly created dictionary have record count 0"() {
@@ -67,7 +139,7 @@ class MainFormExerciserSpec extends Specification {
 
     def "When a word is exercised correctly, its learn count increases by one"() {
         when: "exercising main forms of all words correctly"
-        exerciseWordsMainForm(true)
+        exerciseWordsMainFormInForwardMode(true)
 
         then: "all records have count 1"
         allRecordsHaveCount(1)
@@ -75,10 +147,10 @@ class MainFormExerciserSpec extends Specification {
 
     def "When a word is exercised incorrectly one time, the count remains the same"() {
         given: "that the records in the dictionary have learn count 1"
-        exerciseWordsMainForm(true)
+        exerciseWordsMainFormInForwardMode(true)
 
         when: "exercising main forms of all words incorrectly"
-        exerciseWordsMainForm(false)
+        exerciseWordsMainFormInForwardMode(false)
 
         then: "all records still have count 1"
         allRecordsHaveCount(1)
@@ -86,11 +158,11 @@ class MainFormExerciserSpec extends Specification {
 
     def "When a word is exercised incorrectly two times in a row, the count goes down by 1"() {
         given: "that the records in the dictionary have learn count 1"
-        exerciseWordsMainForm(true)
+        exerciseWordsMainFormInForwardMode(true)
 
         when: "exercising main form of all words incorrectly twice in a row"
-        exerciseWordsMainForm(false)
-        exerciseWordsMainForm(false)
+        exerciseWordsMainFormInForwardMode(false)
+        exerciseWordsMainFormInForwardMode(false)
 
         then: "all records have count 0"
         allRecordsHaveCount(0)
@@ -98,8 +170,8 @@ class MainFormExerciserSpec extends Specification {
 
     def "Word learn count does not go below 0"() {
         when: "exercising main form of all words incorrectly twice in a row"
-        exerciseWordsMainForm(false)
-        exerciseWordsMainForm(false)
+        exerciseWordsMainFormInForwardMode(false)
+        exerciseWordsMainFormInForwardMode(false)
 
         then: "all records have count 0"
         allRecordsHaveCount(0)
@@ -107,10 +179,10 @@ class MainFormExerciserSpec extends Specification {
 
     def "When exercising words incorrectly two times not in a row, then learn count does not go down"() {
         when: "exercising main form of all words correctly/incorrectly/correctly/incorrectly"
-        exerciseWordsMainForm(true)
-        exerciseWordsMainForm(false)
-        exerciseWordsMainForm(true)
-        exerciseWordsMainForm(false)
+        exerciseWordsMainFormInForwardMode(true)
+        exerciseWordsMainFormInForwardMode(false)
+        exerciseWordsMainFormInForwardMode(true)
+        exerciseWordsMainFormInForwardMode(false)
 
         then: "all records have count 2"
         allRecordsHaveCount(2)
@@ -122,7 +194,7 @@ class MainFormExerciserSpec extends Specification {
         dictionary = [FakeEnglish.FIXED_LANGUAGE]
         dictionary.getConfig().setMaxLearnCount(maxLearnCount)
         dictionary.record(["word"] as TestableMultiFormNoun, "description").add()
-        exerciseWordsMainForm(true)
+        exerciseWordsMainFormInForwardMode(true)
 
         expect: "that the record hit max learn count"
         dictionary.records.forEach { assert dictionary.getLearnCount(it) == maxLearnCount }
@@ -141,6 +213,7 @@ class MainFormExerciserSpec extends Specification {
         }
 
         then: "the very first record is not exercised"
+        dictionary.records.size() == numberOfNewWords + 1
         exercisedWords.size() == numberOfNewWords
         !exercisedWords.contains("word")
     }
@@ -166,19 +239,29 @@ class MainFormExerciserSpec extends Specification {
         true
     }
 
-    private def exerciseWordsMainForm(boolean correctly) {
+    private def exerciseWordsMainFormInForwardMode(boolean correctly) {
         MainFormExerciser exerciser = [dictionary]
         exerciser.start()
         while (exerciser.hasNext()) {
             def exercise = exerciser.next()
-            def answer = getAnswer(exercise, correctly)
+            def answer = getAnswerInForwardMode(exercise, correctly)
             exerciser.submitAnswer(answer)
         }
     }
 
-    private MainFormAnswer getAnswer(MainFormExercise mainFormExercise, boolean correctly) {
+    private MainFormAnswer getAnswerInForwardMode(MainFormExercise mainFormExercise, boolean correctly) {
         def mainForm = mainFormExercise.mainForm
         def description = dictionary.records.find { it.word.mainForm == mainForm }.description
         [description + (correctly ? "" : " (incorrect)")] as MainFormAnswer
+    }
+
+    private MainFormAnswer getCorrectAnswerInForwardMode(MainFormExercise exercise) {
+        getAnswerInForwardMode(exercise, true)
+    }
+
+    private MainFormAnswer getCorrectAnswerInBackwardMode(MainFormExercise exercise) {
+        def description = exercise.description
+        def mainForm = dictionary.records.find { it.description == description }.word.mainForm
+        [mainForm] as MainFormAnswer
     }
 }

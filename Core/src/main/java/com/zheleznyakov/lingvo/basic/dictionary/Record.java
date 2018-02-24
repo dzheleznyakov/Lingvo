@@ -19,8 +19,8 @@ public class Record {
     }
 
     public static class UsageExample {
-        final String example;
-        final String translation;
+        public final String example;
+        public final String translation;
 
         public UsageExample(String example, String translation) {
             this.example = example;

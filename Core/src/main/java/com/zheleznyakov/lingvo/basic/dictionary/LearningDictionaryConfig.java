@@ -26,6 +26,7 @@ public class LearningDictionaryConfig {
 
     public enum Mode {
         FORWARD,
-        BACKWARD
+        BACKWARD,
+        TOGGLE
     }
 }
