@@ -277,7 +277,7 @@ class WordExerciserSpec extends Specification {
         then: "the number of distinct orders is close to 100"
         numberOfDistinctOrders > 95
     }
-    
+
     private def addRecordsToDictionary(int numberOfRecords) {
         IntStream.range(0, numberOfRecords)
                 .forEach { addRecord(it) }
