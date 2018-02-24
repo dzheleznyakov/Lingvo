@@ -24,7 +24,7 @@ public abstract class WordExerciser<E extends Exercise, A extends Answer> {
 
     public void start() throws ExerciseException {
         assertCurrentState(State.INITIALISED, "Failed to start");
-        ArrayList<Record> records = new ArrayList<>(dictionary.getRecords());
+        ArrayList<Record> records = new ArrayList<>(dictionary.getNotLearnedRecords());
         Collections.shuffle(records);
         recordIterator = records.iterator();
         state = recordIterator.hasNext() ? State.STARTED : State.STOPPED;

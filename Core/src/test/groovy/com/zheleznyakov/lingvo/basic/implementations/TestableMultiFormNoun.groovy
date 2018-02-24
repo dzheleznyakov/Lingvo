@@ -5,10 +5,10 @@ import com.zheleznyakov.lingvo.basic.words.Language
 import com.zheleznyakov.lingvo.basic.words.MultiFormWord
 import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
 
-class TestableMultiFormWord implements MultiFormWord {
+class TestableMultiFormNoun implements MultiFormWord {
     private final String mainForm;
 
-    TestableMultiFormWord(String mainForm) {
+    TestableMultiFormNoun(String mainForm) {
         this.mainForm = mainForm;
     }
 
@@ -19,7 +19,7 @@ class TestableMultiFormWord implements MultiFormWord {
 
     @Override
     PartOfSpeech getPartOfSpeech() {
-        return null
+        return PartOfSpeech.NOUN
     }
 
     @Override

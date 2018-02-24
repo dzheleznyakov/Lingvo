@@ -6,7 +6,7 @@ import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.basic.implementations.FakeExercise
 import com.zheleznyakov.lingvo.basic.implementations.FakeWordExerciser
-import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormWord
+import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import spock.lang.Specification
 
@@ -281,7 +281,7 @@ class WordExerciserSpec extends Specification {
 
     private def addRecord(def num) {
         char suffix = num + (char)'a'
-        GrammaticalWord word = new TestableMultiFormWord("word${suffix}")
+        GrammaticalWord word = new TestableMultiFormNoun("word${suffix}")
         dictionary.record(word, "meaning${suffix}").add()
     }
 

@@ -2,7 +2,7 @@ package com.zheleznyakov.lingvo.basic.dictionary
 
 import com.zheleznyakov.lingvo.basic.dictionary.Record.UsageExample
 import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
-import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormWord
+import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import com.zheleznyakov.lingvo.basic.words.Language
 import com.zheleznyakov.lingvo.helpers.LearningDictionaryConfigHelper
@@ -11,7 +11,7 @@ import spock.lang.Unroll
 
 class LearningDictionarySpec extends Specification {
     private static final Language LANGUAGE = FakeEnglish.FIXED_LANGUAGE
-    private static final GrammaticalWord word = new TestableMultiFormWord("word")
+    private static final GrammaticalWord word = new TestableMultiFormNoun("word")
     private static final String description = "слово"
     private static final String transcription = "wəːd"
     private static final Record.UsageExample example = ["To give a word", "Дать слово"]
@@ -182,7 +182,7 @@ class LearningDictionarySpec extends Specification {
         def usageExample2 = ["example 2", "translation 2"] as UsageExample
 
         and: "a record"
-        dictionary.record([mainForm] as TestableMultiFormWord, description)
+        dictionary.record([mainForm] as TestableMultiFormNoun, description)
                 .withTranscription(transcription)
                 .withUsageExamples([usageExample1,usageExample2])
                 .add()

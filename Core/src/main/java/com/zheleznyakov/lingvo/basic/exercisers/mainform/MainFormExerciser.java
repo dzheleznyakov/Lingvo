@@ -3,12 +3,10 @@ package com.zheleznyakov.lingvo.basic.exercisers.mainform;
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary;
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode;
 import com.zheleznyakov.lingvo.basic.dictionary.Record;
-import com.zheleznyakov.lingvo.basic.exercisers.Answer;
-import com.zheleznyakov.lingvo.basic.exercisers.Exercise;
 import com.zheleznyakov.lingvo.basic.exercisers.ExerciseException;
 import com.zheleznyakov.lingvo.basic.exercisers.WordExerciser;
 
-public class MainFormExerciser extends WordExerciser<Exercise, Answer> {
+public class MainFormExerciser extends WordExerciser<MainFormExercise, MainFormAnswer> {
     private Mode mode;
     private Record exercisedRecord;
 
@@ -23,14 +21,21 @@ public class MainFormExerciser extends WordExerciser<Exercise, Answer> {
     }
 
     @Override
-    protected Exercise getNextExercise(Record record) {
+    protected MainFormExercise getNextExercise(Record record) {
         exercisedRecord = record;
-        return null;
+        return new MainFormExercise(record);
     }
 
     @Override
-    protected void doSubmitAnswer(Answer answer) {
-        dictionary.increaseLearnCount(exercisedRecord);
+    protected void doSubmitAnswer(MainFormAnswer answer) {
+        if (answerIsCorrect(answer))
+            dictionary.registerCorrectAnswer(exercisedRecord);
+        else
+            dictionary.registerIncorrectAnswer(exercisedRecord);
+    }
+
+    private boolean answerIsCorrect(MainFormAnswer answer) {
+        return exercisedRecord.description.equals(answer.answer);
     }
 
     public Mode getMode() {

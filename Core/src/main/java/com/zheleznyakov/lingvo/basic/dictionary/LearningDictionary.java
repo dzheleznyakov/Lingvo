@@ -3,6 +3,7 @@ package com.zheleznyakov.lingvo.basic.dictionary;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -13,7 +14,7 @@ import com.zheleznyakov.lingvo.util.Util;
 
 public class LearningDictionary {
     private final Language language;
-    private Map<Record, Integer> records = new HashMap<>();
+    private Map<Record, Stats> records = new HashMap<>();
     private LearningDictionaryConfig config = LearningDictionaryConfig.getDefault();
 
     public LearningDictionary(Language language) {
@@ -38,6 +39,12 @@ public class LearningDictionary {
 
     public ImmutableSet<Record> getRecords() {
         return ImmutableSet.copyOf(records.keySet());
+    }
+
+    public ImmutableSet<Record> getNotLearnedRecords() {
+        return records.keySet().stream()
+                .filter(record -> getLearnCount(record) < config.getMaxLearnCount())
+                .collect(ImmutableSet.toImmutableSet());
     }
 
     public void updateDescription(Record record, String description) {
@@ -88,11 +95,21 @@ public class LearningDictionary {
     }
 
     public int getLearnCount(Record record) {
-        return records.get(record);
+        return records.get(record).learnCount;
     }
 
-    public void increaseLearnCount(Record record) {
-        records.compute(record, (rec, count) -> ++count);
+    public void registerCorrectAnswer(Record record) {
+        Stats stats = records.get(record);
+        stats.learnCount++;
+        stats.lastAnswerWasIncorrect = false;
+    }
+
+    public void registerIncorrectAnswer(Record record) {
+        Stats stats = records.get(record);
+        if (stats.lastAnswerWasIncorrect && stats.learnCount > 0)
+            stats.learnCount--;
+        else if (!stats.lastAnswerWasIncorrect  )
+            stats.lastAnswerWasIncorrect = true;
     }
 
     public class RecordAdder {
@@ -126,7 +143,12 @@ public class LearningDictionary {
             Util.validateArgument(word.getLanguage() == language,
                     "Illegal language of a word: required [{}], found [{}]", language, word.getLanguage());
             examples = exampleListBuilder.build();
-            records.put(new Record(this), 0);
+            records.put(new Record(this), new Stats());
         }
+    }
+
+    private static class Stats {
+        private int learnCount = 0;
+        private boolean lastAnswerWasIncorrect = false;
     }
 }
