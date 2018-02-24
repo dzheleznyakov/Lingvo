@@ -1,11 +1,14 @@
-package com.zheleznyakov.lingvo.basic.dictionary;
+package com.zheleznyakov.lingvo.basic.exercisers;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-public abstract class WordExerciser<E, A> {
-    private final LearningDictionary dictionary;
+import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary;
+import com.zheleznyakov.lingvo.basic.dictionary.Record;
+
+public abstract class WordExerciser<E extends Exercise, A extends Answer> {
+    protected final LearningDictionary dictionary;
     private State state = State.INITIALISED;
     private boolean readyForNext = true;
 

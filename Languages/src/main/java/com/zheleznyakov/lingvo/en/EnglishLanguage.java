@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.words.Language;
 
 public class EnglishLanguage extends Language {
-    public static final ImmutableSet<String> SIBILANTS = ImmutableSet.of(
+    static final ImmutableSet<String> SIBILANTS = ImmutableSet.of(
             "x","ch", "sh", "s");
 
     private static EnglishLanguage INSTANCE;

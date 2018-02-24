@@ -1,5 +1,6 @@
 package com.zheleznyakov.lingvo.basic.implementations
 
+import com.google.common.base.MoreObjects
 import com.zheleznyakov.lingvo.basic.words.Language
 import com.zheleznyakov.lingvo.basic.words.MultiFormWord
 import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
@@ -29,5 +30,12 @@ class TestableMultiFormWord implements MultiFormWord {
     @Override
     Map<FakeFormName, String> getForms() {
         return getForms([:], FakeFormName.values())
+    }
+
+    @Override
+    String toString() {
+        return MoreObjects.toStringHelper("Word")
+                .add("mainForm", mainForm)
+                .toString();
     }
 }

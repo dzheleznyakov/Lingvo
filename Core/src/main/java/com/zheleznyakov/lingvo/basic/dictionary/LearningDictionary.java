@@ -1,8 +1,8 @@
 package com.zheleznyakov.lingvo.basic.dictionary;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -13,7 +13,7 @@ import com.zheleznyakov.lingvo.util.Util;
 
 public class LearningDictionary {
     private final Language language;
-    private Set<Record> records = new HashSet<>();
+    private Map<Record, Integer> records = new HashMap<>();
     private LearningDictionaryConfig config = LearningDictionaryConfig.getDefault();
 
     public LearningDictionary(Language language) {
@@ -37,7 +37,7 @@ public class LearningDictionary {
     }
 
     public ImmutableSet<Record> getRecords() {
-        return ImmutableSet.copyOf(records);
+        return ImmutableSet.copyOf(records.keySet());
     }
 
     public void updateDescription(Record record, String description) {
@@ -87,6 +87,14 @@ public class LearningDictionary {
                 .add();
     }
 
+    public int getLearnCount(Record record) {
+        return records.get(record);
+    }
+
+    public void increaseLearnCount(Record record) {
+        records.compute(record, (rec, count) -> ++count);
+    }
+
     public class RecordAdder {
         GrammaticalWord word;
         String description;
@@ -118,7 +126,7 @@ public class LearningDictionary {
             Util.validateArgument(word.getLanguage() == language,
                     "Illegal language of a word: required [{}], found [{}]", language, word.getLanguage());
             examples = exampleListBuilder.build();
-            records.add(new Record(this));
+            records.put(new Record(this), 0);
         }
     }
 }

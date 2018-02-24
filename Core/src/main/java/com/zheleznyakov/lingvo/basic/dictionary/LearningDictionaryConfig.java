@@ -28,13 +28,4 @@ public class LearningDictionaryConfig {
         FORWARD,
         BACKWARD
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LearningDictionaryConfig that = (LearningDictionaryConfig) o;
-        return maxLearnCount == that.maxLearnCount &&
-                mode == that.mode;
-    }
 }
