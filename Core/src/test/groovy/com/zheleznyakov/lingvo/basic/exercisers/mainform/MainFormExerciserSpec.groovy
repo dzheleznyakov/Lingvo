@@ -6,7 +6,8 @@ import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig
 import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
-import com.zheleznyakov.lingvo.helpers.LearningDictionaryConfigHelper
+import com.zheleznyakov.lingvo.helpers.TestHelper
+import org.junit.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -19,21 +20,15 @@ import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.
 class MainFormExerciserSpec extends Specification {
     private LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE]
 
-    /*
-   - Learn in different modes (forward, backward, toggle)
-   (-) Learn only those words, that are not completed
-   (-) Check statistics (percentage)
-   (-) Configure (set learned count)
-    */
-
     def setup() {
         dictionary.config.maxLearnCount = 10
+        dictionary.config.strict = true
         addRecordsToDictionary(10)
     }
 
     def "When a main form exerciser is created, its config equals to the one of dictionary"() {
         expect: "that the dictionary does not have a default config"
-        LearningDictionaryConfigHelper.areConfigsNotEqual(dictionary.config, LearningDictionaryConfig.default)
+        TestHelper.areConfigsNotEqual(dictionary.config, LearningDictionaryConfig.default)
 
         when: "a new main form exerciser is created and started"
         MainFormExerciser exerciser = [dictionary]
@@ -216,6 +211,47 @@ class MainFormExerciserSpec extends Specification {
         dictionary.records.size() == numberOfNewWords + 1
         exercisedWords.size() == numberOfNewWords
         !exercisedWords.contains("word")
+    }
+
+    @Unroll
+    def "Test exercising in strict=#strict regime: description=[#description], answer=[#answer]"() {
+        given: "a dictionary"
+        dictionary = [FakeEnglish.FIXED_LANGUAGE]
+        dictionary.record(["word"] as TestableMultiFormNoun, description).add()
+
+        and: "that the dictionary is in strict=#strict regime"
+        dictionary.getConfig().setStrict(strict)
+
+        and: "a started exerciser"
+        MainFormExerciser exerciser = [dictionary]
+        exerciser.start()
+
+        when: "the answer is submitted"
+        exerciser.next()
+        exerciser.submitAnswer([answer] as MainFormAnswer)
+
+        then: "the recird learn count is as expected"
+        allRecordsHaveCount(expectedLearnCount)
+
+        where: "the parameters are"
+        strict | description | answer || expectedLearnCount
+        false  | "abc"       | "ab"   || 1
+        true   | "abc"       | "ab"   || 0
+        false  | "abc"       | "abc"  || 1
+        true   | "abc"       | "abc"  || 1
+        false  | "abc"       | "abcd" || 0
+        true   | "abc"       | "abcd" || 0
+        false  | "abc, def"  | "def"  || 1
+        false  | "abc, def"  | "de"   || 1
+        false  | "abc (def)" | "de"   || 0
+        false  | "abc (def)" | "def)" || 0
+        false  | "abc-def"   | "def"  || 0
+        false  | "abc - def" | "def"  || 1
+        false  | "abc - def" | "-"    || 0
+        false  | "abc, def"  | ""     || 0
+        true   | "abc, def"  | ""     || 0
+        false  | "abc"       | null   || 0
+        true   | "abc"       | null   || 0
     }
 
     private void addRecordsToDictionary(int numberOfRecords) {

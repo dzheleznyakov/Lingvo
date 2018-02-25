@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.helpers
 
-class LearningDictionaryConfigHelper {
+class TestHelper {
     private static def STATIC_PROPERTIES_FILTER = { it != "default" }
 
 

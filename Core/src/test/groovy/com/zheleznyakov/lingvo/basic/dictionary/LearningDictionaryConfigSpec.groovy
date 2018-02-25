@@ -13,6 +13,7 @@ class LearningDictionaryConfigSpec extends Specification {
         with(config) {
             it.mode == LearningDictionaryConfig.Mode.FORWARD
             it.maxLearnCount == 30
+            it.strict == false
         }
     }
 

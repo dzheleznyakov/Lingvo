@@ -214,6 +214,18 @@ class UtilSpec extends Specification {
         Util.class | _
     }
 
+    @Unroll
+    def "The string [#str] is blank: #expected"() {
+        expect: "the string [#str] to be blank: #expected"
+        Util.isBlank(str) == expected
+
+        where: "the parameters are"
+        str  || expected
+        null || true
+        ""   || true
+        "ab" || false
+    }
+
     private class IntegerToDouble implements Function<Integer, Double> {
         @Override
         Double apply(Integer integer) {

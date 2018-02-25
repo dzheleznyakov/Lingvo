@@ -3,6 +3,7 @@ package com.zheleznyakov.lingvo.basic.dictionary;
 public class LearningDictionaryConfig {
     private Mode mode = Mode.FORWARD;
     private int maxLearnCount = 30;
+    private boolean strict;
 
     public static LearningDictionaryConfig getDefault() {
         return new LearningDictionaryConfig();
@@ -22,6 +23,14 @@ public class LearningDictionaryConfig {
 
     public void setMaxLearnCount(int maxLearnCount) {
         this.maxLearnCount = maxLearnCount;
+    }
+
+    public boolean isStrict() {
+        return strict;
+    }
+
+    public void setStrict(boolean strict) {
+        this.strict = strict;
     }
 
     public enum Mode {
