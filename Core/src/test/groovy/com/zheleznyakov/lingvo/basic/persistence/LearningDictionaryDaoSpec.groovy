@@ -26,6 +26,7 @@ class LearningDictionaryDaoSpec extends Specification {
         1 * persistenceManager.persist({
             it != null
             it instanceof PersistenceEntity
+            it.entityClass == LearningDictionary
         } as PersistenceEntity)
     }
 
