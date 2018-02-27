@@ -3,19 +3,13 @@ package com.zheleznyakov.lingvo.basic.exercisers.mainform
 import com.google.common.collect.ImmutableList
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig
-import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
 import com.zheleznyakov.lingvo.helpers.TestHelper
-import org.junit.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.util.stream.IntStream
-
-import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode.BACKWARD
-import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode.FORWARD
-import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode.TOGGLE
+import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode.*
 
 class MainFormExerciserSpec extends Specification {
     private LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE]
@@ -23,7 +17,7 @@ class MainFormExerciserSpec extends Specification {
     def setup() {
         dictionary.config.maxLearnCount = 10
         dictionary.config.strict = true
-        addRecordsToDictionary(10)
+        TestHelper.addRecordsToDictionary(dictionary, 10)
     }
 
     def "When a main form exerciser is created, its config equals to the one of dictionary"() {
@@ -69,7 +63,7 @@ class MainFormExerciserSpec extends Specification {
     def "Test one word exercise in TOGGLE mode"() {
         given: "the dictionary has four words"
         dictionary = [FakeEnglish.FIXED_LANGUAGE]
-        addRecordsToDictionary(4)
+        TestHelper.addRecordsToDictionary(dictionary, 4)
 
         and: "is in TOGGLE mode"
         dictionary.getConfig().setMode(TOGGLE)
@@ -100,7 +94,7 @@ class MainFormExerciserSpec extends Specification {
         given: "a dictionary with one record in #mode mode"
         dictionary = [FakeEnglish.FIXED_LANGUAGE]
         dictionary.getConfig().setMode(mode)
-        addRecordsToDictionary(1)
+        TestHelper.addRecordsToDictionary(dictionary, 1)
 
         and: "a started main form exerciser"
         MainFormExerciser exerciser = [dictionary]
@@ -196,7 +190,7 @@ class MainFormExerciserSpec extends Specification {
 
         when: "more records added to the dictionary"
         def numberOfNewWords = 10
-        addRecordsToDictionary(numberOfNewWords)
+        TestHelper.addRecordsToDictionary(dictionary, numberOfNewWords)
 
         and: "the main forms are exercised"
         MainFormExerciser exerciser = [dictionary]
@@ -252,21 +246,6 @@ class MainFormExerciserSpec extends Specification {
         true   | "abc, def"  | ""     || 0
         false  | "abc"       | null   || 0
         true   | "abc"       | null   || 0
-    }
-
-    private void addRecordsToDictionary(int numberOfRecords) {
-        IntStream.range(0, numberOfRecords)
-                .mapToObj { (it + (char) 'a') as char }
-                .map { ["word${it}"] as TestableMultiFormNoun }
-                .forEach { addFullRecord(it) }
-    }
-
-    private def addFullRecord(def word) {
-        def mainForm = word.mainForm
-        dictionary.record(word, "${mainForm} description")
-                .withTranscription("${mainForm} transcription")
-                .withUsageExample(["${mainForm} example", "${mainForm} translation"] as Record.UsageExample)
-                .add()
     }
 
     private def allRecordsHaveCount(int expectedCount) {
