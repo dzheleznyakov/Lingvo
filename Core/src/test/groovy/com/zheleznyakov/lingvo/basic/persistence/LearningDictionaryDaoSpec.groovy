@@ -22,12 +22,13 @@ class LearningDictionaryDaoSpec extends Specification {
         when: "the DAO persists the dictionary"
         dao.persist(dictionary)
 
-        then: "the PersistenceEntity describing the dictionary is passed to the persistence manager"
+        then: "the ObjectPersistenceEntity describing the dictionary is passed to the persistence manager"
         1 * persistenceManager.persist({
-            it != null
-            it instanceof PersistenceEntity
             it.entityClass == LearningDictionary
-        } as PersistenceEntity)
+            it.fields["config"] instanceof ObjectPersistenceEntity
+            it.fields["config"].entityClass == LearningDictionaryConfig
+            it.fields["config"].fields["mode"] == LearningDictionaryConfig.Mode.FORWARD.name()
+        } as ObjectPersistenceEntity)
     }
 
 }

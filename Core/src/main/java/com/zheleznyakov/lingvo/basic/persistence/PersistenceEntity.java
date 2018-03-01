@@ -1,11 +1,13 @@
 package com.zheleznyakov.lingvo.basic.persistence;
 
-import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary;
+import java.util.Map;
 
-public class PersistenceEntity {
-    private final Class<?> entityClass = LearningDictionary.class;
+public interface PersistenceEntity {
+    Class<?> getEntityClass();
 
-    public Class<?> getEntityClass() {
-        return entityClass;
-    }
+    default void addField(String key, PersistenceEntity persistenceEntity) {
+        getFields().put(key, persistenceEntity);
+    };
+
+    Map<String, PersistenceEntity> getFields();
 }
