@@ -1,7 +1,7 @@
 package com.zheleznyakov.lingvo.basic.persistence;
 
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary;
-import com.zheleznyakov.lingvo.basic.persistence.converters.LearningDictionaryConverter;
+import com.zheleznyakov.lingvo.basic.persistence.converters.ConvertingWorkshop;
 
 public class LearningDictionaryDao {
     private final PersistenceManager persistenceManager;
@@ -11,6 +11,6 @@ public class LearningDictionaryDao {
     }
 
     public void persist(LearningDictionary dictionary) {
-        persistenceManager.persist(new LearningDictionaryConverter().convert(dictionary));
+        persistenceManager.persist(ConvertingWorkshop.convert(dictionary));
     }
 }

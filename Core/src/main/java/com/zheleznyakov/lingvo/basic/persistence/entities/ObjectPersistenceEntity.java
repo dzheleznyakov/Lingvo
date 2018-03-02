@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.basic.persistence;
+package com.zheleznyakov.lingvo.basic.persistence.entities;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +11,15 @@ public class ObjectPersistenceEntity implements PersistenceEntity {
         this.entityClass = entityClass;
     }
 
-    @Override
     public Class<?> getEntityClass() {
         return entityClass;
     }
 
-    @Override
     public Map<String, PersistenceEntity> getFields() {
         return fields;
+    }
+
+    public void addField(String key, PersistenceEntity persistenceEntity) {
+        fields.put(key, persistenceEntity);
     }
 }

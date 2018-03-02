@@ -1,13 +1,8 @@
 package com.zheleznyakov.lingvo.basic.exercisers.mainform;
 
 import com.google.common.collect.ImmutableList;
-import com.sun.org.apache.xpath.internal.operations.Mod;
-import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig;
-import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode;
 import com.zheleznyakov.lingvo.basic.dictionary.Record;
 import com.zheleznyakov.lingvo.basic.exercisers.Exercise;
-
-import java.util.stream.Collectors;
 
 public class MainFormExercise implements Exercise {
     public final String mainForm;

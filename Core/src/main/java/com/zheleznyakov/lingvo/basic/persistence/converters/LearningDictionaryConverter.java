@@ -1,15 +1,17 @@
 package com.zheleznyakov.lingvo.basic.persistence.converters;
 
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary;
-import com.zheleznyakov.lingvo.basic.persistence.ObjectPersistenceEntity;
-import com.zheleznyakov.lingvo.basic.persistence.PersistenceEntity;
+import com.zheleznyakov.lingvo.basic.persistence.entities.ObjectPersistenceEntity;
+import com.zheleznyakov.lingvo.basic.persistence.entities.PersistenceEntity;
 
 public class LearningDictionaryConverter implements Converter<LearningDictionary> {
 
     @Override
     public PersistenceEntity convert(LearningDictionary dictionary) {
-        PersistenceEntity persistenceEntity = new ObjectPersistenceEntity(dictionary.getClass());
-        persistenceEntity.addField("config", new ObjectPersistenceEntity(dictionary.getConfig().getClass()));
+        ObjectPersistenceEntity persistenceEntity = new ObjectPersistenceEntity(dictionary.getClass());
+        persistenceEntity.addField("language", ConvertingWorkshop.convert(dictionary.getLanguage()));
+        persistenceEntity.addField("config", ConvertingWorkshop.convert(dictionary.getConfig()));
+        persistenceEntity.addField("records", ConvertingWorkshop.convert(dictionary.getRecords()));
         return persistenceEntity;
     }
 
