@@ -2,10 +2,12 @@ package com.zheleznyakov.lingvo.basic.persistence.converters;
 
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary;
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig;
+import com.zheleznyakov.lingvo.basic.dictionary.Record;
 import com.zheleznyakov.lingvo.basic.persistence.entities.ListPersistenceEntity;
 import com.zheleznyakov.lingvo.basic.persistence.entities.PersistenceEntity;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ public class ConvertingWorkshop {
     static {
         registerHandler(LearningDictionary.class, new LearningDictionaryConverter());
         registerHandler(LearningDictionaryConfig.class, new LearningDictionaryConfigConverter());
+        registerHandler(Record.class, new RecordConverter());
     }
 
     @SuppressWarnings("unchecked")
@@ -23,8 +26,9 @@ public class ConvertingWorkshop {
         return converter.convert(object);
     }
 
-    public static <E> PersistenceEntity convert(Collection<E> objects) {
-        return new ListPersistenceEntity();
+    @SuppressWarnings("unchecked")
+    public static <E> ListPersistenceEntity convert(Collection<E> objects) {
+        return new ListPersistenceEntity(objects);
     }
 
     public static <E> void registerHandler(Class<E> entityClass, Converter<E> entityConverter) {
