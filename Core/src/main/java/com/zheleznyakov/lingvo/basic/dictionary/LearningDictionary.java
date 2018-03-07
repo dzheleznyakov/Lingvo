@@ -3,7 +3,6 @@ package com.zheleznyakov.lingvo.basic.dictionary;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -14,8 +13,8 @@ import com.zheleznyakov.lingvo.util.Util;
 
 public class LearningDictionary {
     private final Language language;
-    private Map<Record, Stats> records = new HashMap<>();
     private LearningDictionaryConfig config = LearningDictionaryConfig.getDefault();
+    private final Map<Record, Stats> records = new HashMap<>();
 
     public LearningDictionary(Language language) {
         this.language = language;

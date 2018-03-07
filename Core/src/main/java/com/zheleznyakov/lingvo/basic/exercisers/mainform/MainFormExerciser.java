@@ -7,8 +7,6 @@ import com.zheleznyakov.lingvo.basic.exercisers.ExerciseException;
 import com.zheleznyakov.lingvo.basic.exercisers.WordExerciser;
 import com.zheleznyakov.lingvo.util.Util;
 
-import java.util.Arrays;
-
 public class MainFormExerciser extends WordExerciser<MainFormExercise, MainFormAnswer> {
     private Mode mode;
     private Record exercisedRecord;
