@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.basic.implementations
+package com.zheleznyakov.lingvo.implementations
 
 import com.google.common.base.MoreObjects
 import com.zheleznyakov.lingvo.basic.words.Language

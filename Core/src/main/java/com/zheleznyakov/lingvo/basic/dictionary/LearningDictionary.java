@@ -13,15 +13,21 @@ import com.zheleznyakov.lingvo.util.Util;
 
 public class LearningDictionary {
     private final Language language;
+    private final String name;
     private LearningDictionaryConfig config = LearningDictionaryConfig.getDefault();
     private final Map<Record, Stats> records = new HashMap<>();
 
-    public LearningDictionary(Language language) {
+    public LearningDictionary(Language language, String name) {
         this.language = language;
+        this.name = name;
     }
 
     public Language getLanguage() {
         return language;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public LearningDictionaryConfig getConfig() {

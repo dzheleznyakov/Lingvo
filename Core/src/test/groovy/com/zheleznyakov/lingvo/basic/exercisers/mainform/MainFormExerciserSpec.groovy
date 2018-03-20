@@ -3,8 +3,8 @@ package com.zheleznyakov.lingvo.basic.exercisers.mainform
 import com.google.common.collect.ImmutableList
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig
-import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
-import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
+import com.zheleznyakov.lingvo.implementations.FakeEnglish
+import com.zheleznyakov.lingvo.implementations.TestableMultiFormNoun
 import com.zheleznyakov.lingvo.helpers.TestHelper
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -12,12 +12,12 @@ import spock.lang.Unroll
 import static com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig.Mode.*
 
 class MainFormExerciserSpec extends Specification {
-    private LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE]
+    private LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE, "Test dictionary"]
 
     def setup() {
         dictionary.config.maxLearnCount = 10
         dictionary.config.strict = true
-        TestHelper.addRecordsToDictionary(dictionary, 10)
+        TestHelper.addFullRecordsToDictionary(dictionary, 10)
     }
 
     def "When a main form exerciser is created, its config equals to the one of dictionary"() {
@@ -35,7 +35,7 @@ class MainFormExerciserSpec extends Specification {
     @Unroll
     def "Test one word exercise in #mode mode"() {
         given: "the dictionary has one record"
-        dictionary = [FakeEnglish.FIXED_LANGUAGE]
+        dictionary = [FakeEnglish.FIXED_LANGUAGE, "Test dictionary"]
         def mainForm = "word"
         def description = "description"
         dictionary.record([mainForm] as TestableMultiFormNoun, description).add()
@@ -62,8 +62,8 @@ class MainFormExerciserSpec extends Specification {
 
     def "Test one word exercise in TOGGLE mode"() {
         given: "the dictionary has four words"
-        dictionary = [FakeEnglish.FIXED_LANGUAGE]
-        TestHelper.addRecordsToDictionary(dictionary, 4)
+        dictionary = [FakeEnglish.FIXED_LANGUAGE, "Test dictionary"]
+        TestHelper.addFullRecordsToDictionary(dictionary, 4)
 
         and: "is in TOGGLE mode"
         dictionary.getConfig().setMode(TOGGLE)
@@ -92,9 +92,9 @@ class MainFormExerciserSpec extends Specification {
     @Unroll
     def "Test Exercise for main form exerciser in #mode mode"() {
         given: "a dictionary with one record in #mode mode"
-        dictionary = [FakeEnglish.FIXED_LANGUAGE]
+        dictionary = [FakeEnglish.FIXED_LANGUAGE, "Test dictionary"]
         dictionary.getConfig().setMode(mode)
-        TestHelper.addRecordsToDictionary(dictionary, 1)
+        TestHelper.addFullRecordsToDictionary(dictionary, 1)
 
         and: "a started main form exerciser"
         MainFormExerciser exerciser = [dictionary]
@@ -180,7 +180,7 @@ class MainFormExerciserSpec extends Specification {
     def "Records that hit max learn count are not exercised"() {
         given: "that dictionary has one record"
         def maxLearnCount = 1;
-        dictionary = [FakeEnglish.FIXED_LANGUAGE]
+        dictionary = [FakeEnglish.FIXED_LANGUAGE, "Test dictionary"]
         dictionary.getConfig().setMaxLearnCount(maxLearnCount)
         dictionary.record(["word"] as TestableMultiFormNoun, "description").add()
         exerciseWordsMainFormInForwardMode(true)
@@ -190,7 +190,7 @@ class MainFormExerciserSpec extends Specification {
 
         when: "more records added to the dictionary"
         def numberOfNewWords = 10
-        TestHelper.addRecordsToDictionary(dictionary, numberOfNewWords)
+        TestHelper.addFullRecordsToDictionary(dictionary, numberOfNewWords)
 
         and: "the main forms are exercised"
         MainFormExerciser exerciser = [dictionary]
@@ -210,7 +210,7 @@ class MainFormExerciserSpec extends Specification {
     @Unroll
     def "Test exercising in strict=#strict regime: description=[#description], answer=[#answer]"() {
         given: "a dictionary"
-        dictionary = [FakeEnglish.FIXED_LANGUAGE]
+        dictionary = [FakeEnglish.FIXED_LANGUAGE, "Test dictionary"]
         dictionary.record(["word"] as TestableMultiFormNoun, description).add()
 
         and: "that the dictionary is in strict=#strict regime"

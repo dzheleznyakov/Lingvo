@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.basic.implementations
+package com.zheleznyakov.lingvo.implementations
 
 import com.zheleznyakov.lingvo.basic.words.FormName
 

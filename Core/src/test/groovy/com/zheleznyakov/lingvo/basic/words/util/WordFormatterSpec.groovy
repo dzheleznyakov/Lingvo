@@ -1,9 +1,9 @@
 package com.zheleznyakov.lingvo.basic.words.util
 
-import com.zheleznyakov.lingvo.basic.implementations.FakeFormName
+import com.zheleznyakov.lingvo.implementations.FakeFormName
 import spock.lang.Specification
 
-import static com.zheleznyakov.lingvo.basic.implementations.FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR
+import static com.zheleznyakov.lingvo.implementations.FakeFormName.MANDATORY_AND_POSSIBLE_IRREGULAR
 
 class WordFormatterSpec extends Specification {
 

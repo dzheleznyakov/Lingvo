@@ -10,6 +10,7 @@
         <module>Util</module>
         <module>Core</module>
         <module>Languages</module>
+        <module>Persistence</module>
     </modules>
 
     <properties>
@@ -140,11 +141,6 @@
                 <artifactId>Languages</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.zheleznyakov.lingvo</groupId>
-                <artifactId>Extended</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>com.typesafe</groupId>
@@ -184,6 +180,13 @@
             <dependency>
                 <groupId>com.zheleznyakov.lingvo</groupId>
                 <artifactId>Util</artifactId>
+                <type>test-jar</type>
+                <scope>test</scope>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zheleznyakov.lingvo</groupId>
+                <artifactId>Core</artifactId>
                 <type>test-jar</type>
                 <scope>test</scope>
                 <version>${project.version}</version>

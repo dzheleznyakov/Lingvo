@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.basic.implementations
+package com.zheleznyakov.lingvo.implementations
 
 import com.zheleznyakov.lingvo.basic.exercisers.Answer
 import com.zheleznyakov.lingvo.basic.exercisers.Exercise

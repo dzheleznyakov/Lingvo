@@ -1,8 +1,8 @@
 package com.zheleznyakov.lingvo.basic.dictionary
 
 import com.zheleznyakov.lingvo.basic.dictionary.Record.UsageExample
-import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
-import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
+import com.zheleznyakov.lingvo.implementations.FakeEnglish
+import com.zheleznyakov.lingvo.implementations.TestableMultiFormNoun
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import com.zheleznyakov.lingvo.basic.words.Language
 import com.zheleznyakov.lingvo.helpers.TestHelper
@@ -14,10 +14,11 @@ class LearningDictionarySpec extends Specification {
     private static final GrammaticalWord word = new TestableMultiFormNoun("word")
     private static final String description = "слово"
     private static final String transcription = "wəːd"
-    private static final Record.UsageExample example = ["To give a word", "Дать слово"]
+    private static final UsageExample example = ["To give a word", "Дать слово"]
     private static final UsageExample newExample = ["He gave me the word to start", "Он дал мне команду начинать"]
+    public static final String DICTIONARY_NAME = "Test dictionary"
 
-    private LearningDictionary dictionary = new LearningDictionary(LANGUAGE)
+    private LearningDictionary dictionary = new LearningDictionary(LANGUAGE, DICTIONARY_NAME)
 
     def "Create a dictionary and add a simple record to it"() {
         expect: "the dictionary has not records"
@@ -29,7 +30,10 @@ class LearningDictionarySpec extends Specification {
         when: "a (simple) record is added to the dictionary"
         dictionary.record(word, description).add()
 
-        then: "the dictionary has one record"
+        then: "the name of the dictionary is correct"
+        dictionary.name == DICTIONARY_NAME
+
+        and: "the dictionary has one record"
         dictionary.getRecords().size() == 1
 
         and: "the record contains the given word and its description"
@@ -57,7 +61,7 @@ class LearningDictionarySpec extends Specification {
         def dictionaryLanguage = new FakeEnglish("New Fake English", "NFE")
 
         and: "a dictionary"
-        dictionary = new LearningDictionary(dictionaryLanguage)
+        dictionary = new LearningDictionary(dictionaryLanguage, "Test dictionary")
 
         expect: "the languages of the word and dictionary are different"
         word.language != dictionaryLanguage

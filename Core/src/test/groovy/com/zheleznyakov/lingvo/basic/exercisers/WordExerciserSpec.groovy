@@ -3,17 +3,17 @@ package com.zheleznyakov.lingvo.basic.exercisers
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.dictionary.Record
-import com.zheleznyakov.lingvo.basic.implementations.FakeEnglish
-import com.zheleznyakov.lingvo.basic.implementations.FakeExercise
-import com.zheleznyakov.lingvo.basic.implementations.FakeWordExerciser
-import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
+import com.zheleznyakov.lingvo.implementations.FakeEnglish
+import com.zheleznyakov.lingvo.implementations.FakeExercise
+import com.zheleznyakov.lingvo.implementations.FakeWordExerciser
+import com.zheleznyakov.lingvo.implementations.TestableMultiFormNoun
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import spock.lang.Specification
 
 import java.util.stream.IntStream
 
 class WordExerciserSpec extends Specification {
-    private final LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE]
+    private final LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE, "Test dictionary"]
     private WordExerciser<FakeExercise, Answer> exerciser
 
     def "A newly created exerciser is in the INITIALISED state"() {

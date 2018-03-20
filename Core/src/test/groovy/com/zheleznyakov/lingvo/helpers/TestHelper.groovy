@@ -2,7 +2,7 @@ package com.zheleznyakov.lingvo.helpers
 
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.dictionary.Record
-import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
+import com.zheleznyakov.lingvo.implementations.TestableMultiFormNoun
 
 import java.util.stream.IntStream
 
@@ -31,7 +31,7 @@ class TestHelper {
         return true
     }
 
-    static void addRecordsToDictionary(LearningDictionary dictionary, int numberOfRecords) {
+    static void addFullRecordsToDictionary(LearningDictionary dictionary, int numberOfRecords) {
         IntStream.range(0, numberOfRecords)
                 .mapToObj { (it + (char) 'a') as char }
                 .map { ["word${it}"] as TestableMultiFormNoun }

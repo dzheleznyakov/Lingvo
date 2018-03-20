@@ -1,9 +1,9 @@
 package com.zheleznyakov.lingvo.basic
 
-import com.zheleznyakov.lingvo.basic.implementations.TestableMultiFormNoun
+import com.zheleznyakov.lingvo.implementations.TestableMultiFormNoun
 import spock.lang.Specification
 
-import static com.zheleznyakov.lingvo.basic.implementations.FakeFormName.*
+import static com.zheleznyakov.lingvo.implementations.FakeFormName.*
 
 class MultiFormWordSpec extends Specification {
 
