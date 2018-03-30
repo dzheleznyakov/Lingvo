@@ -12,7 +12,7 @@ class XmlPersistenceManagerSpec extends Specification {
         String dictionaryName = "Test"
         LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE, dictionaryName]
 
-        and: "an XmlPersistenceManager"
+        and: "an XmlPersistenceManager1"
         XmlPersistenceManager persistenceManager = []
 
         expect: "that the xml file with the dictionary does not exist"
@@ -25,5 +25,15 @@ class XmlPersistenceManagerSpec extends Specification {
 
         then: "the xml file with the dictionary exists"
         file.exists()
+        assertFileContent(file)
+
+        cleanup: "remove created file"
+//        file.delete()
+    }
+
+    private assertFileContent(File file) {
+        XmlSlurper xmlSlurper = []
+        def xmlRoot = xmlSlurper.parse(file)
+        true
     }
 }
