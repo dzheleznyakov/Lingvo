@@ -5,7 +5,7 @@ import com.zheleznyakov.lingvo.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.implementations.TestableMultiFormNoun
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import com.zheleznyakov.lingvo.basic.words.Language
-import com.zheleznyakov.lingvo.helpers.TestHelper
+import com.zheleznyakov.lingvo.helpers.DictionaryConfigTestHelper
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -174,7 +174,7 @@ class LearningDictionarySpec extends Specification {
 
     def "A newly created dictionary has default config"() {
         expect: "the config of a newly created dictionary is to be default"
-        TestHelper.areConfigsEqual(dictionary.config, LearningDictionaryConfig.default)
+        DictionaryConfigTestHelper.areConfigsEqual(dictionary.config, LearningDictionaryConfig.default)
     }
 
     def "Test Record.toString method"() {
