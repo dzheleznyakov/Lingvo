@@ -1,10 +1,14 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
+import com.google.common.collect.ImmutableMap
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
+import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.helpers.DictionaryRecordTestHelper
 import com.zheleznyakov.lingvo.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 import spock.lang.Specification
+
+import java.util.function.Function
 
 class XmlPersistenceManagerSpec extends Specification {
     private static final String DICTIONARY_NAME = "Test"
@@ -61,12 +65,32 @@ class XmlPersistenceManagerSpec extends Specification {
 
     }
 
-    private static assertPersistedRecords(File file, int expectedNumberOfRecords = 0) {
+    private assertPersistedRecords(File file, int expectedNumberOfRecords = 0) {
+        def recordsByMainForm = dictionary.records.stream()
+                .collect(ImmutableMap.toImmutableMap(
+                        { record -> record.word.mainForm as String},
+                        Function.identity()
+        ))
+
         def dictionary = new XmlSlurper().parse(file).dictionary
 
         assert dictionary.name == DICTIONARY_NAME
         assert dictionary.language == FakeEnglish.FIXED_LANGUAGE.toString()
-        assert dictionary.records.record.size() == expectedNumberOfRecords
+
+        def records = dictionary.records.record
+        assert records.size() == expectedNumberOfRecords
+        records.each { xmlRecord ->
+            def mainForm = xmlRecord.word.mainForm.toString()
+            def record = recordsByMainForm[mainForm]
+            assert record != null
+            assert xmlRecord.word.class == record.word.class.simpleName
+            assert xmlRecord.word.mainForm == record.word.mainForm
+            assert xmlRecord.description == record.description
+            assert xmlRecord.transcription == record.transcription
+            assert xmlRecord.usageExamples.usageExample.size() == record.examples.size()
+            assert xmlRecord.usageExamples.usageExample[0].example == record.examples[0].example
+            assert xmlRecord.usageExamples.usageExample[0].translation == record.examples[0].translation
+        }
 
         true
     }

@@ -7,6 +7,7 @@ import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
 
 class TestableMultiFormNoun implements MultiFormWord {
     private final String mainForm;
+    private final double randomValue = Math.random()
 
     TestableMultiFormNoun(String mainForm) {
         this.mainForm = mainForm;
