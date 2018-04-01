@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo.persistence.xml
 
 import com.google.common.collect.ImmutableMap
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
+import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig
 import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.helpers.DictionaryRecordTestHelper
 import com.zheleznyakov.lingvo.implementations.FakeEnglish
@@ -38,11 +39,27 @@ class XmlPersistenceManagerSpec extends Specification {
         root.persistenceManager.@type == "xml"
     }
 
-    private File getDictionaryFile() {
-        new File("${PATH_TO_FILE_STORAGE}/${FakeEnglish.FIXED_LANGUAGE.code()}/xml/${dictionary.name}.xml")
+    def "Files for dictionary of the same language are stored in the same folder"() {
+        given: "two dictionaries of the same language"
+        LearningDictionary secondDictionary = [dictionary.language, "Second"]
+
+        expect: "that neither dictionary is persisted"
+        File file1 = getDictionaryFile()
+        File file2 = getDictionaryFile(secondDictionary)
+        !file1.exists()
+        !file2.exists()
+
+        when: "the dictionaries are persisted"
+        persistenceManager.persist(dictionary)
+        persistenceManager.persist(secondDictionary)
+
+        then: "files for both dictionaries are in the same folder"
+        file1.exists()
+        file2.exists()
+        file1.parent == file2.parent
     }
 
-    def "When persisting an empty dictionary, it has not records"() {
+    def "When an empty dictionary is persisted, it has not records"() {
         expect: "the dictionary to be empty"
         dictionary.records.isEmpty()
 
@@ -53,7 +70,7 @@ class XmlPersistenceManagerSpec extends Specification {
         assertPersistedRecords(dictionaryFile)
     }
 
-    def "When a non-empty dictionary, all records are persisted"() {
+    def "When a non-empty dictionary is persisted, all records are persisted"() {
         given: "the dictionary has 10 records"
         DictionaryRecordTestHelper.addFullRecordsToDictionary(dictionary, 10)
 
@@ -62,7 +79,33 @@ class XmlPersistenceManagerSpec extends Specification {
 
         then: "then all records are persisted"
         assertPersistedRecords(dictionaryFile, 10)
+    }
 
+    def "The dictionary config is persisted with the dictionary"() {
+        given: "the dictionaries setting in the config are not default"
+        dictionary.config.maxLearnCount = 10
+        dictionary.config.strict = true
+        dictionary.config.mode = LearningDictionaryConfig.Mode.TOGGLE
+
+        when: "the dictionary is persisted"
+        persistenceManager.persist(dictionary)
+
+        then: "the dictionaries config is persisted as well"
+        assertPersistedDictionaryConfig(dictionaryFile)
+    }
+
+    private File getDictionaryFile(dictionary=this.dictionary) {
+        new File("${PATH_TO_FILE_STORAGE}/${FakeEnglish.FIXED_LANGUAGE.code()}/xml/${dictionary.name}.xml")
+    }
+
+    private assertPersistedDictionaryConfig(File file) {
+        def config = new XmlSlurper().parse(file).dictionary.config
+        assert config.size() == 1
+        assert config.maxLearnCount == dictionary.config.maxLearnCount
+        assert config.strict == dictionary.config.strict
+        assert config.mode == dictionary.config.mode.toString()
+
+        true
     }
 
     private assertPersistedRecords(File file, int expectedNumberOfRecords = 0) {
@@ -83,13 +126,15 @@ class XmlPersistenceManagerSpec extends Specification {
             def mainForm = xmlRecord.word.mainForm.toString()
             def record = recordsByMainForm[mainForm]
             assert record != null
-            assert xmlRecord.word.class == record.word.class.simpleName
-            assert xmlRecord.word.mainForm == record.word.mainForm
             assert xmlRecord.description == record.description
             assert xmlRecord.transcription == record.transcription
             assert xmlRecord.usageExamples.usageExample.size() == record.examples.size()
             assert xmlRecord.usageExamples.usageExample[0].example == record.examples[0].example
             assert xmlRecord.usageExamples.usageExample[0].translation == record.examples[0].translation
+
+            assert xmlRecord.word.class == record.word.class.simpleName
+            assert xmlRecord.word.mainForm == record.word.mainForm
+            assert xmlRecord.word.randomValue == record.word.randomValue
         }
 
         true

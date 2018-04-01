@@ -1,12 +1,15 @@
 package com.zheleznyakov.lingvo.implementations
 
 import com.google.common.base.MoreObjects
+import com.zheleznyakov.lingvo.basic.persistence.Persistable
 import com.zheleznyakov.lingvo.basic.words.Language
 import com.zheleznyakov.lingvo.basic.words.MultiFormWord
 import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
 
 class TestableMultiFormNoun implements MultiFormWord {
-    private final String mainForm;
+    private final String mainForm
+
+    @Persistable
     private final double randomValue = Math.random()
 
     TestableMultiFormNoun(String mainForm) {
@@ -26,6 +29,10 @@ class TestableMultiFormNoun implements MultiFormWord {
     @Override
     String getMainForm() {
         return mainForm
+    }
+
+    double getRandomValue() {
+        return randomValue
     }
 
     @Override
