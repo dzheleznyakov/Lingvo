@@ -1,17 +1,17 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
-import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
-import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
+import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.persistence.PersistenceRegistry
 import groovy.transform.PackageScope
 import groovy.xml.MarkupBuilder
 
-import java.lang.reflect.Field
-
 @PackageScope
 class XmlWriter {
+    private static Set<Class<?>> primitiveClasses = ImmutableSet.of(
+            Boolean, Byte, Short, Character, Integer, Long, Float, Double, String,
+            int, byte, short, char, int, long, float, double)
+
     private final MarkupBuilder xmlBuilder
-    private LearningDictionary dictionary
 
     XmlWriter(Writer writer) {
         xmlBuilder = [writer]
@@ -21,24 +21,50 @@ class XmlWriter {
         doWrite(entity, xmlBuilder, entity.class.simpleName)
     }
 
-    private void doWrite(Object entity, def builder, String tag) {
+    private static void doWrite(def entity, def builder, String tag) {
+        Class<?> entityClass = entity.getClass()
+        if (primitiveClasses.contains(entityClass))
+            writePrimitive(entity, builder, tag)
+        else if (Collection.isAssignableFrom(entityClass))
+            writeCollection(entity, builder, tag)
+        else if (Map.isAssignableFrom(entityClass))
+            writeMap(entity, builder, tag)
+        else
+            writeObject(entity, builder, tag)
+    }
+
+    private static void writePrimitive(value, def builder, String tag) {
+        builder."$tag"('' + value)
+    }
+
+    private static void writeCollection(Collection<?> values, def builder, String tag) {
         builder."$tag" {
-            PersistenceRegistry.getPersistableFields(entity.class).each { field ->
+            values.each { value ->
+                doWrite(value, builder, value.getClass().simpleName) }
+        }
+    }
+
+    private static void writeMap(Map<?, ?> map, def builder, String tag) {
+        builder."$tag" {
+            map.entrySet().each { en ->
+                entry() {
+                    doWrite(en.key, builder, en.key.getClass().simpleName)
+                    doWrite(en.value, builder, en.value.getClass().simpleName)
+                }
+            }
+        }
+    }
+
+    private static void writeObject(Object entity, def builder, String tag) {
+        def entityClass = entity.getClass()
+        builder."$tag" {
+            PersistenceRegistry.getPersistableFields(entityClass).each { field ->
                 boolean isAccessible = field.accessible
                 field.accessible = true
                 doWrite(field.get(entity), builder, field.name)
                 field.accessible = isAccessible
             }
         }
-
-    }
-
-    private void doWrite(int value, def builder, String tag) {
-        builder."$tag"(value)
-    }
-
-    private void doWrite(double value, def builder, String tag) {
-        builder."$tag"(value)
     }
 
 //    void write(LearningDictionary dictionary) {
