@@ -3,6 +3,7 @@ package com.zheleznyakov.lingvo.basic.dictionary;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary.RecordAdder;
+import com.zheleznyakov.lingvo.basic.persistence.Persistable;
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
 
 public class Record {
@@ -19,7 +20,9 @@ public class Record {
     }
 
     public static class UsageExample {
+        @Persistable
         public final String example;
+        @Persistable
         public final String translation;
 
         public UsageExample(String example, String translation) {
