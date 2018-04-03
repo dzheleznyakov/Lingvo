@@ -29,7 +29,9 @@ class XmlWriterSpec extends Specification {
         new LongEntity()      || "<LongEntity><longValue>42</longValue></LongEntity>"
         new FloatEntity()     || "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"
         new DoubleEntity()    || "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"
+        new EnumEntity()      || "<EnumEntity><enumValue>FOURTY_TWO</enumValue></EnumEntity>"
         new StringEntity()    || "<StringEntity><stringValue>testValue</stringValue></StringEntity>"
+        new ArrayEntity()     || "<ArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></ArrayEntity>"
         new ListEntity()      || "<ListEntity><listValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></listValues></ListEntity>"
         new SetEntity()       || "<SetEntity><setValues><Double>42.0</Double><Double>43.0</Double><Double>44.0</Double></setValues></SetEntity>"
         new SetObjectEntity() || "<SetObjectEntity><objectValues>" +
@@ -82,9 +84,20 @@ class XmlWriterSpec extends Specification {
         private double doubleValue2 = Math.random() * 100
     }
 
+    private static class EnumEntity {
+        @Persistable private TestEnum enumValue = TestEnum.FOURTY_TWO
+        private TestEnum enumValue2 = TestEnum.FOURTY_THREE
+
+    }
+
     private static class StringEntity {
         @Persistable private String stringValue = "testValue"
         private String stringValue2 = "another test value"
+    }
+
+    private static class ArrayEntity {
+        @Persistable private int[] arrayValues = [42, 43, 44].toArray()
+        private double[] arrayValues2 = [45D, 46D, 47D].toArray()
     }
 
     private static class ListEntity {
@@ -103,6 +116,10 @@ class XmlWriterSpec extends Specification {
 
     private static class MapEntity {
         @Persistable private Map<?, ?> myMap = ImmutableMap.of(42, true, [42D], new BooleanEntity())
+    }
+
+    private enum TestEnum{
+        FOURTY_TWO, FOURTY_THREE
     }
 
 }

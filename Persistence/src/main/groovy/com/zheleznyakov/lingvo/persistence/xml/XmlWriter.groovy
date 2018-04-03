@@ -1,6 +1,7 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
 import com.google.common.collect.ImmutableSet
+import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.persistence.PersistenceRegistry
 import groovy.transform.PackageScope
 import groovy.xml.MarkupBuilder
@@ -17,6 +18,13 @@ class XmlWriter {
         xmlBuilder = [writer]
     }
 
+    void write(LearningDictionary dictionary) {
+        xmlBuilder.root() {
+            writePersistenceMetadata(xmlBuilder)
+            doWrite(dictionary, xmlBuilder, "dictionary")
+        }
+    }
+
     void write(Object entity) {
         doWrite(entity, xmlBuilder, entity.class.simpleName)
     }
@@ -25,6 +33,10 @@ class XmlWriter {
         Class<?> entityClass = entity.getClass()
         if (primitiveClasses.contains(entityClass))
             writePrimitive(entity, builder, tag)
+        else if (Enum.isAssignableFrom(entityClass))
+            writeEnum(entity, builder, tag)
+        else if (entityClass.isArray())
+            writeArray(entity, builder, tag)
         else if (Collection.isAssignableFrom(entityClass))
             writeCollection(entity, builder, tag)
         else if (Map.isAssignableFrom(entityClass))
@@ -34,13 +46,20 @@ class XmlWriter {
     }
 
     private static void writePrimitive(value, def builder, String tag) {
-        builder."$tag"('' + value)
+        builder."$tag"(value)
+    }
+
+    private static void writeEnum(Enum value, def builder, String tag) {
+        builder."$tag"(value.name())
+    }
+
+    private static void writeArray(value, def builder, String tag) {
+        writeCollection(value.toList(), builder, tag)
     }
 
     private static void writeCollection(Collection<?> values, def builder, String tag) {
         builder."$tag" {
-            values.each { value ->
-                doWrite(value, builder, value.getClass().simpleName) }
+            values.each { value -> doWrite(value, builder, value.getClass().simpleName) }
         }
     }
 
@@ -74,11 +93,11 @@ class XmlWriter {
 //            buildDictionary(xmlBuilder)
 //        }
 //    }
-//
-//    private void buildPersistenceMetadata(builder) {
-//        builder.persistenceManager(version: 'v1', type: 'xml')
-//    }
-//
+
+    private void writePersistenceMetadata(builder) {
+        builder.persistenceManager(version: 'v1', type: 'xml')
+    }
+
 //    private void buildDictionary(builder) {
 //        builder.dictionary {
 //            buildConfig(builder)

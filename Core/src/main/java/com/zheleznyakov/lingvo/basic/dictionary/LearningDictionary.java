@@ -7,12 +7,14 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.zheleznyakov.lingvo.basic.dictionary.Record.UsageExample;
+import com.zheleznyakov.lingvo.basic.persistence.Persistable;
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
 import com.zheleznyakov.lingvo.basic.words.Language;
 import com.zheleznyakov.lingvo.util.Util;
 
 public class LearningDictionary {
     private final Language language;
+    @Persistable
     private final String name;
     private LearningDictionaryConfig config = LearningDictionaryConfig.getDefault();
     private final Map<Record, Stats> records = new HashMap<>();
