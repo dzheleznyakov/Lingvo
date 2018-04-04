@@ -7,9 +7,13 @@ import com.zheleznyakov.lingvo.basic.persistence.Persistable;
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord;
 
 public class Record {
+    @Persistable
     public final GrammaticalWord word;
+    @Persistable
     public final String description;
+    @Persistable
     public final String transcription;
+    @Persistable
     public final ImmutableList<UsageExample> examples;
 
     Record(RecordAdder builder) {

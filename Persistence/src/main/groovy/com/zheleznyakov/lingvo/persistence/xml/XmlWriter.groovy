@@ -2,9 +2,14 @@ package com.zheleznyakov.lingvo.persistence.xml
 
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
+import com.zheleznyakov.lingvo.basic.persistence.Persistable
+import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import com.zheleznyakov.lingvo.persistence.PersistenceRegistry
+import com.zheleznyakov.lingvo.util.Util
 import groovy.transform.PackageScope
 import groovy.xml.MarkupBuilder
+
+import java.lang.reflect.Field
 
 @PackageScope
 class XmlWriter {
@@ -27,6 +32,13 @@ class XmlWriter {
 
     void write(Object entity) {
         doWrite(entity, xmlBuilder, entity.class.simpleName)
+    }
+
+    private writeObject(GrammaticalWord word, def builder, String tag) {
+        builder {
+            "$tag"(class: word.getClass().simpleName)
+            doWrite(word as Object, builder, tag)
+        }
     }
 
     private static void doWrite(def entity, def builder, String tag) {
@@ -80,76 +92,18 @@ class XmlWriter {
             PersistenceRegistry.getPersistableFields(entityClass).each { field ->
                 boolean isAccessible = field.accessible
                 field.accessible = true
-                doWrite(field.get(entity), builder, field.name)
+                doWrite(getValueToPersist(field, entity), builder, field.name)
                 field.accessible = isAccessible
             }
         }
     }
 
-//    void write(LearningDictionary dictionary) {
-//        this.dictionary = dictionary
-//        xmlBuilder.root() {
-//            buildPersistenceMetadata(xmlBuilder)
-//            buildDictionary(xmlBuilder)
-//        }
-//    }
+    private static Object getValueToPersist(Field field, Object entity) {
+        String value = field.getAnnotation(Persistable).value()
+        return (Util.isBlank(value)) ? field.get(entity) : field.get(entity)."$value"()
+    }
 
     private void writePersistenceMetadata(builder) {
         builder.persistenceManager(version: 'v1', type: 'xml')
     }
-
-//    private void buildDictionary(builder) {
-//        builder.dictionary {
-//            buildConfig(builder)
-//            name("${dictionary.name}")
-//            language("${dictionary.language}")
-//            buildRecords(builder)
-//        }
-//    }
-//
-//    private void buildConfig(builder) {
-//        def config = dictionary.config
-//        builder.config() {
-//            maxLearnCount(config.maxLearnCount)
-//            strict(config.strict)
-//            mode(config.mode.toString())
-//        }
-//    }
-//
-//    private void buildRecords(builder) {
-//        builder.records() {
-//            dictionary.records.each { rec -> buildRecord(builder, rec) }
-//        }
-//    }
-//
-//    private void buildRecord(builder, rec) {
-//        builder.record() {
-//            buildWord(builder, rec.word)
-//            description(rec.description)
-//            transcription(rec.transcription)
-//            buildUsageExamples(builder, rec.examples)
-//        }
-//    }
-//
-//    private <E extends GrammaticalWord> void buildWord(builder, E word) {
-//        Class<E> wordClass = word.class
-//        builder.word {
-//            'class'(wordClass.simpleName)
-//            mainForm("${word.mainForm}")
-//            PersistenceRegistry.getPersistableFields(wordClass).each { Field field ->
-//                "${field.name}"(field.get(word).toString())
-//            }
-//        }
-//    }
-//
-//    private void buildUsageExamples(builder, usageExamples) {
-//        builder.usageExamples {
-//            usageExamples.each { ex ->
-//                usageExample {
-//                    example(ex.example)
-//                    translation(ex.translation)
-//                }
-//            }
-//        }
-//    }
 }

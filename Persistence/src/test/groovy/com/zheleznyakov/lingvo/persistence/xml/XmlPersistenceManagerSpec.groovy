@@ -19,7 +19,7 @@ class XmlPersistenceManagerSpec extends Specification {
     private LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE, this.DICTIONARY_NAME]
 
     def cleanup() {
-        IOTestHelper.makeFolderEmpty(PATH_TO_FILE_STORAGE)
+//        IOTestHelper.makeFolderEmpty(PATH_TO_FILE_STORAGE)
     }
 
     def "If xml file with dictionary does not exists, persistence manager creates a new one"() {
@@ -118,23 +118,23 @@ class XmlPersistenceManagerSpec extends Specification {
         def dictionary = new XmlSlurper().parse(file).dictionary
 
         assert dictionary.name == DICTIONARY_NAME
-        assert dictionary.language == FakeEnglish.FIXED_LANGUAGE.toString()
+        assert dictionary.language == FakeEnglish.FIXED_LANGUAGE.code()
 
-        def records = dictionary.records.record
+        def records = dictionary.records.entry
         assert records.size() == expectedNumberOfRecords
-        records.each { xmlRecord ->
+        records.each { entry ->
+            def xmlRecord = entry.Record
             def mainForm = xmlRecord.word.mainForm.toString()
-            def record = recordsByMainForm[mainForm]
-            assert record != null
-            assert xmlRecord.description == record.description
-            assert xmlRecord.transcription == record.transcription
-            assert xmlRecord.usageExamples.usageExample.size() == record.examples.size()
-            assert xmlRecord.usageExamples.usageExample[0].example == record.examples[0].example
-            assert xmlRecord.usageExamples.usageExample[0].translation == record.examples[0].translation
+            def expectedRecord = recordsByMainForm[mainForm]
+            assert xmlRecord.description == expectedRecord.description
+            assert xmlRecord.transcription == expectedRecord.transcription
+            assert xmlRecord.examples.UsageExample.size() == expectedRecord.examples.size()
+            assert xmlRecord.examples.UsageExample[0].example == expectedRecord.examples[0].example
+            assert xmlRecord.examples.UsageExample[0].translation == expectedRecord.examples[0].translation
 
-            assert xmlRecord.word.class == record.word.class.simpleName
-            assert xmlRecord.word.mainForm == record.word.mainForm
-            assert xmlRecord.word.randomValue == record.word.randomValue
+            assert entry.word.class == expectedRecord.word.class.simpleName
+            assert entry.word.mainForm == expectedRecord.word.mainForm
+            assert entry.word.randomValue == expectedRecord.word.randomValue
         }
 
         true

@@ -13,10 +13,13 @@ import com.zheleznyakov.lingvo.basic.words.Language;
 import com.zheleznyakov.lingvo.util.Util;
 
 public class LearningDictionary {
+    @Persistable(value = "code")
     private final Language language;
     @Persistable
     private final String name;
+    @Persistable
     private LearningDictionaryConfig config = LearningDictionaryConfig.getDefault();
+    @Persistable
     private final Map<Record, Stats> records = new HashMap<>();
 
     public LearningDictionary(Language language, String name) {

@@ -7,6 +7,7 @@ import com.zheleznyakov.lingvo.basic.words.MultiFormWord
 import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech
 
 class TestableMultiFormNoun implements MultiFormWord {
+    @Persistable
     private final String mainForm
 
     @Persistable

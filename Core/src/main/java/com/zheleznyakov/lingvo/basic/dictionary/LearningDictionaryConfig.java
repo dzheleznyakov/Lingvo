@@ -1,8 +1,13 @@
 package com.zheleznyakov.lingvo.basic.dictionary;
 
+import com.zheleznyakov.lingvo.basic.persistence.Persistable;
+
 public class LearningDictionaryConfig {
+    @Persistable
     private Mode mode = Mode.FORWARD;
+    @Persistable
     private int maxLearnCount = 30;
+    @Persistable
     private boolean strict;
 
     public static LearningDictionaryConfig getDefault() {
