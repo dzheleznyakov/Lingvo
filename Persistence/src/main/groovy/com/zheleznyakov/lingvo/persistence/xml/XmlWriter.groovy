@@ -81,9 +81,7 @@ class XmlWriter {
 
     private static void writeObject(Object entity, def builder, String tag) {
         def entityClass = entity.getClass()
-        def attributes = [:]
-        if (hasPersistableMetadata(entityClass))
-            attributes['class'] = entityClass.simpleName
+        def attributes = PersistenceRegistry.hasPersistableMetadata(entityClass) ? ['class': entityClass.simpleName] : [:]
         builder."$tag"( attributes ) {
             PersistenceRegistry.getPersistableFields(entityClass).each { field ->
                 boolean isAccessible = field.accessible
@@ -92,10 +90,6 @@ class XmlWriter {
                 field.accessible = isAccessible
             }
         }
-    }
-
-    private static boolean hasPersistableMetadata(entityClass) {
-        return entityClass.getAnnotation(PersistableMetadata) != null
     }
 
     private static Object getValueToPersist(Field field, Object entity) {

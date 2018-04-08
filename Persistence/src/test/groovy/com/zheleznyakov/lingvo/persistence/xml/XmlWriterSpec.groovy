@@ -21,30 +21,31 @@ class XmlWriterSpec extends Specification {
         trimLines(output.toString()) == expectedOutput.replace("><", ">\n<")
 
         where: "the parameters are"
-        entity                      || expectedOutput
-        new BooleanEntity()         || "<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>"
-        new ShortEntity()           || "<ShortEntity><shortValue>42</shortValue></ShortEntity>"
-        new CharEntity()            || "<CharEntity><charValue>*</charValue></CharEntity>"
-        new ByteEntity()            || "<ByteEntity><byteValue>42</byteValue></ByteEntity>"
-        new IntegerEntity()         || "<IntegerEntity><intValue>42</intValue></IntegerEntity>"
-        new LongEntity()            || "<LongEntity><longValue>42</longValue></LongEntity>"
-        new FloatEntity()           || "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"
-        new DoubleEntity()          || "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"
-        new EnumEntity()            || "<EnumEntity><enumValue>FOURTY_TWO</enumValue></EnumEntity>"
-        new StringEntity()          || "<StringEntity><stringValue>testValue</stringValue></StringEntity>"
-        new ArrayEntity()           || "<ArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></ArrayEntity>"
-        new ListEntity()            || "<ListEntity><listValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></listValues></ListEntity>"
-        new SetEntity()             || "<SetEntity><setValues><Double>42.0</Double><Double>43.0</Double><Double>44.0</Double></setValues></SetEntity>"
-        new SetObjectEntity()       || "<SetObjectEntity><objectValues>" +
-                                       "<IntegerEntity><intValue>42</intValue></IntegerEntity>" +
-                                       "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>" +
-                                       "</objectValues></SetObjectEntity>"
-        new MapEntity()             || "<MapEntity><myMap>" +
-                                       "<entry><Integer>42</Integer><Boolean>true</Boolean></entry>" +
-                                       "<entry><ArrayList><Double>42.0</Double></ArrayList><BooleanEntity><booleanValue>true</booleanValue></BooleanEntity></entry>" +
-                                       "</myMap></MapEntity>"
-        new PredefinedValueEntity() || "<PredefinedValueEntity><entity>predefinedValue</entity></PredefinedValueEntity>"
-        new SimpleContainer()       || "<SimpleContainer><fieldWithMetadata class='PersistableMetadataEntity' /></SimpleContainer>"
+        entity                                 || expectedOutput
+        new BooleanEntity()                    || "<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>"
+        new ShortEntity()                      || "<ShortEntity><shortValue>42</shortValue></ShortEntity>"
+        new CharEntity()                       || "<CharEntity><charValue>*</charValue></CharEntity>"
+        new ByteEntity()                       || "<ByteEntity><byteValue>42</byteValue></ByteEntity>"
+        new IntegerEntity()                    || "<IntegerEntity><intValue>42</intValue></IntegerEntity>"
+        new LongEntity()                       || "<LongEntity><longValue>42</longValue></LongEntity>"
+        new FloatEntity()                      || "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"
+        new DoubleEntity()                     || "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"
+        new EnumEntity()                       || "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"
+        new StringEntity()                     || "<StringEntity><stringValue>testValue</stringValue></StringEntity>"
+        new ArrayEntity()                      || "<ArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></ArrayEntity>"
+        new ListEntity()                       || "<ListEntity><listValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></listValues></ListEntity>"
+        new SetEntity()                        || "<SetEntity><setValues><Double>42.0</Double><Double>43.0</Double><Double>44.0</Double></setValues></SetEntity>"
+        new SetObjectEntity()                  || "<SetObjectEntity><objectValues>" +
+                                                  "<IntegerEntity><intValue>42</intValue></IntegerEntity>" +
+                                                  "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>" +
+                                                  "</objectValues></SetObjectEntity>"
+        new MapEntity()                        || "<MapEntity><myMap>" +
+                                                  "<entry><Integer>42</Integer><Boolean>true</Boolean></entry>" +
+                                                  "<entry><ArrayList><Double>42.0</Double></ArrayList><BooleanEntity><booleanValue>true</booleanValue></BooleanEntity></entry>" +
+                                                  "</myMap></MapEntity>"
+        new PredefinedValueEntity()            || "<PredefinedValueEntity><entity>predefinedValue</entity></PredefinedValueEntity>"
+        new PersistableMetadataFromClass()     || "<PersistableMetadataFromClass><fieldWithMetadata class='MetadataFromClassEntity' /></PersistableMetadataFromClass>"
+        new PersistableMetadataFromInterface() || "<PersistableMetadataFromInterface><fieldWithMetadata class='MetadataFromInterfaceEntity' /></PersistableMetadataFromInterface>"
     }
 
     private static String trimLines(String text) {
@@ -95,8 +96,8 @@ class XmlWriterSpec extends Specification {
     }
 
     private static class EnumEntity {
-        @Persistable private TestEnum enumValue = TestEnum.FOURTY_TWO
-        private TestEnum enumValue2 = TestEnum.FOURTY_THREE
+        @Persistable private TestEnum enumValue = TestEnum.FORTY_TWO
+        private TestEnum enumValue2 = TestEnum.FORTY_THREE
 
     }
 
@@ -139,15 +140,29 @@ class XmlWriterSpec extends Specification {
     }
 
     @PersistableMetadata
-    private static class PersistableMetadataEntity {
+    private static abstract class PersistableMetadataAbstract {
     }
 
-    private static class SimpleContainer {
-        @Persistable PersistableMetadataEntity fieldWithMetadata = new PersistableMetadataEntity()
+    private static class MetadataFromClassEntity extends PersistableMetadataAbstract {
+    }
+
+    private static class PersistableMetadataFromClass {
+        @Persistable PersistableMetadataAbstract fieldWithMetadata = new MetadataFromClassEntity()
+    }
+
+    @PersistableMetadata
+    private interface PersistableMetadataInterface {
+    }
+
+    private static class MetadataFromInterfaceEntity implements PersistableMetadataInterface {
+    }
+
+    private static class PersistableMetadataFromInterface {
+        @Persistable PersistableMetadataInterface fieldWithMetadata = new MetadataFromInterfaceEntity()
     }
 
     private enum TestEnum{
-        FOURTY_TWO, FOURTY_THREE
+        FORTY_TWO, FORTY_THREE
     }
 
 }
