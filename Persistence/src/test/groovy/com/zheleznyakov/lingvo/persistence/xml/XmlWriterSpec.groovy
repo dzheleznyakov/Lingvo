@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.persistence.Persistable
+import com.zheleznyakov.lingvo.basic.persistence.PersistableMetadata
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -17,7 +18,7 @@ class XmlWriterSpec extends Specification {
         writer.write(entity)
 
         then: "only annotated fields are persisted"
-        output.toString().replace(" ", "") == expectedOutput.replace("><", ">\n<")
+        trimLines(output.toString()) == expectedOutput.replace("><", ">\n<")
 
         where: "the parameters are"
         entity                      || expectedOutput
@@ -43,6 +44,14 @@ class XmlWriterSpec extends Specification {
                                        "<entry><ArrayList><Double>42.0</Double></ArrayList><BooleanEntity><booleanValue>true</booleanValue></BooleanEntity></entry>" +
                                        "</myMap></MapEntity>"
         new PredefinedValueEntity() || "<PredefinedValueEntity><entity>predefinedValue</entity></PredefinedValueEntity>"
+        new SimpleContainer()       || "<SimpleContainer><fieldWithMetadata class='PersistableMetadataEntity' /></SimpleContainer>"
+    }
+
+    private static String trimLines(String text) {
+        Arrays.stream(text.split("\n"))
+                .map { it.trim() }
+                .toArray()
+                .join("\n")
     }
 
     private static class BooleanEntity {
@@ -127,6 +136,14 @@ class XmlWriterSpec extends Specification {
         String getPredefinedValue() {
             return "predefinedValue"
         }
+    }
+
+    @PersistableMetadata
+    private static class PersistableMetadataEntity {
+    }
+
+    private static class SimpleContainer {
+        @Persistable PersistableMetadataEntity fieldWithMetadata = new PersistableMetadataEntity()
     }
 
     private enum TestEnum{

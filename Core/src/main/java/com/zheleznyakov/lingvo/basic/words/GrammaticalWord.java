@@ -1,11 +1,12 @@
 package com.zheleznyakov.lingvo.basic.words;
 
-import java.io.Serializable;
 import java.util.Map;
 
+import com.zheleznyakov.lingvo.basic.persistence.PersistableMetadata;
 import com.zheleznyakov.lingvo.basic.words.parts.PartOfSpeech;
 
-public interface GrammaticalWord extends Serializable {
+@PersistableMetadata
+public interface GrammaticalWord {
 
     Language getLanguage();
 

@@ -3,7 +3,7 @@ package com.zheleznyakov.lingvo.persistence.xml
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.persistence.Persistable
-import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
+import com.zheleznyakov.lingvo.basic.persistence.PersistableMetadata
 import com.zheleznyakov.lingvo.persistence.PersistenceRegistry
 import com.zheleznyakov.lingvo.util.Util
 import groovy.transform.PackageScope
@@ -32,13 +32,6 @@ class XmlWriter {
 
     void write(Object entity) {
         doWrite(entity, xmlBuilder, entity.class.simpleName)
-    }
-
-    private writeObject(GrammaticalWord word, def builder, String tag) {
-        builder {
-            "$tag"(class: word.getClass().simpleName)
-            doWrite(word as Object, builder, tag)
-        }
     }
 
     private static void doWrite(def entity, def builder, String tag) {
@@ -88,7 +81,10 @@ class XmlWriter {
 
     private static void writeObject(Object entity, def builder, String tag) {
         def entityClass = entity.getClass()
-        builder."$tag" {
+        def attributes = [:]
+        if (hasPersistableMetadata(entityClass))
+            attributes['class'] = entityClass.simpleName
+        builder."$tag"( attributes ) {
             PersistenceRegistry.getPersistableFields(entityClass).each { field ->
                 boolean isAccessible = field.accessible
                 field.accessible = true
@@ -96,6 +92,10 @@ class XmlWriter {
                 field.accessible = isAccessible
             }
         }
+    }
+
+    private static boolean hasPersistableMetadata(entityClass) {
+        return entityClass.getAnnotation(PersistableMetadata) != null
     }
 
     private static Object getValueToPersist(Field field, Object entity) {

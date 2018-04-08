@@ -3,7 +3,6 @@ package com.zheleznyakov.lingvo.persistence.xml
 import com.google.common.collect.ImmutableMap
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig
-import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.helpers.DictionaryRecordTestHelper
 import com.zheleznyakov.lingvo.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
@@ -132,9 +131,10 @@ class XmlPersistenceManagerSpec extends Specification {
             assert xmlRecord.examples.UsageExample[0].example == expectedRecord.examples[0].example
             assert xmlRecord.examples.UsageExample[0].translation == expectedRecord.examples[0].translation
 
-            assert entry.word.class == expectedRecord.word.class.simpleName
-            assert entry.word.mainForm == expectedRecord.word.mainForm
-            assert entry.word.randomValue == expectedRecord.word.randomValue
+            def xmlWord = entry.word
+            assert xmlWord.@class == expectedRecord.word.class.simpleName
+            assert xmlWord.mainForm == expectedRecord.word.mainForm
+            assert xmlWord.randomValue == expectedRecord.word.randomValue
         }
 
         true
