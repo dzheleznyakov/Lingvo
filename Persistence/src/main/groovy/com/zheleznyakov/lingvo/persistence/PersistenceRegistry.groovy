@@ -3,6 +3,7 @@ package com.zheleznyakov.lingvo.persistence
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.persistence.Persistable
 import com.zheleznyakov.lingvo.basic.persistence.PersistableMetadata
+import org.apache.commons.lang3.ClassUtils
 
 import java.lang.reflect.Field
 
@@ -24,9 +25,9 @@ class PersistenceRegistry {
 
     static boolean hasPersistableMetadata(Class<?> clazz) {
         return hasPersistableMetadata.computeIfAbsent(clazz, { cl ->
-            if (clazz.getAnnotation(PersistableMetadata) != null)
+            if (cl.getAnnotation(PersistableMetadata) != null)
                 return true
-            for (def interfaceClass : clazz.getInterfaces()) {
+            for (def interfaceClass : ClassUtils.getAllInterfaces(cl)) {
                 if (interfaceClass.getAnnotation(PersistableMetadata) != null)
                     return true
             }
