@@ -18,7 +18,7 @@ class XmlPersistenceManagerSpec extends Specification {
     private LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE, this.DICTIONARY_NAME]
 
     def cleanup() {
-//        IOTestHelper.makeFolderEmpty(PATH_TO_FILE_STORAGE)
+        IOTestHelper.makeFolderEmpty(PATH_TO_FILE_STORAGE)
     }
 
     def "If xml file with dictionary does not exists, persistence manager creates a new one"() {
@@ -131,7 +131,7 @@ class XmlPersistenceManagerSpec extends Specification {
             assert xmlRecord.examples.UsageExample[0].example == expectedRecord.examples[0].example
             assert xmlRecord.examples.UsageExample[0].translation == expectedRecord.examples[0].translation
 
-            def xmlWord = entry.word
+            def xmlWord = xmlRecord.word
             assert xmlWord.@class == expectedRecord.word.class.simpleName
             assert xmlWord.mainForm == expectedRecord.word.mainForm
             assert xmlWord.randomValue == expectedRecord.word.randomValue
