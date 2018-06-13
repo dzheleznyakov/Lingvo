@@ -22,4 +22,8 @@ class XmlPersistenceManager {
             throw new IOException("Failed to create directory");
     }
 
+    LearningDictionary load(File file) {
+        return new XmlReader(file).read()
+    }
+
 }

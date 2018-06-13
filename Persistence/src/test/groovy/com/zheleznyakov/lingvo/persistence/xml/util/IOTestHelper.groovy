@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.persistence.xml
+package com.zheleznyakov.lingvo.persistence.xml.util
 
 class IOTestHelper {
 

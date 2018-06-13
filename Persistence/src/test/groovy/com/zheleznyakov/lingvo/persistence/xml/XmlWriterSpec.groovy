@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.persistence.Persistable
 import com.zheleznyakov.lingvo.basic.persistence.PersistableMetadata
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.BooleanEntity
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -53,11 +54,6 @@ class XmlWriterSpec extends Specification {
                 .map { it.trim() }
                 .toArray()
                 .join("\n")
-    }
-
-    private static class BooleanEntity {
-        @Persistable private boolean booleanValue = true
-        private boolean booleanValue2 = false
     }
 
     private static class ShortEntity {
