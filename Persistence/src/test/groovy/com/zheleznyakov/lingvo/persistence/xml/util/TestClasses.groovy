@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.persistence.Persistable
-import com.zheleznyakov.lingvo.basic.persistence.PersistableMetadata
 
 class TestClasses {
     static class BooleanEntity {
@@ -123,38 +122,6 @@ class TestClasses {
 
     static class MapEntity {
         @Persistable private Map<?, ?> myMap = ImmutableMap.of(42, true, [42D], new BooleanEntity())
-    }
-
-    static class PredefinedValueEntity {
-        @Persistable(value = "getPredefinedValue") private EntityWithMethod entity = new EntityWithMethod()
-    }
-
-    static class EntityWithMethod {
-        String getPredefinedValue() {
-            return "predefinedValue"
-        }
-    }
-
-    @PersistableMetadata
-    static abstract class PersistableMetadataAbstract {
-    }
-
-    static class MetadataFromClassEntity extends PersistableMetadataAbstract {
-    }
-
-    static class PersistableMetadataFromClass {
-        @Persistable PersistableMetadataAbstract fieldWithMetadata = new MetadataFromClassEntity()
-    }
-
-    @PersistableMetadata
-    private interface PersistableMetadataInterface {
-    }
-
-    static class MetadataFromInterfaceEntity implements PersistableMetadataInterface {
-    }
-
-    static class PersistableMetadataFromInterface {
-        @Persistable PersistableMetadataInterface fieldWithMetadata = new MetadataFromInterfaceEntity()
     }
 
     enum TestEnum{

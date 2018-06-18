@@ -11,8 +11,7 @@ trait ObjectXmlSerializer implements XmlSerializer<Object> {
     @Override
     void serialize(Object entity, MarkupBuilder builder, String tag) {
         def entityClass = entity.getClass()
-        def attributes = PersistenceRegistry.hasPersistableMetadata(entityClass) ? ['class': entityClass.simpleName] : [:]
-        builder."$tag"( attributes ) {
+        builder."$tag"() {
             PersistenceRegistry.getPersistableFields(entityClass).each { field ->
                 boolean isAccessible = field.accessible
                 field.accessible = true

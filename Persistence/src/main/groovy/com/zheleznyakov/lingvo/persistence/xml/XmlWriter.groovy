@@ -50,7 +50,7 @@ class XmlWriter {
     void write(LearningDictionary dictionary) {
         builder.root() {
             writePersistenceMetadata(builder)
-            doWrite(dictionary, builder, "dictionary")
+            serializer.serialize(dictionary, builder, "dictionary")
         }
     }
 
@@ -58,7 +58,7 @@ class XmlWriter {
         serializer.serialize(entity, builder, entity.class.simpleName)
     }
 
-//    private void writePersistenceMetadata(builder) {
-//        builder.persistenceManager(version: 'v1', type: 'xml')
-//    }
+    private void writePersistenceMetadata(builder) {
+        builder.persistenceManager(version: 'v1', type: 'xml')
+    }
 }

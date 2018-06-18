@@ -1,7 +1,6 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
-import com.zheleznyakov.lingvo.basic.persistence.PersistableMetadata
 
 class XmlReader {
     public static final String VERSION = "v1"
@@ -25,11 +24,6 @@ class XmlReader {
         def root = new XmlSlurper().parse(file)
         Class<?> clazz = getEntityClass(root)
         return clazz.newInstance()
-    }
-
-    private Class<?> getEntityClass(xmlNode) {
-        def className = xmlNode.name()
-        return PersistableMetadata.getClass(className)
     }
 
     private void verifyMetadata(def root) {
