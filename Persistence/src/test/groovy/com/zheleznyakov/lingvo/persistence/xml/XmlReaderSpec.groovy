@@ -3,8 +3,10 @@ package com.zheleznyakov.lingvo.persistence.xml
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.BooleanEntity
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
+import org.junit.Ignore
 import spock.lang.Specification
 
+@Ignore
 class XmlReaderSpec extends Specification {
     private XmlReader reader = []
     private File file = ["${ZhConfigFactory.get().getString("persistence.xml.root")}/temp.xml"]

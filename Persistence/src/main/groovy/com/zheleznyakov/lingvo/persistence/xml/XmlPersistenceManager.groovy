@@ -10,7 +10,7 @@ class XmlPersistenceManager {
         ensureDirectoryExists(directoryPath)
 
         FileWriter writer = ["$directoryPath/${dictionary.getName()}.xml"]
-        new XmlWriter(writer).write(dictionary)
+        XmlWriter.with(writer).write(dictionary)
     }
 
     private static void ensureDirectoryExists(String directoryPath) throws IOException {
