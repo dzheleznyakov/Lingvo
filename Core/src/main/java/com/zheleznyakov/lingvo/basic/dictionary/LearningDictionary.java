@@ -13,7 +13,7 @@ import com.zheleznyakov.lingvo.basic.words.Language;
 import com.zheleznyakov.lingvo.util.Util;
 
 public class LearningDictionary {
-    @Persistable(value = "code")
+    @Persistable
     private final Language language;
     @Persistable
     private final String name;

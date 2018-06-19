@@ -61,9 +61,6 @@ class XmlWriterSpec extends Specification {
                                                   "<entry><Integer>42</Integer><Boolean>true</Boolean></entry>" +
                                                   "<entry><ArrayList><Double>42.0</Double></ArrayList><BooleanEntity><booleanValue>true</booleanValue></BooleanEntity></entry>" +
                                                   "</myMap></MapEntity>"
-//        new PredefinedValueEntity()            || "<PredefinedValueEntity><entity>predefinedValue</entity></PredefinedValueEntity>"
-//        new PersistableMetadataFromClass()     || "<PersistableMetadataFromClass><fieldWithMetadata class='MetadataFromClassEntity' /></PersistableMetadataFromClass>"
-//        new PersistableMetadataFromInterface() || "<PersistableMetadataFromInterface><fieldWithMetadata class='MetadataFromInterfaceEntity' /></PersistableMetadataFromInterface>"
     }
 
     @Unroll

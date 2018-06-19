@@ -1,7 +1,8 @@
-package com.zheleznyakov.lingvo.persistence.xml.serializers
+package com.zheleznyakov.lingvo.persistence.xml.serializers.basic
 
 import com.zheleznyakov.lingvo.basic.persistence.Persistable
 import com.zheleznyakov.lingvo.persistence.PersistenceRegistry
+import com.zheleznyakov.lingvo.persistence.xml.serializers.XmlSerializer
 import com.zheleznyakov.lingvo.util.Util
 import groovy.xml.MarkupBuilder
 
@@ -15,14 +16,10 @@ trait ObjectXmlSerializer implements XmlSerializer<Object> {
             PersistenceRegistry.getPersistableFields(entityClass).each { field ->
                 boolean isAccessible = field.accessible
                 field.accessible = true
-                serialize(getValueToPersist(field, entity), builder, field.name)
+                serialize(field.get(entity), builder, field.name)
                 field.accessible = isAccessible
             }
         }
     }
 
-    private Object getValueToPersist(Field field, Object entity) {
-        String value = field.getAnnotation(Persistable).value()
-        return (Util.isBlank(value)) ? field.get(entity) : field.get(entity)."$value"()
-    }
 }

@@ -25,22 +25,22 @@ class PersistenceRegistry {
         })
     }
 
-    static Class<?> getClass(String className) {
-        return classSimpleNamesToClasses.computeIfAbsent(className, { name ->
-            getLoadedClasses().stream()
-                    .filter { clazz -> clazz.simpleName == name }
-                    .findAny()
-                    .orElse(null)
-        })
-    }
-
-    private static Set<Class<?>> getLoadedClasses() {
-        if (loadedClasses == null) {
-            ClassPath classPath = ClassPath.from(ClassLoader.getSystemClassLoader())
-            loadedClasses = classPath.getTopLevelClassesRecursive(ROOT_PACKAGE).stream()
-                    .map { classInfo -> classInfo.load() }
-                    .collect(ImmutableSet.toImmutableSet())
-        }
-        return loadedClasses
-    }
+//    static Class<?> getClass(String className) {
+//        return classSimpleNamesToClasses.computeIfAbsent(className, { name ->
+//            getLoadedClasses().stream()
+//                    .filter { clazz -> clazz.simpleName == name }
+//                    .findAny()
+//                    .orElse(null)
+//        })
+//    }
+//
+//    private static Set<Class<?>> getLoadedClasses() {
+//        if (loadedClasses == null) {
+//            ClassPath classPath = ClassPath.from(ClassLoader.getSystemClassLoader())
+//            loadedClasses = classPath.getTopLevelClassesRecursive(ROOT_PACKAGE).stream()
+//                    .map { classInfo -> classInfo.load() }
+//                    .collect(ImmutableSet.toImmutableSet())
+//        }
+//        return loadedClasses
+//    }
 }

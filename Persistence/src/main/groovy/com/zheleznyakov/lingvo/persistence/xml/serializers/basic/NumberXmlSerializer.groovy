@@ -1,5 +1,6 @@
-package com.zheleznyakov.lingvo.persistence.xml.serializers
+package com.zheleznyakov.lingvo.persistence.xml.serializers.basic
 
+import com.zheleznyakov.lingvo.persistence.xml.serializers.XmlSerializer
 import groovy.xml.MarkupBuilder
 
 trait NumberXmlSerializer implements XmlSerializer<Number> {
