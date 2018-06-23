@@ -9,7 +9,7 @@ trait CharXmlDeserializer implements XmlDeserializer<Character> {
     Character deserialize(GPathResult node, Class<Character> clazz, Object serializationContext) {
         def value = node.text()
         if (value.length() == 0)
-            throw new IllegalArgumentException(Util.format("'{}' contains no character", node.name()))
+            throw new IllegalArgumentException(Util.format("Node '{}' contains no character", node.name()))
         if (value.length() > 1)
             throw new IllegalArgumentException(Util.format("'{}'=[{}] is not a character", node.name(), value))
         return value.charAt(0)
