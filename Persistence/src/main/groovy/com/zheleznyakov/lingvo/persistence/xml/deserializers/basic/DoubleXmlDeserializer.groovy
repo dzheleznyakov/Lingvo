@@ -2,14 +2,14 @@ package com.zheleznyakov.lingvo.persistence.xml.deserializers.basic
 
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.NumberXmlDeserializer
 
-trait ByteXmlDeserializer implements NumberXmlDeserializer<Byte> {
+trait DoubleXmlDeserializer implements NumberXmlDeserializer<Double> {
     @Override
-    Byte parse(String value) {
-        return Byte.parseByte(value)
+    Double parse(String value) {
+        return Double.parseDouble(value)
     }
 
     @Override
     String getValueType() {
-        return "byte"
+        return "double"
     }
 }

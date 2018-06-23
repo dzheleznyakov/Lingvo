@@ -1,12 +1,13 @@
 package com.zheleznyakov.lingvo.persistence.xml.deserializers.basic
 
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.XmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.BaseXmlDeserializer
 import com.zheleznyakov.lingvo.util.Util
 import groovy.util.slurpersupport.GPathResult
 
-trait BooleanXmlDeserializer implements XmlDeserializer<Boolean> {
+trait BooleanXmlDeserializer implements BaseXmlDeserializer<Boolean> {
     @Override
     Boolean deserialize(GPathResult node, Class<Boolean> clazz, def serializationContext) {
+        verifyNodeExistence(node)
         def value = node.text()
         if (value == "true")
             return true

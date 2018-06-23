@@ -41,21 +41,33 @@ class TestClasses {
     static class IntegerEntity {
         @Persistable private int intValue = 42
         private int intValue2 = (Math.random() * 100) as int
+        int getIntValue() {
+            return intValue
+        }
     }
 
     static class LongEntity {
         @Persistable private long longValue = 42L
         private long longValue2 = Math.random() * 100L;
+        long getLongValue() {
+            return longValue
+        }
     }
 
     static class FloatEntity {
         @Persistable private float floatValue = 42F
         private float floatValue2 = (Math.random() * 100) as float
+        float getFloatValue() {
+            return floatValue
+        }
     }
 
     static class DoubleEntity {
         @Persistable private double doubleValue = 42D
         private double doubleValue2 = Math.random() * 100
+        double getDoubleValue() {
+            return doubleValue
+        }
     }
 
     static class EnumEntity {

@@ -1,12 +1,12 @@
 package com.zheleznyakov.lingvo.persistence.xml.deserializers.basic
 
 import com.zheleznyakov.lingvo.persistence.PersistenceHelper
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.XmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.BaseXmlDeserializer
 import groovy.util.slurpersupport.GPathResult
 
 import java.lang.reflect.Field
 
-trait ObjectXmlDeserializer implements XmlDeserializer<Object> {
+trait ObjectXmlDeserializer implements BaseXmlDeserializer<Object> {
     @Override
     Object deserialize(GPathResult node, Class<Object> clazz, def serializationContext) {
         def entity = clazz.newInstance()

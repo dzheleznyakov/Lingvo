@@ -5,6 +5,10 @@ import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.BooleanXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ByteXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.CharXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.DoubleXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.FloatXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.IntXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.LongXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ObjectXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ShortXmlDeserializer
 
@@ -21,6 +25,14 @@ class XmlReader {
             .put(Byte.class,      ByteXmlDeserializer)
             .put(short.class,     ShortXmlDeserializer)
             .put(Short.class,     ShortXmlDeserializer)
+            .put(int.class,       IntXmlDeserializer)
+            .put(Integer.class,   IntXmlDeserializer)
+            .put(long.class,      LongXmlDeserializer)
+            .put(Long.class,      LongXmlDeserializer)
+            .put(float.class,     FloatXmlDeserializer)
+            .put(Float.class,     FloatXmlDeserializer)
+            .put(double.class,    DoubleXmlDeserializer)
+            .put(Double.class,    DoubleXmlDeserializer)
             .put(Object.class,    ObjectXmlDeserializer)
             .build()
 

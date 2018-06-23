@@ -1,12 +1,13 @@
 package com.zheleznyakov.lingvo.persistence.xml.deserializers.basic
 
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.XmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.BaseXmlDeserializer
 import com.zheleznyakov.lingvo.util.Util
 import groovy.util.slurpersupport.GPathResult
 
-trait CharXmlDeserializer implements XmlDeserializer<Character> {
+trait CharXmlDeserializer implements BaseXmlDeserializer<Character> {
     @Override
     Character deserialize(GPathResult node, Class<Character> clazz, Object serializationContext) {
+        verifyNodeExistence(node)
         def value = node.text()
         if (value.length() == 0)
             throw new IllegalArgumentException(Util.format("Node '{}' contains no character", node.name()))
