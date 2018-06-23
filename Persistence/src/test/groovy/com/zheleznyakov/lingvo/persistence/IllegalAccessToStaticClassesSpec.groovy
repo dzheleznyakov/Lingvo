@@ -1,6 +1,5 @@
 package com.zheleznyakov.lingvo.persistence
 
-import com.zheleznyakov.lingvo.basic.words.util.WordFormatter
 import com.zheleznyakov.lingvo.util.ZhAssert
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -13,7 +12,7 @@ class IllegalAccessToStaticClassesSpec extends Specification {
         ZhAssert.assertIllegalAccess(clazz, "This class is a static helper; it is not supposed to be instantiated")
 
         where:
-        clazz                     | _
-        PersistenceRegistry.class | _
+        clazz                   | _
+        PersistenceHelper.class | _
     }
 }

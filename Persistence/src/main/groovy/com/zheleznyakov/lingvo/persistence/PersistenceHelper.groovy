@@ -6,14 +6,14 @@ import com.zheleznyakov.lingvo.basic.persistence.Persistable
 
 import java.lang.reflect.Field
 
-class PersistenceRegistry {
+class PersistenceHelper {
     private static Map<Class<?>, Set<Field>> persistableFieldsByClass = new HashMap<>()
 
-    private static Map<String, Class<?>> classSimpleNamesToClasses = new HashMap<>()
-    private static Set<Class<?>> loadedClasses
-    public static final String ROOT_PACKAGE = "com.zheleznyakov.lingvo"
+//    private static Map<String, Class<?>> classSimpleNamesToClasses = new HashMap<>()
+//    private static Set<Class<?>> loadedClasses
+//    public static final String ROOT_PACKAGE = "com.zheleznyakov.lingvo"
 
-    private PersistenceRegistry() throws IllegalAccessException {
+    private PersistenceHelper() throws IllegalAccessException {
         throw new IllegalAccessException("This class is a static helper; it is not supposed to be instantiated");
     }
 

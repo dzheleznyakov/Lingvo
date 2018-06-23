@@ -1,14 +1,40 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
+import com.google.common.collect.ImmutableMap
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.BooleanXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ByteXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.CharXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ObjectXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ShortXmlDeserializer
 
 class XmlReader {
     public static final String VERSION = "v1"
     public static final String TYPE = "xml"
+
+    private static final def DEFAULT_DESERIALIZERS = ImmutableMap.builder()
+            .put(boolean.class,   BooleanXmlDeserializer)
+            .put(Boolean.class,   BooleanXmlDeserializer)
+            .put(char.class,      CharXmlDeserializer)
+            .put(Character.class, CharXmlDeserializer)
+            .put(byte.class,      ByteXmlDeserializer)
+            .put(Byte.class,      ByteXmlDeserializer)
+            .put(short.class,     ShortXmlDeserializer)
+            .put(Short.class,     ShortXmlDeserializer)
+            .put(Object.class,    ObjectXmlDeserializer)
+            .build()
+
+    private def deserializer
+
     private File file
 
-    XmlReader(File file) {
-        this.file = file
+    XmlReader() {
+        def deserializersBuilder = ImmutableMap.builder()
+        DEFAULT_DESERIALIZERS.each {entry ->
+            def des = new Object().withTraits entry.value
+            deserializersBuilder.put(entry.key, des)
+        }
+        deserializer = deserializersBuilder.build()
     }
 
     LearningDictionary read() {
@@ -20,10 +46,12 @@ class XmlReader {
         return null
     }
 
-    def read(File file) {
-        def root = new XmlSlurper().parse(file)
-        Class<?> clazz = getEntityClass(root)
-        return clazz.newInstance()
+    def read(InputStream input, Class<?> clazz) {
+        def root = new XmlSlurper().parse(input)
+        def des = deserializer.getOrDefault(clazz, deserializer.get(Object.class))
+        return des.deserialize(root, clazz, deserializer)
+//        println root.childNodes().next().getClass()
+//        return clazz.newInstance()
     }
 
     private void verifyMetadata(def root) {

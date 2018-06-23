@@ -9,21 +9,33 @@ class TestClasses {
     static class BooleanEntity {
         @Persistable private boolean booleanValue = true
         private boolean booleanValue2 = false
+        boolean getBooleanValue() {
+            return booleanValue
+        }
     }
 
     static class ShortEntity {
         @Persistable private short shortValue = 42 as short
         private short shortValue2 = (Math.random() * 100) as short
+        short getShortValue() {
+            return shortValue
+        }
     }
 
     static class CharEntity {
         @Persistable private char charValue = 42 as char
         private char charValue2 = (Math.random() * 100) as char
+        char getCharValue() {
+            return charValue
+        }
     }
 
     static class ByteEntity {
         @Persistable private byte byteValue = 42 as byte
         private byte byteValue2 = (Math.random() * 100) as byte
+        byte getByteValue() {
+            return byteValue
+        }
     }
 
     static class IntegerEntity {

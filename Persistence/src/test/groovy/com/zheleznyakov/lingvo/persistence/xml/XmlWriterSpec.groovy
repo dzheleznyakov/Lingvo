@@ -48,19 +48,19 @@ class XmlWriterSpec extends Specification {
         new IntegerEntity()           || "<IntegerEntity><intValue>42</intValue></IntegerEntity>"
         new LongEntity()              || "<LongEntity><longValue>42</longValue></LongEntity>"
         new FloatEntity()             || "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"
-        new DoubleEntity()                     || "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"
-        new EnumEntity()                       || "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"
-        new StringEntity()                     || "<StringEntity><stringValue>testValue</stringValue></StringEntity>"
-        new ListEntity()                       || "<ListEntity><listValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></listValues></ListEntity>"
-        new SetEntity()                        || "<SetEntity><setValues><Double>42.0</Double><Double>43.0</Double><Double>44.0</Double></setValues></SetEntity>"
-        new SetObjectEntity()                  || "<SetObjectEntity><objectValues>" +
-                                                  "<IntegerEntity><intValue>42</intValue></IntegerEntity>" +
-                                                  "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>" +
-                                                  "</objectValues></SetObjectEntity>"
-        new MapEntity()                        || "<MapEntity><myMap>" +
-                                                  "<entry><Integer>42</Integer><Boolean>true</Boolean></entry>" +
-                                                  "<entry><ArrayList><Double>42.0</Double></ArrayList><BooleanEntity><booleanValue>true</booleanValue></BooleanEntity></entry>" +
-                                                  "</myMap></MapEntity>"
+        new DoubleEntity()            || "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"
+        new EnumEntity()              || "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"
+        new StringEntity()            || "<StringEntity><stringValue>testValue</stringValue></StringEntity>"
+        new ListEntity()              || "<ListEntity><listValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></listValues></ListEntity>"
+        new SetEntity()               || "<SetEntity><setValues><Double>42.0</Double><Double>43.0</Double><Double>44.0</Double></setValues></SetEntity>"
+        new SetObjectEntity()         || "<SetObjectEntity><objectValues>" +
+                                         "<IntegerEntity><intValue>42</intValue></IntegerEntity>" +
+                                         "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>" +
+                                         "</objectValues></SetObjectEntity>"
+        new MapEntity()               || "<MapEntity><myMap>" +
+                                         "<entry><Integer>42</Integer><Boolean>true</Boolean></entry>" +
+                                         "<entry><ArrayList><Double>42.0</Double></ArrayList><BooleanEntity><booleanValue>true</booleanValue></BooleanEntity></entry>" +
+                                         "</myMap></MapEntity>"
     }
 
     @Unroll
