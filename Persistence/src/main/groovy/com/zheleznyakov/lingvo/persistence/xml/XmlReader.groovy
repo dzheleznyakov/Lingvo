@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo.persistence.xml
 
 import com.google.common.collect.ImmutableMap
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.XmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.BooleanXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ByteXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.CharXmlDeserializer
@@ -38,32 +39,29 @@ class XmlReader {
 
     private def deserializer
 
-    private File file
-
     XmlReader() {
         def deserializersBuilder = ImmutableMap.builder()
         DEFAULT_DESERIALIZERS.each {entry ->
             def des = new Object().withTraits entry.value
             deserializersBuilder.put(entry.key, des)
         }
-        deserializer = deserializersBuilder.build()
+        deserializer = deserializersBuilder.build().withTraits DefaultBehaviour, Map
     }
 
-    LearningDictionary read() {
+    LearningDictionary read(File file) {
         if (!file.exists())
             throw new PersistenceException("File [" + file.absolutePath + "] is not found")
         def root = new XmlSlurper().parse(file)
         verifyMetadata(root)
 
-        return null
+        def inputStream = new BufferedInputStream(new FileInputStream(file))
+        return read(inputStream, LearningDictionary)
     }
 
     def read(InputStream input, Class<?> clazz) {
         def root = new XmlSlurper().parse(input)
-        def des = deserializer.getOrDefault(clazz, deserializer.get(Object.class))
+        def des = deserializer.getOrDefault(clazz)
         return des.deserialize(root, clazz, deserializer)
-//        println root.childNodes().next().getClass()
-//        return clazz.newInstance()
     }
 
     private void verifyMetadata(def root) {
@@ -74,5 +72,11 @@ class XmlReader {
         def type = metadata.@type
         if (type != TYPE)
             throw new PersistenceException("Wrong type: expected [$TYPE], but found [$type]")
+    }
+
+    private static trait DefaultBehaviour {
+        def <E> XmlDeserializer<? extends E> getOrDefault(Class<E> clazz) {
+            getOrDefault(clazz, get(Object))
+        }
     }
 }

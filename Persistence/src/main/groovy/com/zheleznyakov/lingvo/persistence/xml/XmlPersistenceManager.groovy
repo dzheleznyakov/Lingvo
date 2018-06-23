@@ -24,7 +24,7 @@ class XmlPersistenceManager {
     }
 
     LearningDictionary load(File file) {
-        return new XmlReader(file).read()
+        return new XmlReader().read(file)
     }
 
 }
