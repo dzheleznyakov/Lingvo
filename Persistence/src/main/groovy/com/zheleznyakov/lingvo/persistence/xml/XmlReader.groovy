@@ -1,7 +1,6 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
 import com.google.common.collect.ImmutableMap
-import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.XmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.BooleanXmlDeserializer
@@ -13,6 +12,7 @@ import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.IntXmlDeseria
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.LongXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ObjectXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ShortXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.StringXmlDeserializer
 
 class XmlReader {
     public static final String VERSION = "v1"
@@ -35,6 +35,7 @@ class XmlReader {
             .put(Float,     FloatXmlDeserializer)
             .put(double,    DoubleXmlDeserializer)
             .put(Double,    DoubleXmlDeserializer)
+            .put(String,    StringXmlDeserializer)
             .put(Object,    ObjectXmlDeserializer)
             .build()
 

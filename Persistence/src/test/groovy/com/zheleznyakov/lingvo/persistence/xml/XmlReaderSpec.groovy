@@ -72,8 +72,10 @@ class XmlReaderSpec extends Specification {
         "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"                    | EnumEntity    || { it.getEnumValue() }    | TestEnum.FORTY_TWO
         "<EnumEntity><enumValue>FORTY_THREE</enumValue></EnumEntity>"                  | EnumEntity    || { it.getEnumValue() }    | TestEnum.FORTY_THREE
 
-//        "<StringEntity><stringValue>testValue</stringValue></StringEntity>"            | StringEntity  || { it.getStringValue() }  | "testValue"
-
+        "<StringEntity><stringValue>testValue</stringValue></StringEntity>"            | StringEntity  || { it.getStringValue() }  | "testValue"
+        "<StringEntity><stringValue>testValue2</stringValue></StringEntity>"           | StringEntity  || { it.getStringValue() }  | "testValue2"
+        "<StringEntity><stringValue></stringValue></StringEntity>"                     | StringEntity  || { it.getStringValue() }  | ""
+        "<StringEntity></StringEntity>"                                               | StringEntity  || { it.getStringValue() }  | null
     }
 
     @Unroll

@@ -11,4 +11,8 @@ trait BaseXmlDeserializer<E> implements XmlDeserializer<E> {
     void verifyValuePresence(GPathResult node) {
         Util.validateArgument(!Util.isBlank(node.text()), "Node '{}' contains no {} value", node.name(), getValueType())
     }
+
+    boolean nodeIsAbsent(GPathResult node) {
+        return node.size() == 0
+    }
 }
