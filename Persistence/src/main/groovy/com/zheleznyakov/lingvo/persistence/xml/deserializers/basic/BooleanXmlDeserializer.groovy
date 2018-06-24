@@ -6,7 +6,7 @@ import groovy.util.slurpersupport.GPathResult
 
 trait BooleanXmlDeserializer implements BaseXmlDeserializer<Boolean> {
     @Override
-    Boolean deserialize(GPathResult node, Class<Boolean> clazz, def serializationContext) {
+    Boolean deserialize(GPathResult node, Class<Boolean> clazz, def deserializer) {
         verifyNodeExistence(node)
         def value = node.text()
         if (value == "true")

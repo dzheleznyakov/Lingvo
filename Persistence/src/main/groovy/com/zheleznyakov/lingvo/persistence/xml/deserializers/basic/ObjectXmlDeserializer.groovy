@@ -8,22 +8,22 @@ import java.lang.reflect.Field
 
 trait ObjectXmlDeserializer implements BaseXmlDeserializer<Object> {
     @Override
-    Object deserialize(GPathResult node, Class<Object> clazz, def serializationContext) {
+    Object deserialize(GPathResult node, Class<Object> clazz, def deserializer) {
         def entity = clazz.newInstance()
         def fields = PersistenceHelper.getPersistableFields(clazz)
         fields.each { field ->
-            def fieldValue = getFieldValue(field, node, serializationContext)
+            def fieldValue = getFieldValue(field, node, deserializer)
             setFieldValue(entity, field, fieldValue)
         }
         return entity
     }
 
-    private getFieldValue(Field field, GPathResult node, def serializationContext) {
+    private getFieldValue(Field field, GPathResult node, def deserializer) {
         Class<?> fieldType = field.type
         String fieldName = field.name
         def fieldNode = node."$fieldName"
-        def des = serializationContext.getOrDefault(fieldType, serializationContext.get(Object.class))
-        return des.deserialize(fieldNode, fieldType, serializationContext)
+        def des = deserializer.getOrDefault(fieldType)
+        return des.deserialize(fieldNode, fieldType, deserializer)
     }
 
     private void setFieldValue(def object, Field field, def value) {

@@ -5,7 +5,7 @@ import groovy.util.slurpersupport.GPathResult
 
 trait NumberXmlDeserializer<E extends Number> implements BaseXmlDeserializer<E> {
     @Override
-    E deserialize(GPathResult node, Class<E> clazz, Object serializationContext) {
+    E deserialize(GPathResult node, Class<E> clazz, def deserializer) {
         verifyNodeExistence(node)
         verifyValuePresence(node)
 

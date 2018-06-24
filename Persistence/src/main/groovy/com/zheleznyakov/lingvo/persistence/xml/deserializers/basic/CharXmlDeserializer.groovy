@@ -6,7 +6,7 @@ import groovy.util.slurpersupport.GPathResult
 
 trait CharXmlDeserializer implements BaseXmlDeserializer<Character> {
     @Override
-    Character deserialize(GPathResult node, Class<Character> clazz, Object serializationContext) {
+    Character deserialize(GPathResult node, Class<Character> clazz, def deserializer) {
         verifyNodeExistence(node)
         def value = node.text()
         if (value.length() == 0)
