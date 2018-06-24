@@ -1,5 +1,7 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
+import com.google.common.collect.ImmutableMap
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.EnumXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.BooleanEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ByteEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.CharEntity
@@ -8,6 +10,9 @@ import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ShortEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.LongEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.FloatEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.DoubleEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.EnumEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.StringEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.TestEnum
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -15,7 +20,7 @@ import spock.lang.Unroll
 import java.nio.charset.StandardCharsets
 
 class XmlReaderSpec extends Specification {
-    private XmlReader reader = []
+    private XmlReader reader = [ImmutableMap.of(TestEnum, TestEnumXmlDeserializer)]
     private File file = ["${ZhConfigFactory.get().getString("persistence.xml.root")}/temp.xml"]
 
     def cleanup() {
@@ -64,6 +69,11 @@ class XmlReaderSpec extends Specification {
         "<DoubleEntity><doubleValue>1</doubleValue></DoubleEntity>"                    | DoubleEntity  || { it.getDoubleValue() }  | 1d
         "<DoubleEntity><doubleValue>1${Double.MAX_VALUE}</doubleValue></DoubleEntity>" | DoubleEntity  || { it.getDoubleValue() }  | Double.POSITIVE_INFINITY
 
+        "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"                    | EnumEntity    || { it.getEnumValue() }    | TestEnum.FORTY_TWO
+        "<EnumEntity><enumValue>FORTY_THREE</enumValue></EnumEntity>"                  | EnumEntity    || { it.getEnumValue() }    | TestEnum.FORTY_THREE
+
+//        "<StringEntity><stringValue>testValue</stringValue></StringEntity>"            | StringEntity  || { it.getStringValue() }  | "testValue"
+
     }
 
     @Unroll
@@ -76,7 +86,7 @@ class XmlReaderSpec extends Specification {
 
         then: "the extracted entity is correct"
         IllegalArgumentException exception = thrown()
-        exception.message.contains expectedExceptionMessage
+        exception.message.matches ".*$expectedExceptionMessage.*"
 
         where: "the parameters are"
         xml                                                                         | clazz         || expectedExceptionMessage
@@ -118,6 +128,12 @@ class XmlReaderSpec extends Specification {
         "<DoubleEntity/>"                                                           | DoubleEntity  || "does not exist"
         "<DoubleEntity><doubleValue/></DoubleEntity>"                               | DoubleEntity  || "no double"
         "<DoubleEntity><doubleValue>float</doubleValue></DoubleEntity>"             | DoubleEntity  || "not a double"
+
+        "<EnumEntity/>"                                                             | EnumEntity    || "does not exist"
+        "<EnumEntity><enumValue/></EnumEntity>"                                     | EnumEntity    || "no enum value"
+        "<EnumEntity><enumValue>FORTY_FOUR</enumValue></EnumEntity>"                | EnumEntity    || "No enum constant.*TestEnum.*FORTY_FOUR"
     }
+
+    private static trait TestEnumXmlDeserializer implements EnumXmlDeserializer<TestEnum> {}
 
 }

@@ -1,5 +1,6 @@
-package com.zheleznyakov.lingvo.persistence.xml.deserializers
+package com.zheleznyakov.lingvo.persistence.xml.deserializers.basic
 
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.BaseXmlDeserializer
 import com.zheleznyakov.lingvo.util.Util
 import groovy.util.slurpersupport.GPathResult
 

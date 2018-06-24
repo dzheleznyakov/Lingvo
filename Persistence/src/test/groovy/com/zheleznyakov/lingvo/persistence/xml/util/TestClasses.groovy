@@ -73,12 +73,17 @@ class TestClasses {
     static class EnumEntity {
         @Persistable private TestEnum enumValue = TestEnum.FORTY_TWO
         private TestEnum enumValue2 = TestEnum.FORTY_THREE
-
+        TestEnum getEnumValue() {
+            return enumValue
+        }
     }
 
     static class StringEntity {
         @Persistable private String stringValue = "testValue"
         private String stringValue2 = "another test value"
+        String getStringValue() {
+            return stringValue
+        }
     }
 
     static class BooleanArrayEntity {

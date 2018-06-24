@@ -22,7 +22,7 @@ trait ObjectXmlDeserializer implements BaseXmlDeserializer<Object> {
         Class<?> fieldType = field.type
         String fieldName = field.name
         def fieldNode = node."$fieldName"
-        def des = deserializer.getOrDefault(fieldType)
+        def des = deserializer.getBestMatch(fieldType)
         return des.deserialize(fieldNode, fieldType, deserializer)
     }
 
