@@ -2,6 +2,7 @@ package com.zheleznyakov.lingvo.persistence.xml.deserializers.basic
 
 import com.zheleznyakov.lingvo.persistence.PersistenceHelper
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.BaseXmlDeserializer
+import com.zheleznyakov.lingvo.util.Util
 import groovy.util.slurpersupport.GPathResult
 
 import java.lang.reflect.Field
@@ -19,11 +20,11 @@ trait ObjectXmlDeserializer implements BaseXmlDeserializer<Object> {
     }
 
     private getFieldValue(Field field, GPathResult node, def deserializer) {
-        Class<?> fieldType = field.type
+        def fieldTypeAttribute = node."$field.name".@type.toString()
+        Class<?> fieldType = Util.isBlank(fieldTypeAttribute) ? field.type : Class.forName(fieldTypeAttribute)
         String fieldName = field.name
         def fieldNode = node."$fieldName"
-        def des = deserializer.getBestMatch(fieldType)
-        return des.deserialize(fieldNode, fieldType, deserializer)
+        return deserializer.deserialize(fieldNode, fieldType)
     }
 
     private void setFieldValue(def object, Field field, def value) {

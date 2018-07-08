@@ -6,7 +6,8 @@ import groovy.util.slurpersupport.GPathResult
 trait EnumXmlDeserializer<E extends Enum<E>> implements BaseXmlDeserializer<E> {
     @Override
     E deserialize(GPathResult node, Class<E> clazz, def deserializer) {
-        verifyNodeExistence(node)
+        if (!exists(node))
+            return null
         verifyValuePresence(node)
         return Enum.valueOf(clazz, node.text())
     }

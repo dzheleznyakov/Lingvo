@@ -6,7 +6,7 @@ import groovy.xml.MarkupBuilder
 
 trait LanguageXmlSerializer implements XmlSerializer<Language> {
     @Override
-    void serialize(Language language, MarkupBuilder builder, String tag) {
-        builder.language(language.code())
+    void serialize(Language language, MarkupBuilder builder, String tag, def attributes, def serializer) {
+        builder.language(attributes, language.code())
     }
 }

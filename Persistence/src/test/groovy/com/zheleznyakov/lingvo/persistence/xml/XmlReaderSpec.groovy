@@ -5,15 +5,17 @@ import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.EnumXmlDeseri
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.BooleanEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ByteEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.CharEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.IntegerEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ShortEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.LongEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.FloatEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.DoubleEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.EnumEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.FloatEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.IntegerEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ListEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.LongEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ShortEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.StringEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.SetEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.SetObjectEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.TestEnum
-import com.zheleznyakov.lingvo.util.ZhConfigFactory
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -21,11 +23,6 @@ import java.nio.charset.StandardCharsets
 
 class XmlReaderSpec extends Specification {
     private XmlReader reader = [ImmutableMap.of(TestEnum, TestEnumXmlDeserializer)]
-    private File file = ["${ZhConfigFactory.get().getString("persistence.xml.root")}/temp.xml"]
-
-    def cleanup() {
-        file.delete()
-    }
 
     @Unroll
     def "Test reading entity: #expectedClass.simpleName, value=#expectedValue"() {
@@ -40,42 +37,94 @@ class XmlReaderSpec extends Specification {
         value(entity) == expectedValue
 
         where: "the parameters are"
-        xml                                                                            | expectedClass || value                    | expectedValue
-        "<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>"             | BooleanEntity || { it.getBooleanValue() } | true
-        "<BooleanEntity><booleanValue>false</booleanValue></BooleanEntity>"            | BooleanEntity || { it.getBooleanValue() } | false
+        xml                                                                            | expectedClass  || value                    | expectedValue
+        "<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>"             | BooleanEntity  || { it.getBooleanValue() } | true
+        "<BooleanEntity><booleanValue>false</booleanValue></BooleanEntity>"            | BooleanEntity  || { it.getBooleanValue() } | false
 
-        "<CharEntity><charValue>*</charValue></CharEntity>"                            | CharEntity    || { it.getCharValue() }    | 42 as char
-        "<CharEntity><charValue>1</charValue></CharEntity>"                            | CharEntity    || { it.getCharValue() }    | '1'
+        "<CharEntity><charValue>*</charValue></CharEntity>"                            | CharEntity     || { it.getCharValue() }    | 42 as char
+        "<CharEntity><charValue>1</charValue></CharEntity>"                            | CharEntity     || { it.getCharValue() }    | '1'
 
-        "<ByteEntity><byteValue>42</byteValue></ByteEntity>"                           | ByteEntity    || { it.getByteValue() }    | 42 as byte
-        "<ByteEntity><byteValue>1</byteValue></ByteEntity>"                            | ByteEntity    || { it.getByteValue() }    | 1 as byte
+        "<ByteEntity><byteValue>42</byteValue></ByteEntity>"                           | ByteEntity     || { it.getByteValue() }    | 42 as byte
+        "<ByteEntity><byteValue>1</byteValue></ByteEntity>"                            | ByteEntity     || { it.getByteValue() }    | 1 as byte
 
-        "<ShortEntity><shortValue>42</shortValue></ShortEntity>"                       | ShortEntity   || { it.getShortValue() }   | 42 as short
-        "<ShortEntity><shortValue>1</shortValue></ShortEntity>"                        | ShortEntity   || { it.getShortValue() }   | 1 as short
+        "<ShortEntity><shortValue>42</shortValue></ShortEntity>"                       | ShortEntity    || { it.getShortValue() }   | 42 as short
+        "<ShortEntity><shortValue>1</shortValue></ShortEntity>"                        | ShortEntity    || { it.getShortValue() }   | 1 as short
 
-        "<IntegerEntity><intValue>42</intValue></IntegerEntity>"                       | IntegerEntity || { it.getIntValue() }     | 42
-        "<IntegerEntity><intValue>1</intValue></IntegerEntity>"                        | IntegerEntity || { it.getIntValue() }     | 1
+        "<IntegerEntity><intValue>42</intValue></IntegerEntity>"                       | IntegerEntity  || { it.getIntValue() }     | 42
+        "<IntegerEntity><intValue>1</intValue></IntegerEntity>"                        | IntegerEntity  || { it.getIntValue() }     | 1
 
-        "<LongEntity><longValue>42</longValue></LongEntity>"                           | LongEntity    || { it.getLongValue() }    | 42L
-        "<LongEntity><longValue>1</longValue></LongEntity>"                            | LongEntity    || { it.getLongValue() }    | 1L
+        "<LongEntity><longValue>42</longValue></LongEntity>"                           | LongEntity     || { it.getLongValue() }    | 42L
+        "<LongEntity><longValue>1</longValue></LongEntity>"                            | LongEntity     || { it.getLongValue() }    | 1L
 
-        "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"                     | FloatEntity   || { it.getFloatValue() }   | 42f
-        "<FloatEntity><floatValue>1.0</floatValue></FloatEntity>"                      | FloatEntity   || { it.getFloatValue() }   | 1f
-        "<FloatEntity><floatValue>1</floatValue></FloatEntity>"                        | FloatEntity   || { it.getFloatValue() }   | 1f
-        "<FloatEntity><floatValue>1${Float.MAX_VALUE}</floatValue></FloatEntity>"      | FloatEntity   || { it.getFloatValue() }   | Float.POSITIVE_INFINITY
+        "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"                     | FloatEntity    || { it.getFloatValue() }   | 42f
+        "<FloatEntity><floatValue>1.0</floatValue></FloatEntity>"                      | FloatEntity    || { it.getFloatValue() }   | 1f
+        "<FloatEntity><floatValue>1</floatValue></FloatEntity>"                        | FloatEntity    || { it.getFloatValue() }   | 1f
+        "<FloatEntity><floatValue>1${Float.MAX_VALUE}</floatValue></FloatEntity>"      | FloatEntity    || { it.getFloatValue() }   | Float.POSITIVE_INFINITY
 
-        "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"                 | DoubleEntity  || { it.getDoubleValue() }  | 42d
-        "<DoubleEntity><doubleValue>1.0</doubleValue></DoubleEntity>"                  | DoubleEntity  || { it.getDoubleValue() }  | 1d
-        "<DoubleEntity><doubleValue>1</doubleValue></DoubleEntity>"                    | DoubleEntity  || { it.getDoubleValue() }  | 1d
-        "<DoubleEntity><doubleValue>1${Double.MAX_VALUE}</doubleValue></DoubleEntity>" | DoubleEntity  || { it.getDoubleValue() }  | Double.POSITIVE_INFINITY
+        "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"                 | DoubleEntity   || { it.getDoubleValue() }  | 42d
+        "<DoubleEntity><doubleValue>1.0</doubleValue></DoubleEntity>"                  | DoubleEntity   || { it.getDoubleValue() }  | 1d
+        "<DoubleEntity><doubleValue>1</doubleValue></DoubleEntity>"                    | DoubleEntity   || { it.getDoubleValue() }  | 1d
+        "<DoubleEntity><doubleValue>1${Double.MAX_VALUE}</doubleValue></DoubleEntity>" | DoubleEntity   || { it.getDoubleValue() }  | Double.POSITIVE_INFINITY
 
-        "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"                    | EnumEntity    || { it.getEnumValue() }    | TestEnum.FORTY_TWO
-        "<EnumEntity><enumValue>FORTY_THREE</enumValue></EnumEntity>"                  | EnumEntity    || { it.getEnumValue() }    | TestEnum.FORTY_THREE
+        "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"                    | EnumEntity     || { it.getEnumValue() }    | TestEnum.FORTY_TWO
+        "<EnumEntity><enumValue>FORTY_THREE</enumValue></EnumEntity>"                  | EnumEntity     || { it.getEnumValue() }    | TestEnum.FORTY_THREE
+        "<EnumEntity/>"                                                                | EnumEntity     || { it.getEnumValue() }    | null
 
-        "<StringEntity><stringValue>testValue</stringValue></StringEntity>"            | StringEntity  || { it.getStringValue() }  | "testValue"
-        "<StringEntity><stringValue>testValue2</stringValue></StringEntity>"           | StringEntity  || { it.getStringValue() }  | "testValue2"
-        "<StringEntity><stringValue></stringValue></StringEntity>"                     | StringEntity  || { it.getStringValue() }  | ""
-        "<StringEntity></StringEntity>"                                               | StringEntity  || { it.getStringValue() }  | null
+        "<StringEntity><stringValue>testValue</stringValue></StringEntity>"            | StringEntity   || { it.getStringValue() }  | "testValue"
+        "<StringEntity><stringValue>testValue2</stringValue></StringEntity>"           | StringEntity   || { it.getStringValue() }  | "testValue2"
+        "<StringEntity><stringValue/></StringEntity>"                                  | StringEntity   || { it.getStringValue() }  | ""
+        "<StringEntity></StringEntity>"                                                | StringEntity   || { it.getStringValue() }  | null
+
+        """<ListEntity>
+             <listValues type='java.util.ArrayList'>
+               <elem type='java.lang.Integer'>42</elem>
+               <elem type='java.lang.Integer'>43</elem>
+               <elem type='java.lang.Integer'>44</elem>
+             </listValues>
+           </ListEntity>"""                                                            | ListEntity     || { it.getListValues() }   | [42, 43, 44]
+
+        """<ListEntity>
+             <listValues type='java.util.ArrayList'>
+               <elem type='java.lang.Integer'>0</elem>
+               <elem type='java.lang.Integer'>100</elem>
+               <elem type='java.lang.Integer'>999</elem>
+             </listValues>
+           </ListEntity>"""                                                            | ListEntity     || { it.getListValues() }   | [0, 100, 999]
+
+        "<ListEntity/>"                                                                | ListEntity     || { it.getListValues() }   | null
+
+        """<ListEntity>
+             <listValues type='java.util.ArrayList' />
+           </ListEntity>"""                                                            | ListEntity     || { it.getListValues() }   | []
+
+        """<SetEntity>
+             <setValues type='java.util.HashSet'>
+               <elem type='java.lang.Double'>42.0</elem>
+               <elem type='java.lang.Double'>43.0</elem>
+               <elem type='java.lang.Double'>44.0</elem>
+             </setValues>
+           </SetEntity>"""                                                             | SetEntity      || { it.getSetValues() }    | [42d, 43d, 44d].toSet()
+
+        """<SetEntity>
+             <setValues type='java.util.HashSet'>
+               <elem type='java.lang.Double'>42.42</elem>
+               <elem type='java.lang.Double'>43.43</elem>
+               <elem type='java.lang.Double'>44.44</elem>
+             </setValues>
+           </SetEntity>"""                                                             | SetEntity      || { it.getSetValues() }    | [42.42, 43.43, 44.44].toSet()
+
+        "<SetEntity/>"                                                                 | SetEntity      || { it.getSetValues() }    | null
+
+        """<SetEntity>
+             <setValues type='java.util.HashSet'/>
+           </SetEntity>"""                                                             | SetEntity      || { it.getSetValues() }    | [].toSet()
+
+        """<SetObjectEntity>
+             <objectValues type='com.google.common.collect.ImmutableSet'>
+               <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$IntegerEntity'><intValue>42</intValue></elem>
+               <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$DoubleEntity'><doubleValue>42.0</doubleValue></elem>
+             </objectValues>
+           </SetObjectEntity>"""                                                       | SetObjectEntity || { it.getObjectValues() } | [new IntegerEntity(), new DoubleEntity()].toSet()
     }
 
     @Unroll
@@ -131,7 +180,6 @@ class XmlReaderSpec extends Specification {
         "<DoubleEntity><doubleValue/></DoubleEntity>"                               | DoubleEntity  || "no double"
         "<DoubleEntity><doubleValue>float</doubleValue></DoubleEntity>"             | DoubleEntity  || "not a double"
 
-        "<EnumEntity/>"                                                             | EnumEntity    || "does not exist"
         "<EnumEntity><enumValue/></EnumEntity>"                                     | EnumEntity    || "no enum value"
         "<EnumEntity><enumValue>FORTY_FOUR</enumValue></EnumEntity>"                | EnumEntity    || "No enum constant.*TestEnum.*FORTY_FOUR"
     }

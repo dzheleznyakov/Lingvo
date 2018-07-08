@@ -5,7 +5,7 @@ import groovy.xml.MarkupBuilder
 
 trait NumberXmlSerializer implements XmlSerializer<Number> {
     @Override
-    void serialize(Number number, MarkupBuilder builder, String tag) {
-        builder."$tag"(number)
+    void serialize(Number number, MarkupBuilder builder, String tag, def attributes, def serializer) {
+        builder."$tag"(attributes, number)
     }
 }

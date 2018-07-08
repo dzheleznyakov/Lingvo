@@ -3,6 +3,7 @@ package com.zheleznyakov.lingvo.persistence.xml
 import com.google.common.collect.ImmutableMap
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig
+import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.helpers.DictionaryRecordTestHelper
 import com.zheleznyakov.lingvo.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.persistence.xml.util.IOTestHelper
@@ -141,9 +142,10 @@ class XmlPersistenceManagerSpec extends Specification {
             def expectedRecord = recordsByMainForm[mainForm]
             assert xmlRecord.description == expectedRecord.description
             assert xmlRecord.transcription == expectedRecord.transcription
-            assert xmlRecord.examples.UsageExample.size() == expectedRecord.examples.size()
-            assert xmlRecord.examples.UsageExample[0].example == expectedRecord.examples[0].example
-            assert xmlRecord.examples.UsageExample[0].translation == expectedRecord.examples[0].translation
+            assert xmlRecord.examples.elem.size() == expectedRecord.examples.size()
+            assert xmlRecord.examples.elem.@type == Record.UsageExample.typeName
+            assert xmlRecord.examples.elem[0].example == expectedRecord.examples[0].example
+            assert xmlRecord.examples.elem[0].translation == expectedRecord.examples[0].translation
 
             def xmlWord = xmlRecord.word
 //            assert xmlWord.@class == expectedRecord.word.class.simpleName

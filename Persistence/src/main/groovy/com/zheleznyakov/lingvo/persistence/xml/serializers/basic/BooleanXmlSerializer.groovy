@@ -5,7 +5,7 @@ import groovy.xml.MarkupBuilder
 
 trait BooleanXmlSerializer implements XmlSerializer<Boolean> {
     @Override
-    void serialize(Boolean value, MarkupBuilder builder, String tag) {
-        builder."$tag"(value)
+    void serialize(Boolean value, MarkupBuilder builder, String tag, def attributes, def serializer) {
+        builder."$tag"(attributes, value)
     }
 }

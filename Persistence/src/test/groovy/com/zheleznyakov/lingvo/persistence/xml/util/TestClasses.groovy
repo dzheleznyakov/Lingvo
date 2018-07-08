@@ -44,6 +44,21 @@ class TestClasses {
         int getIntValue() {
             return intValue
         }
+
+        boolean equals(o) {
+            if (this.is(o)) return true
+            if (getClass() != o.class) return false
+
+            IntegerEntity that = (IntegerEntity) o
+
+            if (intValue != that.intValue) return false
+
+            return true
+        }
+
+        int hashCode() {
+            return intValue
+        }
     }
 
     static class LongEntity {
@@ -67,6 +82,21 @@ class TestClasses {
         private double doubleValue2 = Math.random() * 100
         double getDoubleValue() {
             return doubleValue
+        }
+        boolean equals(o) {
+            if (this.is(o)) return true
+            if (getClass() != o.class) return false
+
+            DoubleEntity that = (DoubleEntity) o
+
+            if (Double.compare(that.doubleValue, doubleValue) != 0) return false
+
+            return true
+        }
+
+        int hashCode() {
+            long temp = doubleValue != +0.0d ? Double.doubleToLongBits(doubleValue) : 0L
+            return (int) (temp ^ (temp >>> 32))
         }
     }
 
@@ -136,17 +166,26 @@ class TestClasses {
     }
 
     static class ListEntity {
-        @Persistable private List<Integer> listValues = ImmutableList.of(42, 43, 44)
+        @Persistable private List<Integer> listValues = [42, 43, 44]
         private List<Double> listValues2 = ImmutableList.of(45D, 46D, 47D)
+        List<Integer> getListValues() {
+            return listValues
+        }
     }
 
     static class SetEntity {
-        @Persistable private Set<Double> setValues = ImmutableSet.of(42D, 43D, 44D)
+        @Persistable private Set<Double> setValues = [42D, 43D, 44D].toSet()
         private Set<Integer> setValues2 = ImmutableSet.of(1, 2, 3)
+        Set<Double> getSetValues() {
+            return setValues
+        }
     }
 
     static class SetObjectEntity {
         @Persistable private Set<?> objectValues = ImmutableSet.of(new IntegerEntity(), new DoubleEntity())
+        Set<?> getObjectValues() {
+            return objectValues
+        }
     }
 
     static class MapEntity {

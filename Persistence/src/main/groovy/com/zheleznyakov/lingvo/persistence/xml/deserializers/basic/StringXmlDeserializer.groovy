@@ -6,8 +6,6 @@ import groovy.util.slurpersupport.GPathResult
 trait StringXmlDeserializer implements BaseXmlDeserializer<String> {
     @Override
     String deserialize(GPathResult node, Class<String> clazz, Object deserializer) {
-        if (nodeIsAbsent(node))
-            return null
-        return node.text()
+        return exists(node) ? node.text() : null
     }
 }

@@ -6,16 +6,16 @@ import groovy.xml.MarkupBuilder
 
 trait ObjectXmlSerializer implements XmlSerializer<Object> {
     @Override
-    void serialize(Object entity, MarkupBuilder builder, String tag) {
+    void serialize(Object entity, MarkupBuilder builder, String tag, def attributes, def serializer) {
         def entityClass = entity.getClass()
-        builder."$tag"() {
+        builder."$tag"(attributes) {
             PersistenceHelper.getPersistableFields(entityClass).each { field ->
                 boolean isAccessible = field.accessible
                 field.accessible = true
-                serialize(field.get(entity), builder, field.name)
+                def value = field.get(entity)
+                serializer.serialize(value, builder, field.name, [:])
                 field.accessible = isAccessible
             }
         }
     }
-
 }

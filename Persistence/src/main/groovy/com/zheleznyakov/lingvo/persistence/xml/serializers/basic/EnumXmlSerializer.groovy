@@ -5,7 +5,7 @@ import groovy.xml.MarkupBuilder
 
 trait EnumXmlSerializer implements XmlSerializer<Enum<?>> {
     @Override
-    void serialize(Enum<?> value, MarkupBuilder builder, String tag) {
-        builder."$tag"(value.name())
+    void serialize(Enum<?> value, MarkupBuilder builder, String tag, def attributes, def serializer) {
+        builder."$tag"(attributes, value.name())
     }
 }

@@ -5,12 +5,12 @@ import groovy.xml.MarkupBuilder
 
 trait MapXmlSerializer implements XmlSerializer<Map<?, ?>> {
     @Override
-    void serialize(Map<?, ?> map, MarkupBuilder builder, String tag) {
-        builder."$tag" {
+    void serialize(Map<?, ?> map, MarkupBuilder builder, String tag, def attributes, def serializer) {
+        builder."$tag"(attributes) {
             map.entrySet().each { en ->
                 entry() {
-                    serialize(en.key, builder, en.key.getClass().simpleName)
-                    serialize(en.value, builder, en.value.getClass().simpleName)
+                    serialize(en.key, builder, en.key.getClass().simpleName, [:])
+                    serialize(en.value, builder, en.value.getClass().simpleName, [:])
                 }
             }
         }
