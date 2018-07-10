@@ -12,6 +12,21 @@ class TestClasses {
         boolean getBooleanValue() {
             return booleanValue
         }
+
+        boolean equals(o) {
+            if (this.is(o)) return true
+            if (getClass() != o.class) return false
+
+            BooleanEntity that = (BooleanEntity) o
+
+            if (booleanValue != that.booleanValue) return false
+
+            return true
+        }
+
+        int hashCode() {
+            return (booleanValue ? 1 : 0)
+        }
     }
 
     static class ShortEntity {
@@ -190,6 +205,9 @@ class TestClasses {
 
     static class MapEntity {
         @Persistable private Map<?, ?> myMap = ImmutableMap.of(42, true, [42D], new BooleanEntity())
+        Map<?, ?> getMyMap() {
+            return myMap
+        }
     }
 
     enum TestEnum{

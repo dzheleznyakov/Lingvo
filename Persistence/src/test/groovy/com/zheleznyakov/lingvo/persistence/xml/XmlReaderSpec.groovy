@@ -15,6 +15,7 @@ import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ShortEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.StringEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.SetEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.SetObjectEntity
+import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.MapEntity
 import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.TestEnum
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -125,6 +126,19 @@ class XmlReaderSpec extends Specification {
                <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$DoubleEntity'><doubleValue>42.0</doubleValue></elem>
              </objectValues>
            </SetObjectEntity>"""                                                       | SetObjectEntity || { it.getObjectValues() } | [new IntegerEntity(), new DoubleEntity()].toSet()
+
+//        """<MapEntity>
+//             <myMap>
+//               <entry>
+//                 <Integer>42</Integer>
+//                 <Boolean>true</Boolean>
+//               </entry>
+//               <entry>
+//                 <ArrayList type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></ArrayList>
+//                 <BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>
+//               </entry>
+//             </myMap>
+//           </MapEntity>"""                                                             | MapEntity       || { it.getMyMap() }        | [42: true, 42D: new BooleanEntity()]
     }
 
     @Unroll
