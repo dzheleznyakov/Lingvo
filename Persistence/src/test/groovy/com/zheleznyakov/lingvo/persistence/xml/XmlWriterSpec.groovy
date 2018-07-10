@@ -41,16 +41,16 @@ class XmlWriterSpec extends Specification {
 
         where: "the parameters are"
         entity                        || expectedOutput
-        new BooleanEntity()           || "<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>"
-        new ShortEntity()             || "<ShortEntity><shortValue>42</shortValue></ShortEntity>"
-        new CharEntity()              || "<CharEntity><charValue>*</charValue></CharEntity>"
-        new ByteEntity()              || "<ByteEntity><byteValue>42</byteValue></ByteEntity>"
-        new IntegerEntity()           || "<IntegerEntity><intValue>42</intValue></IntegerEntity>"
-        new LongEntity()              || "<LongEntity><longValue>42</longValue></LongEntity>"
-        new FloatEntity()             || "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"
-        new DoubleEntity()            || "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"
-        new EnumEntity()              || "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"
-        new StringEntity()            || "<StringEntity><stringValue>testValue</stringValue></StringEntity>"
+        new BooleanEntity()           || '<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>'
+        new ShortEntity()             || '<ShortEntity><shortValue>42</shortValue></ShortEntity>'
+        new CharEntity()              || '<CharEntity><charValue>*</charValue></CharEntity>'
+        new ByteEntity()              || '<ByteEntity><byteValue>42</byteValue></ByteEntity>'
+        new IntegerEntity()           || '<IntegerEntity><intValue>42</intValue></IntegerEntity>'
+        new LongEntity()              || '<LongEntity><longValue>42</longValue></LongEntity>'
+        new FloatEntity()             || '<FloatEntity><floatValue>42.0</floatValue></FloatEntity>'
+        new DoubleEntity()            || '<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>'
+        new EnumEntity()              || '<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>'
+        new StringEntity()            || '<StringEntity><stringValue>testValue</stringValue></StringEntity>'
         new ListEntity()              || """<ListEntity>
                                               <listValues type='java.util.ArrayList'>
                                                 <elem type='java.lang.Integer'>42</elem>
@@ -95,17 +95,17 @@ class XmlWriterSpec extends Specification {
 
         where: "the parameters are"
         entity                   || expectedOutput
-        new BooleanArrayEntity() || "<BooleanArrayEntity><arrayValues><Boolean>true</Boolean><Boolean>true</Boolean><Boolean>false</Boolean></arrayValues></BooleanArrayEntity>"
-        new CharArrayEntity()    || "<CharArrayEntity><arrayValues><Character>a</Character><Character>b</Character><Character>c</Character></arrayValues></CharArrayEntity>"
-        new ByteArrayEntity()    || "<ByteArrayEntity><arrayValues><Byte>42</Byte><Byte>43</Byte><Byte>44</Byte></arrayValues></ByteArrayEntity>"
-        new ShortArrayEntity()   || "<ShortArrayEntity><arrayValues><Short>42</Short><Short>43</Short><Short>44</Short></arrayValues></ShortArrayEntity>"
-        new IntArrayEntity()     || "<IntArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></IntArrayEntity>"
-        new LongArrayEntity()    || "<LongArrayEntity><arrayValues><Long>42</Long><Long>43</Long><Long>44</Long></arrayValues></LongArrayEntity>"
-        new FloatArrayEntity()   || "<FloatArrayEntity><arrayValues><Float>42.0</Float><Float>43.0</Float><Float>44.0</Float></arrayValues></FloatArrayEntity>"
-        new DoubleArrayEntity()  || "<DoubleArrayEntity><arrayValues><Double>42.0</Double><Double>43.0</Double><Double>44.0</Double></arrayValues></DoubleArrayEntity>"
+        new BooleanArrayEntity() || '<BooleanArrayEntity><arrayValues><Boolean>true</Boolean><Boolean>true</Boolean><Boolean>false</Boolean></arrayValues></BooleanArrayEntity>'
+        new CharArrayEntity()    || '<CharArrayEntity><arrayValues><Character>a</Character><Character>b</Character><Character>c</Character></arrayValues></CharArrayEntity>'
+        new ByteArrayEntity()    || '<ByteArrayEntity><arrayValues><Byte>42</Byte><Byte>43</Byte><Byte>44</Byte></arrayValues></ByteArrayEntity>'
+        new ShortArrayEntity()   || '<ShortArrayEntity><arrayValues><Short>42</Short><Short>43</Short><Short>44</Short></arrayValues></ShortArrayEntity>'
+        new IntArrayEntity()     || '<IntArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></IntArrayEntity>'
+        new LongArrayEntity()    || '<LongArrayEntity><arrayValues><Long>42</Long><Long>43</Long><Long>44</Long></arrayValues></LongArrayEntity>'
+        new FloatArrayEntity()   || '<FloatArrayEntity><arrayValues><Float>42.0</Float><Float>43.0</Float><Float>44.0</Float></arrayValues></FloatArrayEntity>'
+        new DoubleArrayEntity()  || '<DoubleArrayEntity><arrayValues><Double>42.0</Double><Double>43.0</Double><Double>44.0</Double></arrayValues></DoubleArrayEntity>'
 
-        new ObjectArrayEntity<Integer>(42, 43, 44)                        || "<ObjectArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></ObjectArrayEntity>"
-        new ObjectArrayEntity<TestEnum>(TestEnum.FORTY_TWO, TestEnum.FORTY_THREE) || "<ObjectArrayEntity><arrayValues><TestEnum>FORTY_TWO</TestEnum><TestEnum>FORTY_THREE</TestEnum></arrayValues></ObjectArrayEntity>"
+        new ObjectArrayEntity<Integer>(42, 43, 44)                        || '<ObjectArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></ObjectArrayEntity>'
+        new ObjectArrayEntity<TestEnum>(TestEnum.FORTY_TWO, TestEnum.FORTY_THREE) || '<ObjectArrayEntity><arrayValues><TestEnum>FORTY_TWO</TestEnum><TestEnum>FORTY_THREE</TestEnum></arrayValues></ObjectArrayEntity>'
 
     }
 
