@@ -36,8 +36,7 @@ class Serializer {
             put(Object,       ObjectXmlSerializer).
             build()
 
-    @Delegate
-    private Map serializer
+    private final Map serializersByClass
 
     Serializer(def additionalSerializers) {
         def serBuilder = ImmutableMap.builder()
@@ -45,7 +44,7 @@ class Serializer {
             def ser = new Object().withTraits entry.value
             serBuilder.put(entry.key, ser)
         }
-        serializer = serBuilder.build()
+        serializersByClass = serBuilder.build()
     }
 
     def serialize(def entity, MarkupBuilder builder, String tag, def attributes) {
@@ -75,5 +74,17 @@ class Serializer {
                 return get(clazz)
         }
         return false
+    }
+
+    private Set keySet() {
+        return serializersByClass.keySet()
+    }
+
+    private boolean containsKey(clazz) {
+        return serializersByClass.containsKey(clazz)
+    }
+
+    private def get(clazz) {
+        serializersByClass.get(clazz)
     }
 }

@@ -43,8 +43,7 @@ class Deserializer {
             put(ImmutableSet, ImmutableSetXmlDeserializer).
             build()
 
-    @Delegate
-    private Map deserializer
+    private Map deserializersByClass
 
     Deserializer(def additionalDeserializers) {
         def desBuilder = ImmutableMap.builder()
@@ -52,7 +51,7 @@ class Deserializer {
             def des = new Object().withTraits entry.value
             desBuilder.put(entry.key, des)
         }
-        deserializer = desBuilder.build()
+        deserializersByClass = desBuilder.build()
     }
 
     def deserialize(GPathResult node, Class<?> clazz) {
@@ -67,6 +66,14 @@ class Deserializer {
             return get(Collection)
         else
             return get(Object)
+    }
+
+    private boolean containsKey(clazz) {
+        return deserializersByClass.containsKey(clazz)
+    }
+
+    private def get(clazz) {
+        deserializersByClass.get(clazz)
     }
 
 }
