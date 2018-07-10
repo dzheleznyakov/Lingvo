@@ -20,28 +20,28 @@ import groovy.util.slurpersupport.GPathResult
 
 @PackageScope
 class Deserializer {
-    private static final def DEFAULT_DESERIALIZERS = ImmutableMap.builder()
-            .put(boolean,      BooleanXmlDeserializer)
-            .put(Boolean,      BooleanXmlDeserializer)
-            .put(char,         CharXmlDeserializer)
-            .put(Character,    CharXmlDeserializer)
-            .put(byte,         ByteXmlDeserializer)
-            .put(Byte,         ByteXmlDeserializer)
-            .put(short,        ShortXmlDeserializer)
-            .put(Short,        ShortXmlDeserializer)
-            .put(int,          IntXmlDeserializer)
-            .put(Integer,      IntXmlDeserializer)
-            .put(long,         LongXmlDeserializer)
-            .put(Long,         LongXmlDeserializer)
-            .put(float,        FloatXmlDeserializer)
-            .put(Float,        FloatXmlDeserializer)
-            .put(double,       DoubleXmlDeserializer)
-            .put(Double,       DoubleXmlDeserializer)
-            .put(String,       StringXmlDeserializer)
-            .put(Object,       ObjectXmlDeserializer)
-            .put(Collection,   CollectionXmlDeserializer)
-            .put(ImmutableSet, ImmutableSetXmlDeserializer)
-            .build()
+    private static final def DEFAULT_DESERIALIZERS = ImmutableMap.builder().
+            put(boolean,      BooleanXmlDeserializer).
+            put(Boolean,      BooleanXmlDeserializer).
+            put(char,         CharXmlDeserializer).
+            put(Character,    CharXmlDeserializer).
+            put(byte,         ByteXmlDeserializer).
+            put(Byte,         ByteXmlDeserializer).
+            put(short,        ShortXmlDeserializer).
+            put(Short,        ShortXmlDeserializer).
+            put(int,          IntXmlDeserializer).
+            put(Integer,      IntXmlDeserializer).
+            put(long,         LongXmlDeserializer).
+            put(Long,         LongXmlDeserializer).
+            put(float,        FloatXmlDeserializer).
+            put(Float,        FloatXmlDeserializer).
+            put(double,       DoubleXmlDeserializer).
+            put(Double,       DoubleXmlDeserializer).
+            put(String,       StringXmlDeserializer).
+            put(Object,       ObjectXmlDeserializer).
+            put(Collection,   CollectionXmlDeserializer).
+            put(ImmutableSet, ImmutableSetXmlDeserializer).
+            build()
 
     @Delegate
     private Map deserializer

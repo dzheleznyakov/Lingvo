@@ -204,9 +204,15 @@ class TestClasses {
     }
 
     static class MapEntity {
-        @Persistable private Map<?, ?> myMap = ImmutableMap.of(42, true, [42D], new BooleanEntity())
-        Map<?, ?> getMyMap() {
+        @Persistable private Map myMap = ImmutableMap.of(42, true, [42D], new BooleanEntity())
+
+        Map getMyMap() {
             return myMap
+        }
+
+        MapEntity setMyMap( myMap) {
+            this.myMap = myMap
+            return this
         }
     }
 

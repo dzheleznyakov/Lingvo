@@ -31,13 +31,21 @@ class XmlWriterSpec extends Specification {
     private StringWriter output = []
     private XmlWriter writer = XmlWriter.with(output)
 
+    def setupSpec() {
+        String.metaClass.trimLines { -> trimLines(delegate) }
+    }
+
+    def setup() {
+        output.metaClass.trimLines { -> XmlWriterSpec.trimLines(delegate.toString()) }
+    }
+
     @Unroll
     def "Test persisting entity: #entity.class.simpleName"() {
         when: "the entity is persisted"
         writer.write(entity)
 
         then: "only annotated fields are persisted"
-        trimLines(output.toString()) == trimLines(expectedOutput).replace("><", ">\n<")
+        output.trimLines() == expectedOutput.trimLines().replace("><", ">\n<")
 
         where: "the parameters are"
         entity                        || expectedOutput
@@ -71,18 +79,6 @@ class XmlWriterSpec extends Specification {
                                                 <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$DoubleEntity'><doubleValue>42.0</doubleValue></elem>
                                               </objectValues>
                                             </SetObjectEntity>"""
-        new MapEntity()               || """<MapEntity>
-                                              <myMap>
-                                                <entry>
-                                                  <Integer>42</Integer>
-                                                  <Boolean>true</Boolean>
-                                                </entry>
-                                                <entry>
-                                                  <ArrayList type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></ArrayList>
-                                                  <BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>
-                                                </entry>
-                                              </myMap>
-                                            </MapEntity>"""
     }
 
     @Unroll
@@ -91,7 +87,7 @@ class XmlWriterSpec extends Specification {
         writer.write(entity)
 
         then: "only annotated fields are persisted"
-        trimLines(output.toString()) == expectedOutput.replace("><", ">\n<")
+        output.trimLines() == expectedOutput.replace("><", ">\n<")
 
         where: "the parameters are"
         entity                   || expectedOutput
@@ -107,6 +103,32 @@ class XmlWriterSpec extends Specification {
         new ObjectArrayEntity<Integer>(42, 43, 44)                        || '<ObjectArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></ObjectArrayEntity>'
         new ObjectArrayEntity<TestEnum>(TestEnum.FORTY_TWO, TestEnum.FORTY_THREE) || '<ObjectArrayEntity><arrayValues><TestEnum>FORTY_TWO</TestEnum><TestEnum>FORTY_THREE</TestEnum></arrayValues></ObjectArrayEntity>'
 
+    }
+
+    @Unroll
+    def "Test persisting maps: #entity.class.simpleName"() {
+        when: "the map is persisted"
+        writer.write(entity)
+
+        then: "the map type is persisted correctly"
+        output.trimLines() == expectedOutput.trimLines().replace("><", ">\n<")
+
+        where: "the parameters are"
+        entity                        || expectedOutput
+        new HashMap()                 || "<HashMap type='java.util.HashMap' />"
+        new MapEntity().setMyMap([:]) || "<MapEntity><myMap type='java.util.LinkedHashMap' /></MapEntity>"
+        new MapEntity()               || """<MapEntity>
+                                              <myMap type='com.google.common.collect.ImmutableMap'>
+                                                <entry>
+                                                  <Integer>42</Integer>
+                                                  <Boolean>true</Boolean>
+                                                </entry>
+                                                <entry>
+                                                  <ArrayList type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></ArrayList>
+                                                  <BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>
+                                                </entry>
+                                              </myMap>
+                                            </MapEntity>"""
     }
 
     private static String trimLines(String text) {

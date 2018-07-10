@@ -31,7 +31,7 @@ class XmlWriter implements XmlPersistenceV1 {
     }
 
     void write(Object entity) {
-        serializer.serialize(entity, builder, entity.class.simpleName, [:])
+        serializer.serialize(entity, builder, entity.getClass().simpleName, [:])
     }
 
     private void writePersistenceMetadata(builder) {

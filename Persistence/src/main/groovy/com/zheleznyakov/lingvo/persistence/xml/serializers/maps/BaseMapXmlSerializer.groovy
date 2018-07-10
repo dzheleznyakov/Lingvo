@@ -1,11 +1,12 @@
-package com.zheleznyakov.lingvo.persistence.xml.serializers.basic
+package com.zheleznyakov.lingvo.persistence.xml.serializers.maps
 
 import com.zheleznyakov.lingvo.persistence.xml.serializers.XmlSerializer
 import groovy.xml.MarkupBuilder
 
-trait MapXmlSerializer implements XmlSerializer<Map<?, ?>> {
+trait BaseMapXmlSerializer<E extends Map> implements XmlSerializer<E> {
     @Override
-    void serialize(Map<?, ?> map, MarkupBuilder builder, String tag, def attributes, def serializer) {
+    void serialize(Map map, MarkupBuilder builder, String tag, def attributes, def serializer) {
+        updateAttributes(map, attributes)
         builder."$tag"(attributes) {
             map.entrySet().each { en ->
                 entry() {
@@ -15,4 +16,6 @@ trait MapXmlSerializer implements XmlSerializer<Map<?, ?>> {
             }
         }
     }
+
+    abstract void updateAttributes(map, attributes)
 }

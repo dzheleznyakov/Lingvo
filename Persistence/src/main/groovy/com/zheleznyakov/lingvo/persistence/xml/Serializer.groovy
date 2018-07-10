@@ -7,7 +7,8 @@ import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.ArrayXmlSeriali
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.BooleanXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.CharXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.EnumXmlSerializer
-import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.MapXmlSerializer
+import com.zheleznyakov.lingvo.persistence.xml.serializers.maps.ImmutableMapXmlSerializer
+import com.zheleznyakov.lingvo.persistence.xml.serializers.maps.MapXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.NumberXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.ObjectXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.StringXmlSerializer
@@ -19,20 +20,21 @@ import groovy.xml.MarkupBuilder
 @PackageScope
 class Serializer {
     private static interface Array {}
-    private static final def DEFAULT_SERIALIZERS = ImmutableMap.builder()
-            .put(boolean,      BooleanXmlSerializer)
-            .put(Boolean,      BooleanXmlSerializer)
-            .put(char,         CharXmlSerializer)
-            .put(Character,    CharXmlSerializer)
-            .put(Number,       NumberXmlSerializer)
-            .put(Enum,         EnumXmlSerializer)
-            .put(String,       StringXmlSerializer)
-            .put(Array,        ArrayXmlSerializer)
-            .put(ImmutableSet, ImmutableSetXmlSerializer)
-            .put(Collection,   CollectionXmlSerializer)
-            .put(Map,          MapXmlSerializer)
-            .put(Object,       ObjectXmlSerializer)
-            .build()
+    private static final def DEFAULT_SERIALIZERS = ImmutableMap.builder().
+            put(boolean,      BooleanXmlSerializer).
+            put(Boolean,      BooleanXmlSerializer).
+            put(char,         CharXmlSerializer).
+            put(Character,    CharXmlSerializer).
+            put(Number,       NumberXmlSerializer).
+            put(Enum,         EnumXmlSerializer).
+            put(String,       StringXmlSerializer).
+            put(Array,        ArrayXmlSerializer).
+            put(ImmutableSet, ImmutableSetXmlSerializer).
+            put(Collection,   CollectionXmlSerializer).
+            put(ImmutableMap, ImmutableMapXmlSerializer).
+            put(Map,          MapXmlSerializer).
+            put(Object,       ObjectXmlSerializer).
+            build()
 
     @Delegate
     private Map serializer
