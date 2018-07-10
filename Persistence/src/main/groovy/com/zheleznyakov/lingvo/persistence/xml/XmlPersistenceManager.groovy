@@ -1,6 +1,7 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
+import com.zheleznyakov.lingvo.basic.words.Language
 import com.zheleznyakov.lingvo.persistence.xml.serializers.domain.LanguageXmlSerializer
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 
@@ -11,7 +12,9 @@ class XmlPersistenceManager {
         ensureDirectoryExists(directoryPath)
 
         FileWriter writer = ["$directoryPath/${dictionary.getName()}.xml"]
-        XmlWriter.with(writer, [LanguageXmlSerializer]).write(dictionary)
+        def additionalSerializers = new LinkedHashMap()
+        additionalSerializers.put(Language, LanguageXmlSerializer)
+        XmlWriter.with(writer, additionalSerializers).write(dictionary)
     }
 
     private static void ensureDirectoryExists(String directoryPath) throws IOException {

@@ -7,55 +7,55 @@ trait ArrayXmlSerializer implements XmlSerializer<Object[]> {
     @Override
     void serialize(Object[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 
-    void serialize(boolean[] values, MarkupBuilder builder, String tag, def attributes) {
+    void serialize(boolean[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 
-    void serialize(char[] values, MarkupBuilder builder, String tag, def attributes) {
+    void serialize(char[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 
-    void serialize(byte[] values, MarkupBuilder builder, String tag, def attributes) {
+    void serialize(byte[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 
-    void serialize(short[] values, MarkupBuilder builder, String tag, def attributes) {
+    void serialize(short[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 
-    void serialize(int[] values, MarkupBuilder builder, String tag, def attributes) {
+    void serialize(int[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 
-    void serialize(long[] values, MarkupBuilder builder, String tag, def attributes) {
+    void serialize(long[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 
-    void serialize(float[] values, MarkupBuilder builder, String tag, def attributes) {
+    void serialize(float[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 
-    void serialize(double[] values, MarkupBuilder builder, String tag, def attributes) {
+    void serialize(double[] values, MarkupBuilder builder, String tag, def attributes, def serializer) {
        builder."$tag"(attributes) {
-            values.each { value -> serialize(value, builder, value.getClass().simpleName, [:])}
+            values.each { value -> serializer.serialize(value, builder, value.getClass().simpleName, [:])}
         }
     }
 }

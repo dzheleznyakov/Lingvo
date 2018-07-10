@@ -41,16 +41,16 @@ class XmlWriterSpec extends Specification {
 
         where: "the parameters are"
         entity                        || expectedOutput
-//        new BooleanEntity()           || "<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>"
-//        new ShortEntity()             || "<ShortEntity><shortValue>42</shortValue></ShortEntity>"
-//        new CharEntity()              || "<CharEntity><charValue>*</charValue></CharEntity>"
-//        new ByteEntity()              || "<ByteEntity><byteValue>42</byteValue></ByteEntity>"
-//        new IntegerEntity()           || "<IntegerEntity><intValue>42</intValue></IntegerEntity>"
-//        new LongEntity()              || "<LongEntity><longValue>42</longValue></LongEntity>"
-//        new FloatEntity()             || "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"
-//        new DoubleEntity()            || "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"
-//        new EnumEntity()              || "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"
-//        new StringEntity()            || "<StringEntity><stringValue>testValue</stringValue></StringEntity>"
+        new BooleanEntity()           || "<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>"
+        new ShortEntity()             || "<ShortEntity><shortValue>42</shortValue></ShortEntity>"
+        new CharEntity()              || "<CharEntity><charValue>*</charValue></CharEntity>"
+        new ByteEntity()              || "<ByteEntity><byteValue>42</byteValue></ByteEntity>"
+        new IntegerEntity()           || "<IntegerEntity><intValue>42</intValue></IntegerEntity>"
+        new LongEntity()              || "<LongEntity><longValue>42</longValue></LongEntity>"
+        new FloatEntity()             || "<FloatEntity><floatValue>42.0</floatValue></FloatEntity>"
+        new DoubleEntity()            || "<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>"
+        new EnumEntity()              || "<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>"
+        new StringEntity()            || "<StringEntity><stringValue>testValue</stringValue></StringEntity>"
         new ListEntity()              || """<ListEntity>
                                               <listValues type='java.util.ArrayList'>
                                                 <elem type='java.lang.Integer'>42</elem>
@@ -65,24 +65,24 @@ class XmlWriterSpec extends Specification {
                                                 <elem type='java.lang.Double'>44.0</elem>
                                               </setValues>
                                             </SetEntity>"""
-//        new SetObjectEntity()         || """<SetObjectEntity>
-//                                              <objectValues type='com.google.common.collect.ImmutableSet'>
-//                                                <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$IntegerEntity'><intValue>42</intValue></elem>
-//                                                <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$DoubleEntity'><doubleValue>42.0</doubleValue></elem>
-//                                              </objectValues>
-//                                            </SetObjectEntity>"""
-//        new MapEntity()               || """<MapEntity>
-//                                              <myMap>
-//                                                <entry>
-//                                                  <Integer>42</Integer>
-//                                                  <BooRlean>true</Boolean>
-//                                                </entry>
-//                                                <entry>
-//                                                  <ArrayList type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></ArrayList>
-//                                                  <BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>
-//                                                </entry>
-//                                              </myMap>
-//                                            </MapEntity>"""
+        new SetObjectEntity()         || """<SetObjectEntity>
+                                              <objectValues type='com.google.common.collect.ImmutableSet'>
+                                                <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$IntegerEntity'><intValue>42</intValue></elem>
+                                                <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$DoubleEntity'><doubleValue>42.0</doubleValue></elem>
+                                              </objectValues>
+                                            </SetObjectEntity>"""
+        new MapEntity()               || """<MapEntity>
+                                              <myMap>
+                                                <entry>
+                                                  <Integer>42</Integer>
+                                                  <Boolean>true</Boolean>
+                                                </entry>
+                                                <entry>
+                                                  <ArrayList type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></ArrayList>
+                                                  <BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>
+                                                </entry>
+                                              </myMap>
+                                            </MapEntity>"""
     }
 
     @Unroll

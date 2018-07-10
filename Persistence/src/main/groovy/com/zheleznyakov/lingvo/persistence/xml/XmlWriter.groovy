@@ -10,23 +10,8 @@ import com.zheleznyakov.lingvo.persistence.xml.serializers.collections.Immutable
 import groovy.transform.PackageScope
 import groovy.xml.MarkupBuilder
 
-import java.lang.reflect.Array
-
 @PackageScope
 class XmlWriter {
-//    private static final def DEFAULT_SERIALIZERS = [
-//            BooleanXmlSerializer,
-//            CharXmlSerializer,
-//            NumberXmlSerializer,
-//            EnumXmlSerializer,
-//            StringXmlSerializer,
-//            ObjectXmlSerializer,
-//            ArrayXmlSerializer,
-//            ImmutableSetXmlSerializer,
-//            CollectionXmlSerializer,
-//            MapXmlSerializer
-//    ]
-
     private static final def DEFAULT_SERIALIZERS = ImmutableMap.builder()
             .put(boolean,      BooleanXmlSerializer)
             .put(Boolean,      BooleanXmlSerializer)
@@ -35,30 +20,26 @@ class XmlWriter {
             .put(Number,       NumberXmlSerializer)
             .put(Enum,         EnumXmlSerializer)
             .put(String,       StringXmlSerializer)
-            .put(Object,       ObjectXmlSerializer)
             .put(Array,        ArrayXmlSerializer)
-            .put(Collection,   CollectionXmlSerializer)
             .put(ImmutableSet, ImmutableSetXmlSerializer)
+            .put(Collection,   CollectionXmlSerializer)
             .put(Map,          MapXmlSerializer)
+            .put(Object,       ObjectXmlSerializer)
             .build()
-
-
 
     private final MarkupBuilder builder
     private final Serializer serializer
 
-    private XmlWriter(Writer writer, Collection<XmlSerializer> additionalSerializers) {
+    private XmlWriter(Writer writer, Map<Class, XmlSerializer> additionalSerializers) {
         builder = new MarkupBuilder(writer)
-//        def traits = (DEFAULT_SERIALIZERS + additionalSerializers.toList()).toArray([] as Class<?>[])
-//        serializer = new Object().withTraits traits
         serializer = new Serializer(additionalSerializers)
     }
 
     static XmlWriter with(Writer writer) {
-        return [writer, []]
+        return [writer, [:]]
     }
 
-    static XmlWriter with(Writer writer, Collection<XmlSerializer<?>> additionalSerializers) {
+    static XmlWriter with(Writer writer, Map<Class, XmlSerializer> additionalSerializers) {
         return [writer, additionalSerializers]
     }
 
@@ -80,18 +61,26 @@ class XmlWriter {
     private static trait SerializerMatcher {
         def <E> XmlSerializer<? extends E> getBestMatch(entity) {
             Class<?> clazz = entity.getClass()
+            def bestMatch
             if (containsKey(clazz))
                 return get(clazz)
-            else if (Number.class.isAssignableFrom(clazz))
+            else if (Number.class.isAssignableFrom(clazz) || clazz.isPrimitive())
                 return get(Number)
-            else if (clazz.isPrimitive())
-                return get(Number)
-            else if (Enum.isAssignableFrom(clazz))
-                return get(Enum)
-            else if (Collection.class.isAssignableFrom(clazz))
-                return get(Collection)
+            else if (clazz.isArray())
+                return get(Array)
+            else if ((bestMatch = isAssignableFrom(entity)))
+                return bestMatch
             else
                 return get(Object)
+        }
+
+        private def isAssignableFrom(entity) {
+            Class entityClass = entity.getClass()
+            for (Class clazz : keySet()) {
+                if (clazz.isAssignableFrom(entityClass))
+                    return get(clazz)
+            }
+            return false
         }
     }
 
@@ -100,7 +89,7 @@ class XmlWriter {
 
         Serializer(def additionalSerializers) {
             def serBuilder = ImmutableMap.builder()
-            (DEFAULT_SERIALIZERS + additionalSerializers).each {entry ->
+            (additionalSerializers + DEFAULT_SERIALIZERS).each {entry ->
                 def ser = new Object().withTraits entry.value
                 serBuilder.put(entry.key, ser)
             }
@@ -112,4 +101,6 @@ class XmlWriter {
             ser.serialize(entity, builder, tag, attributes, this)
         }
     }
+
+    private static interface Array {}
 }

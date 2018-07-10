@@ -66,7 +66,7 @@ class XmlPersistenceManagerSpec extends Specification {
         root.persistenceManager.@type == "xml"
     }
 
-    def "When an empty dictionary is persisted, it has not records"() {
+    def "When an empty dictionary is persisted, it has no records"() {
         expect: "the dictionary to be empty"
         dictionary.records.isEmpty()
 

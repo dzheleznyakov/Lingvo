@@ -9,8 +9,8 @@ trait MapXmlSerializer implements XmlSerializer<Map<?, ?>> {
         builder."$tag"(attributes) {
             map.entrySet().each { en ->
                 entry() {
-                    serialize(en.key, builder, en.key.getClass().simpleName, [:])
-                    serialize(en.value, builder, en.value.getClass().simpleName, [:])
+                    serializer.serialize(en.key, builder, en.key.getClass().simpleName, [:])
+                    serializer.serialize(en.value, builder, en.value.getClass().simpleName, [:])
                 }
             }
         }
