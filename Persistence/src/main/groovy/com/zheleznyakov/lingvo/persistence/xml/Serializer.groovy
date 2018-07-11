@@ -52,28 +52,23 @@ class Serializer {
         ser.serialize(entity, builder, tag, attributes, this)
     }
 
-    def <E> XmlSerializer<? extends E> getBestMatch(entity) {
+    private  <E> XmlSerializer<? extends E> getBestMatch(entity) {
         Class<?> clazz = entity.getClass()
-        def bestMatch
         if (containsKey(clazz))
             return get(clazz)
         else if (Number.class.isAssignableFrom(clazz) || clazz.isPrimitive())
             return get(Number)
         else if (clazz.isArray())
             return get(Array)
-        else if ((bestMatch = isAssignableFrom(entity)))
-            return bestMatch
         else
-            return get(Object)
+            return getTheFirstAssignableFrom(entity)
     }
 
-    private def isAssignableFrom(entity) {
+    private def getTheFirstAssignableFrom(entity) {
         Class entityClass = entity.getClass()
-        for (Class clazz : keySet()) {
+        for (Class clazz : keySet())
             if (clazz.isAssignableFrom(entityClass))
                 return get(clazz)
-        }
-        return false
     }
 
     private Set keySet() {

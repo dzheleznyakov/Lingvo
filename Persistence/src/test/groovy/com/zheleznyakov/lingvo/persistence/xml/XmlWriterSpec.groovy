@@ -120,12 +120,12 @@ class XmlWriterSpec extends Specification {
         new MapEntity()               || """<MapEntity>
                                               <myMap type='com.google.common.collect.ImmutableMap'>
                                                 <entry>
-                                                  <Integer>42</Integer>
-                                                  <Boolean>true</Boolean>
+                                                  <key type='java.lang.Integer'>42</key>
+                                                  <value type='java.lang.Boolean'>true</value>
                                                 </entry>
                                                 <entry>
-                                                  <ArrayList type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></ArrayList>
-                                                  <BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>
+                                                  <key type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></key>
+                                                  <value type='${BooleanEntity.class.typeName}'><booleanValue>true</booleanValue></value>
                                                 </entry>
                                               </myMap>
                                             </MapEntity>"""

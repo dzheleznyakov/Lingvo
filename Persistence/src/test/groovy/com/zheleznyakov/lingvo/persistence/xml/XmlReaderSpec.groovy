@@ -127,18 +127,18 @@ class XmlReaderSpec extends Specification {
              </objectValues>
            </SetObjectEntity>"""                                                       | SetObjectEntity || { it.getObjectValues() } | [new IntegerEntity(), new DoubleEntity()].toSet()
 
-//        """<MapEntity>
-//             <myMap>
-//               <entry>
-//                 <Integer>42</Integer>
-//                 <Boolean>true</Boolean>
-//               </entry>
-//               <entry>
-//                 <ArrayList type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></ArrayList>
-//                 <BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>
-//               </entry>
-//             </myMap>
-//           </MapEntity>"""                                                             | MapEntity       || { it.getMyMap() }        | [42: true, 42D: new BooleanEntity()]
+        """<MapEntity>
+             <myMap type='java.util.HashMap'>
+               <entry>
+                 <key type='java.lang.Integer'>42</key>
+                 <value type='java.lang.Boolean'>true</value>
+               </entry>
+               <entry>
+                 <key type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></key>
+                 <value type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$BooleanEntity'><booleanValue>true</booleanValue></value>
+               </entry>
+             </myMap>
+           </MapEntity>"""                                                             | MapEntity       || { it.getMyMap() }        | [42: true, [42D]: new BooleanEntity()]
     }
 
     @Unroll

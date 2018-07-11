@@ -6,7 +6,6 @@ import groovy.util.slurpersupport.GPathResult
 trait BaseCollectionXmlDeserializer<E extends Collection> implements BaseXmlDeserializer<E> {
     @Override
     E deserialize(GPathResult node, Class<E> clazz, def deserializer) {
-
         if (!exists(node))
             return null
 

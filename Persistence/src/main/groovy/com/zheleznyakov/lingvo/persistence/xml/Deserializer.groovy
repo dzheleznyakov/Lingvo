@@ -15,6 +15,7 @@ import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ShortXmlDeser
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.StringXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.collections.CollectionXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.collections.ImmutableSetXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.maps.MapXmlDeserializer
 import groovy.transform.PackageScope
 import groovy.util.slurpersupport.GPathResult
 
@@ -38,9 +39,10 @@ class Deserializer {
             put(double,       DoubleXmlDeserializer).
             put(Double,       DoubleXmlDeserializer).
             put(String,       StringXmlDeserializer).
-            put(Object,       ObjectXmlDeserializer).
-            put(Collection,   CollectionXmlDeserializer).
             put(ImmutableSet, ImmutableSetXmlDeserializer).
+            put(Collection,   CollectionXmlDeserializer).
+            put(Map,          MapXmlDeserializer).
+            put(Object,       ObjectXmlDeserializer).
             build()
 
     private Map deserializersByClass
@@ -59,13 +61,19 @@ class Deserializer {
         return des.deserialize(node, clazz, this)
     }
 
-    def <E> XmlDeserializer<? extends E> getBestMatch(Class<E> clazz) {
+    private <E> XmlDeserializer<? extends E> getBestMatch(Class<E> clazz) {
         if (containsKey(clazz))
             return get(clazz)
         else if (Collection.class.isAssignableFrom(clazz))
             return get(Collection)
         else
-            return get(Object)
+            return getTheBestAssignableFrom(clazz)
+    }
+
+    private def getTheBestAssignableFrom(entityClass) {
+        for (Class clazz : deserializersByClass.keySet())
+            if (clazz.isAssignableFrom(entityClass))
+                return get(clazz)
     }
 
     private boolean containsKey(clazz) {

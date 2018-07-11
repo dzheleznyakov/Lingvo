@@ -10,8 +10,8 @@ trait BaseMapXmlSerializer<E extends Map> implements XmlSerializer<E> {
         builder."$tag"(attributes) {
             map.entrySet().each { en ->
                 entry() {
-                    serializer.serialize(en.key, builder, en.key.getClass().simpleName, [:])
-                    serializer.serialize(en.value, builder, en.value.getClass().simpleName, [:])
+                    serializer.serialize(en.key, builder, 'key', ['type': en.key.getClass().typeName])
+                    serializer.serialize(en.value, builder, 'value', ['type': en.value.getClass().typeName])
                 }
             }
         }

@@ -137,7 +137,7 @@ class XmlPersistenceManagerSpec extends Specification {
         def records = dictionary.records.entry
         assert records.size() == expectedNumberOfRecords
         records.each { entry ->
-            def xmlRecord = entry.Record
+            def xmlRecord = entry.key
             def mainForm = xmlRecord.word.mainForm.toString()
             def expectedRecord = recordsByMainForm[mainForm]
             assert xmlRecord.description == expectedRecord.description
