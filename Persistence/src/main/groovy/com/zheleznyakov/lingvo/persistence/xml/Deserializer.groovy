@@ -13,9 +13,10 @@ import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.LongXmlDeseri
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ObjectXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ShortXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.StringXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.collections.CollectionXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.collections.GeneralCollectionXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.collections.ImmutableSetXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.maps.MapXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.maps.ImmutableMapXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.maps.GeneralMapXmlDeserializer
 import groovy.transform.PackageScope
 import groovy.util.slurpersupport.GPathResult
 
@@ -40,8 +41,9 @@ class Deserializer {
             put(Double,       DoubleXmlDeserializer).
             put(String,       StringXmlDeserializer).
             put(ImmutableSet, ImmutableSetXmlDeserializer).
-            put(Collection,   CollectionXmlDeserializer).
-            put(Map,          MapXmlDeserializer).
+            put(Collection,   GeneralCollectionXmlDeserializer).
+            put(ImmutableMap, ImmutableMapXmlDeserializer).
+            put(Map,          GeneralMapXmlDeserializer).
             put(Object,       ObjectXmlDeserializer).
             build()
 

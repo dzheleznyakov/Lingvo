@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.persistence.xml.deserializers.collections
 
-trait CollectionXmlDeserializer implements BaseCollectionXmlDeserializer<Collection> {
+trait GeneralCollectionXmlDeserializer implements BaseCollectionXmlDeserializer<Collection> {
     @Override
     def builder(clazz) {
         return clazz.newInstance()

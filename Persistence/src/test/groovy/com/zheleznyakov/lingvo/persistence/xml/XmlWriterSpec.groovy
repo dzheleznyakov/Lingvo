@@ -1,35 +1,16 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.TestEnum
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.BooleanEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ByteEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.CharEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.DoubleEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.EnumEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.FloatEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ByteArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ShortArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.IntArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.LongArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.BooleanArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.CharArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.FloatArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.DoubleArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ObjectArrayEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.IntegerEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ListEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.LongEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.MapEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.SetEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.SetObjectEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.ShortEntity
-import com.zheleznyakov.lingvo.persistence.xml.util.TestClasses.StringEntity
+import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableMap
+import com.google.common.collect.ImmutableSet
+import com.zheleznyakov.lingvo.persistence.xml.util.*
 import spock.lang.Specification
 import spock.lang.Unroll
 
 class XmlWriterSpec extends Specification {
     private StringWriter output = []
     private XmlWriter writer = XmlWriter.with(output)
+    private static def testXmlGenerator = new TestXmlGenerator()
 
     def setupSpec() {
         String.metaClass.trimLines { -> trimLines(delegate) }
@@ -48,37 +29,21 @@ class XmlWriterSpec extends Specification {
         output.trimLines() == expectedOutput.trimLines().replace("><", ">\n<")
 
         where: "the parameters are"
-        entity                        || expectedOutput
-        new BooleanEntity()           || '<BooleanEntity><booleanValue>true</booleanValue></BooleanEntity>'
-        new ShortEntity()             || '<ShortEntity><shortValue>42</shortValue></ShortEntity>'
-        new CharEntity()              || '<CharEntity><charValue>*</charValue></CharEntity>'
-        new ByteEntity()              || '<ByteEntity><byteValue>42</byteValue></ByteEntity>'
-        new IntegerEntity()           || '<IntegerEntity><intValue>42</intValue></IntegerEntity>'
-        new LongEntity()              || '<LongEntity><longValue>42</longValue></LongEntity>'
-        new FloatEntity()             || '<FloatEntity><floatValue>42.0</floatValue></FloatEntity>'
-        new DoubleEntity()            || '<DoubleEntity><doubleValue>42.0</doubleValue></DoubleEntity>'
-        new EnumEntity()              || '<EnumEntity><enumValue>FORTY_TWO</enumValue></EnumEntity>'
-        new StringEntity()            || '<StringEntity><stringValue>testValue</stringValue></StringEntity>'
-        new ListEntity()              || """<ListEntity>
-                                              <listValues type='java.util.ArrayList'>
-                                                <elem type='java.lang.Integer'>42</elem>
-                                                <elem type='java.lang.Integer'>43</elem>
-                                                <elem type='java.lang.Integer'>44</elem>
-                                              </listValues>
-                                            </ListEntity>"""
-        new SetEntity()               || """<SetEntity>
-                                              <setValues type='java.util.HashSet'>
-                                                <elem type='java.lang.Double'>42.0</elem>
-                                                <elem type='java.lang.Double'>43.0</elem>
-                                                <elem type='java.lang.Double'>44.0</elem>
-                                              </setValues>
-                                            </SetEntity>"""
-        new SetObjectEntity()         || """<SetObjectEntity>
-                                              <objectValues type='com.google.common.collect.ImmutableSet'>
-                                                <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$IntegerEntity'><intValue>42</intValue></elem>
-                                                <elem type='com.zheleznyakov.lingvo.persistence.xml.util.TestClasses\$DoubleEntity'><doubleValue>42.0</doubleValue></elem>
-                                              </objectValues>
-                                            </SetObjectEntity>"""
+        entity                || expectedOutput
+        new BooleanEntity()   || testXmlGenerator.booleanEntity('true')
+        new CharEntity()      || testXmlGenerator.charEntity('*')
+        new ByteEntity()      || testXmlGenerator.byteEntity('42')
+        new ShortEntity()     || testXmlGenerator.shortEntity('42')
+        new IntegerEntity()   || testXmlGenerator.integerEntity('42')
+        new LongEntity()      || testXmlGenerator.longEntity('42')
+        new FloatEntity()     || testXmlGenerator.floatEntity('42.0')
+        new DoubleEntity()    || testXmlGenerator.doubleEntity('42.0')
+        new EnumEntity()      || testXmlGenerator.enumEntity('FORTY_TWO')
+        new StringEntity()    || testXmlGenerator.stringEntity('testValue')
+        new ListEntity()      || testXmlGenerator.listEntity(ArrayList, 42, 43, 44)
+        new SetEntity()       || testXmlGenerator.setEntity(HashSet, 42D, 43D, 44D)
+        new SetObjectEntity() || testXmlGenerator.setObjectEntity(ImmutableSet, new IntegerEntity(), new DoubleEntity())
+        new MapEntity()       || testXmlGenerator.mapEntity(ImmutableMap, 42, true, [42d], new BooleanEntity())
     }
 
     @Unroll
@@ -114,21 +79,30 @@ class XmlWriterSpec extends Specification {
         output.trimLines() == expectedOutput.trimLines().replace("><", ">\n<")
 
         where: "the parameters are"
-        entity                        || expectedOutput
-        new HashMap()                 || "<HashMap type='java.util.HashMap' />"
-        new MapEntity().setMyMap([:]) || "<MapEntity><myMap type='java.util.LinkedHashMap' /></MapEntity>"
-        new MapEntity()               || """<MapEntity>
-                                              <myMap type='com.google.common.collect.ImmutableMap'>
-                                                <entry>
-                                                  <key type='java.lang.Integer'>42</key>
-                                                  <value type='java.lang.Boolean'>true</value>
-                                                </entry>
-                                                <entry>
-                                                  <key type='java.util.ArrayList'><elem type='java.lang.Double'>42.0</elem></key>
-                                                  <value type='${BooleanEntity.class.typeName}'><booleanValue>true</booleanValue></value>
-                                                </entry>
-                                              </myMap>
-                                            </MapEntity>"""
+        entity                          || expectedOutput
+        new HashMap()                   || "<HashMap type='java.util.HashMap' />"
+        new MapEntity().setMyMap([a:1]) || testXmlGenerator.mapEntity(LinkedHashMap, 'a', 1)
+    }
+
+    @Unroll
+    def "Test serialization of container classes: #container.class.simpleName"() {
+        when: "a (empty) container is serialised"
+        writer.write(container)
+
+        then: "its type is written correctly"
+        output.trimLines() == expectedXml.trimLines()
+
+        where: "the parameters are"
+        container           || expectedXml
+        new HashSet()       || testXmlGenerator.empty(HashSet)
+        new LinkedHashSet() || testXmlGenerator.empty(LinkedHashSet)
+        ImmutableSet.of()   || testXmlGenerator.emptyRegularImmutableSet(ImmutableSet)
+        new ArrayList()     || testXmlGenerator.empty(ArrayList)
+        new LinkedList()    || testXmlGenerator.empty(LinkedList)
+        ImmutableList.of()  || testXmlGenerator.emptyRegularImmutableList(ImmutableList)
+        new HashMap()       || testXmlGenerator.empty(HashMap)
+        new LinkedHashMap() || testXmlGenerator.empty(LinkedHashMap)
+        ImmutableMap.of()   || testXmlGenerator.emptyRegularImmutableMap(ImmutableMap)
     }
 
     private static String trimLines(String text) {

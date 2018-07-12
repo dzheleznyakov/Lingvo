@@ -1,6 +1,6 @@
 package com.zheleznyakov.lingvo.persistence.xml.deserializers.maps
 
-trait MapXmlDeserializer extends BaseMapXmlDeserializer<Map> {
+trait GeneralMapXmlDeserializer extends BaseMapXmlDeserializer<Map> {
     @Override
     def builder(Class clazz) {
         return clazz.newInstance()
