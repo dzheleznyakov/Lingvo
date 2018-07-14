@@ -136,7 +136,7 @@ class BooleanArrayEntity {
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
 }
 
-class CharArrayEntity {
+class CharacterArrayEntity {
     @Persistable private char[] arrayValues = ['a', 'b', 'c'].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
 }
@@ -151,7 +151,7 @@ class ShortArrayEntity {
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
 }
 
-class IntArrayEntity {
+class IntegerArrayEntity {
     @Persistable private int[] arrayValues = [42, 43, 44].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
 }

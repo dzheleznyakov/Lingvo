@@ -55,18 +55,18 @@ class XmlWriterSpec extends Specification {
         output.trimLines() == expectedOutput.replace("><", ">\n<")
 
         where: "the parameters are"
-        entity                   || expectedOutput
-        new BooleanArrayEntity() || '<BooleanArrayEntity><arrayValues><Boolean>true</Boolean><Boolean>true</Boolean><Boolean>false</Boolean></arrayValues></BooleanArrayEntity>'
-        new CharArrayEntity()    || '<CharArrayEntity><arrayValues><Character>a</Character><Character>b</Character><Character>c</Character></arrayValues></CharArrayEntity>'
-        new ByteArrayEntity()    || '<ByteArrayEntity><arrayValues><Byte>42</Byte><Byte>43</Byte><Byte>44</Byte></arrayValues></ByteArrayEntity>'
-        new ShortArrayEntity()   || '<ShortArrayEntity><arrayValues><Short>42</Short><Short>43</Short><Short>44</Short></arrayValues></ShortArrayEntity>'
-        new IntArrayEntity()     || '<IntArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></IntArrayEntity>'
-        new LongArrayEntity()    || '<LongArrayEntity><arrayValues><Long>42</Long><Long>43</Long><Long>44</Long></arrayValues></LongArrayEntity>'
-        new FloatArrayEntity()   || '<FloatArrayEntity><arrayValues><Float>42.0</Float><Float>43.0</Float><Float>44.0</Float></arrayValues></FloatArrayEntity>'
-        new DoubleArrayEntity()  || '<DoubleArrayEntity><arrayValues><Double>42.0</Double><Double>43.0</Double><Double>44.0</Double></arrayValues></DoubleArrayEntity>'
+        entity                     || expectedOutput
+        new BooleanArrayEntity()   || testXmlGenerator.booleanArrayEntity('true', 'true','false')
+        new CharacterArrayEntity() || testXmlGenerator.characterArrayEntity('a', 'b', 'c')
+        new ByteArrayEntity()      || testXmlGenerator.byteArrayEntity('42', '43', '44')
+        new ShortArrayEntity()     || testXmlGenerator.shortArrayEntity('42', '43', '44')
+        new IntegerArrayEntity()   || testXmlGenerator.integerArrayEntity('42', '43', '44')
+        new LongArrayEntity()      || testXmlGenerator.longArrayEntity('42', '43', '44')
+        new FloatArrayEntity()     || testXmlGenerator.floatArrayEntity('42.0', '43.0', '44.0')
+        new DoubleArrayEntity()    || testXmlGenerator.doubleArrayEntity('42.0', '43.0', '44.0')
 
-        new ObjectArrayEntity<Integer>(42, 43, 44)                        || '<ObjectArrayEntity><arrayValues><Integer>42</Integer><Integer>43</Integer><Integer>44</Integer></arrayValues></ObjectArrayEntity>'
-        new ObjectArrayEntity<TestEnum>(TestEnum.FORTY_TWO, TestEnum.FORTY_THREE) || '<ObjectArrayEntity><arrayValues><TestEnum>FORTY_TWO</TestEnum><TestEnum>FORTY_THREE</TestEnum></arrayValues></ObjectArrayEntity>'
+        new ObjectArrayEntity<Integer>(42, 43, 44)                        || testXmlGenerator.objectArrayEntity('Integer', '42', '43', '44')
+        new ObjectArrayEntity<TestEnum>(TestEnum.FORTY_TWO, TestEnum.FORTY_THREE) || testXmlGenerator.objectArrayEntity('TestEnum', 'FORTY_TWO', 'FORTY_THREE')
 
     }
 

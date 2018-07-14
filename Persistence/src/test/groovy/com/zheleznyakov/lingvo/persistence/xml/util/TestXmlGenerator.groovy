@@ -5,6 +5,8 @@ import java.util.stream.Collectors
 class TestXmlGenerator {
 
     def methodMissing(String name, def args) {
+        if (callForArrayEntity(name))
+            return arrayEntityHandler(name, args)
         if (callForSimpleEntity(name, args))
             return simpleEntityHandler(name, args)
 
@@ -17,10 +19,26 @@ class TestXmlGenerator {
         null
     }
 
+    private static boolean callForArrayEntity(String name) {
+        name.endsWith('ArrayEntity')
+    }
+
+    private static String arrayEntityHandler(String name, Object[] args) {
+        String entityType = capitalise(getEntityType(name, 'ArrayEntity'))
+        arrayEntity "${entityType}ArrayEntity", entityType, args
+    }
+
     private static boolean callForSimpleEntity(String name, def args) {
         name.endsWith('Entity') &&
+                !name.endsWith('ArrayEntity')
                 args.length <= 1 &&
                 (args.length == 0 || args[0] == null ||args[0].class != Class)
+    }
+
+    private static String simpleEntityHandler(String name, Object[] args) {
+        String entityType = getEntityType(name, 'Entity')
+        def value = args.length == 0 ? null : args[0]
+        simpleEntity "${capitalise entityType}Entity", "${entityType}Value", value
     }
 
     private static boolean callForCollectionEntity(String name, def args) {
@@ -29,24 +47,18 @@ class TestXmlGenerator {
                 (args[0] == null || args[0] instanceof Class)
     }
 
-    private static boolean callForEmptyContainer(String name, def args) {
-        name.startsWith('empty') &&
-                args.length == 1 &&
-                args[0] instanceof Class
-    }
-
-    private static String simpleEntityHandler(String name, Object[] args) {
-        String entityType = getEntityType(name)
-        def value = args.length == 0 ? null : args[0]
-        simpleEntity "${capitalise entityType}Entity", "${entityType}Value", value
-    }
-
     private static String collectionEntityHandler(String name, Object[] args) {
-        String entityType = getEntityType(name)
+        String entityType = getEntityType(name, 'Entity')
         int numberOfElements = args.length - 1
         Object[] elements = new Object[numberOfElements]
         System.arraycopy(args, 1, elements, 0, numberOfElements)
         collectionEntity "${capitalise entityType}Entity", "${entityType}Values", args[0], elements
+    }
+
+    private static boolean callForEmptyContainer(String name, def args) {
+        name.startsWith('empty') &&
+                args.length == 1 &&
+                args[0] instanceof Class
     }
 
     private static String emptyContainerHandler(String name, Object[] args) {
@@ -57,8 +69,8 @@ class TestXmlGenerator {
         emptyContainer containerType, tag
     }
 
-    private static String getEntityType(String name) {
-        int entityTypeEndIndex = name.indexOf('Entity') - 1
+    private static String getEntityType(String name, String suffix) {
+        int entityTypeEndIndex = name.indexOf(suffix) - 1
         name[0..entityTypeEndIndex]
     }
 
@@ -72,6 +84,10 @@ class TestXmlGenerator {
             mapNode += "<entry>${getEntryNode('key', entries[i])}${getEntryNode('value', entries[i + 1])}</entry>"
         mapNode += '</myMap>'
         "<MapEntity>$mapNode</MapEntity>"
+    }
+
+    String objectArrayEntity(String elementType, String... elements) {
+        arrayEntity 'ObjectArrayEntity', elementType, elements
     }
 
     private static String simpleEntity(String entityTag, String fieldTag, String value) {
@@ -93,6 +109,13 @@ class TestXmlGenerator {
 
     private static String emptyContainer(String containerType, String tag) {
         "<$tag type='$containerType' />"
+    }
+
+    private static String arrayEntity(String entityTag, String elementTag, Object... elements) {
+        def xml = "<$entityTag><arrayValues>"
+        for (def element : elements)
+            xml += "<$elementTag>$element</$elementTag>"
+        "$xml</arrayValues></$entityTag>"
     }
 
     private static String getEntryNode(String entryTag, IntegerEntity element) {
