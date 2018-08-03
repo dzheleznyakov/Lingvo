@@ -1,4 +1,4 @@
-package com.zheleznyakov.lingvo.persistence.xml.serializers.basic
+package com.zheleznyakov.lingvo.persistence.xml.serializers.collections
 
 import com.zheleznyakov.lingvo.persistence.xml.serializers.XmlSerializer
 import groovy.xml.MarkupBuilder

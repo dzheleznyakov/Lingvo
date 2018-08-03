@@ -7,9 +7,9 @@ import groovy.util.slurpersupport.GPathResult
 
 import java.lang.reflect.Field
 
-trait ObjectXmlDeserializer implements BaseXmlDeserializer<Object> {
+class ObjectXmlDeserializer<E> implements BaseXmlDeserializer<E> {
     @Override
-    Object deserialize(GPathResult node, Class<Object> clazz, def deserializer) {
+    E deserialize(GPathResult node, Class<E> clazz, def deserializer) {
         def entity = clazz.newInstance()
         def fields = PersistenceHelper.getPersistableFields(clazz)
         fields.each { field ->
@@ -32,5 +32,9 @@ trait ObjectXmlDeserializer implements BaseXmlDeserializer<Object> {
         field.accessible = true
         field.set(object, value)
         field.accessible = accessible
+    }
+
+    static <E> ObjectXmlDeserializer<E> get(Class<E> clazz) {
+        return new ObjectXmlDeserializer<>()
     }
 }

@@ -3,20 +3,11 @@ package com.zheleznyakov.lingvo.persistence.xml
 import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.XmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.BooleanXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ByteXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.CharXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.DoubleXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.FloatXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.IntXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.LongXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ObjectXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ShortXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.StringXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.*
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.collections.GeneralCollectionXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.collections.ImmutableSetXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.maps.ImmutableMapXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.maps.GeneralMapXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.maps.ImmutableMapXmlDeserializer
 import groovy.transform.PackageScope
 import groovy.util.slurpersupport.GPathResult
 
@@ -44,7 +35,6 @@ class Deserializer {
             put(Collection,   GeneralCollectionXmlDeserializer).
             put(ImmutableMap, ImmutableMapXmlDeserializer).
             put(Map,          GeneralMapXmlDeserializer).
-            put(Object,       ObjectXmlDeserializer).
             build()
 
     private Map deserializersByClass
@@ -63,19 +53,25 @@ class Deserializer {
         return des.deserialize(node, clazz, this)
     }
 
-    private <E> XmlDeserializer<? extends E> getBestMatch(Class<E> clazz) {
+    private <E> XmlDeserializer<E> getBestMatch(Class<E> clazz) {
+        def bestAssignableMatch
         if (containsKey(clazz))
             return get(clazz)
         else if (Collection.class.isAssignableFrom(clazz))
             return get(Collection)
+        else if (clazz.isArray())
+            return ArrayXmlDeserializer.get(clazz.componentType)
+        else if ((bestAssignableMatch = getTheBestAssignableFrom(clazz)))
+            return bestAssignableMatch
         else
-            return getTheBestAssignableFrom(clazz)
+            return ObjectXmlDeserializer.get(clazz)
     }
 
     private def getTheBestAssignableFrom(entityClass) {
         for (Class clazz : deserializersByClass.keySet())
             if (clazz.isAssignableFrom(entityClass))
                 return get(clazz)
+        return false
     }
 
     private boolean containsKey(clazz) {

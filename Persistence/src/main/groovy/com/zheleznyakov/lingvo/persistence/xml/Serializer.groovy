@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.persistence.xml.serializers.XmlSerializer
-import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.ArrayXmlSerializer
+import com.zheleznyakov.lingvo.persistence.xml.serializers.collections.ArrayXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.BooleanXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.CharXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.basic.EnumXmlSerializer

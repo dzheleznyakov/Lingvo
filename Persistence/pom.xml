@@ -25,11 +25,6 @@
             <artifactId>groovy-all</artifactId>
             <version>2.6.0-alpha-2</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.apache.commons</groupId>-->
-            <!--<artifactId>commons-lang3</artifactId>-->
-            <!--<version>3.7</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>com.zheleznyakov.lingvo</groupId>
@@ -43,6 +38,7 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

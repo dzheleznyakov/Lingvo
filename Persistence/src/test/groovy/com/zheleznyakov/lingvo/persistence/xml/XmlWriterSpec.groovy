@@ -65,23 +65,10 @@ class XmlWriterSpec extends Specification {
         new FloatArrayEntity()     || testXmlGenerator.floatArrayEntity('42.0', '43.0', '44.0')
         new DoubleArrayEntity()    || testXmlGenerator.doubleArrayEntity('42.0', '43.0', '44.0')
 
-        new ObjectArrayEntity<Integer>(42, 43, 44)                        || testXmlGenerator.objectArrayEntity('Integer', '42', '43', '44')
-        new ObjectArrayEntity<TestEnum>(TestEnum.FORTY_TWO, TestEnum.FORTY_THREE) || testXmlGenerator.objectArrayEntity('TestEnum', 'FORTY_TWO', 'FORTY_THREE')
+        new ObjectArrayEntity(Integer, 42, 43, 44)                        || testXmlGenerator.objectArrayEntity('Integer', '42', '43', '44')
+        new ObjectArrayEntity(Integer)                                            || testXmlGenerator.objectArrayEntity('Integer')
+        new ObjectArrayEntity(TestEnum, TestEnum.FORTY_TWO, TestEnum.FORTY_THREE) || testXmlGenerator.objectArrayEntity('TestEnum', 'FORTY_TWO', 'FORTY_THREE')
 
-    }
-
-    @Unroll
-    def "Test persisting maps: #entity.class.simpleName"() {
-        when: "the map is persisted"
-        writer.write(entity)
-
-        then: "the map type is persisted correctly"
-        output.trimLines() == expectedOutput.trimLines().replace("><", ">\n<")
-
-        where: "the parameters are"
-        entity                          || expectedOutput
-        new HashMap()                   || "<HashMap type='java.util.HashMap' />"
-        new MapEntity().setMyMap([a:1]) || testXmlGenerator.mapEntity(LinkedHashMap, 'a', 1)
     }
 
     @Unroll

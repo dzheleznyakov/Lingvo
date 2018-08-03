@@ -112,10 +112,13 @@ class TestXmlGenerator {
     }
 
     private static String arrayEntity(String entityTag, String elementTag, Object... elements) {
-        def xml = "<$entityTag><arrayValues>"
-        for (def element : elements)
-            xml += "<$elementTag>$element</$elementTag>"
-        "$xml</arrayValues></$entityTag>"
+        def internalNode = null
+        for (def element : elements) {
+            internalNode = internalNode ?: '<arrayValues>'
+            internalNode += "<$elementTag>$element</$elementTag>"
+        }
+        internalNode = internalNode ? "$internalNode</arrayValues>" : '<arrayValues />'
+        "<$entityTag>$internalNode</$entityTag>"
     }
 
     private static String getEntryNode(String entryTag, IntegerEntity element) {

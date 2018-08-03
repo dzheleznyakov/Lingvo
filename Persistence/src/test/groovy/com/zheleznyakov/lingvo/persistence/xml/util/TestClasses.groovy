@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.basic.persistence.Persistable
 
+import java.lang.reflect.Array
+
 class BooleanEntity {
     @Persistable private boolean booleanValue = true
     private boolean booleanValue2 = false
@@ -134,49 +136,98 @@ class StringEntity {
 class BooleanArrayEntity {
     @Persistable private boolean[] arrayValues = [true, true, false].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
+
+    boolean[] getArrayValues() {
+        return arrayValues
+    }
 }
 
-class CharacterArrayEntity {
-    @Persistable private char[] arrayValues = ['a', 'b', 'c'].toArray()
+class CharacterArrayEntity  {
+    @Persistable private char[] arrayValues = ['a' as char, 'b' as char, 'c' as char].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
+
+    char[] getArrayValues() {
+        return arrayValues
+    }
 }
 
-class ByteArrayEntity {
+class ByteArrayEntity  {
     @Persistable private byte[] arrayValues = [42 as byte, 43 as byte, 44 as byte].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
+
+    byte[] getArrayValues() {
+        return arrayValues
+    }
 }
 
-class ShortArrayEntity {
+class ShortArrayEntity  {
     @Persistable private short[] arrayValues = [42 as short, 43 as short, 44 as short].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
+
+    short[] getArrayValues() {
+        return arrayValues
+    }
 }
 
-class IntegerArrayEntity {
+class IntegerArrayEntity  {
     @Persistable private int[] arrayValues = [42, 43, 44].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
+
+    int[] getArrayValues() {
+        return arrayValues
+    }
 }
 
-class LongArrayEntity {
+class LongArrayEntity  {
     @Persistable private long[] arrayValues = [42L, 43L, 44L].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
+
+    long[] getArrayValues() {
+        return arrayValues
+    }
 }
 
-class FloatArrayEntity {
-    @Persistable private float[] arrayValues = [42 as float, 43 as float, 44 as float].toArray()
+class FloatArrayEntity  {
+    @Persistable private float[] arrayValues = [42F, 43F, 44F].toArray()
     private double[] arrayValues2 = [45D, 46D, 47D].toArray()
+
+    float[] getArrayValues() {
+        return arrayValues
+    }
 }
 
-class DoubleArrayEntity {
+class DoubleArrayEntity  {
     @Persistable private double[] arrayValues = [42D, 43D, 44D].toArray()
     private double[] doubleValues2 = [45D, 46D, 47D].toArray()
+
+    double[] getArrayValues() {
+        return arrayValues
+    }
 }
 
 class ObjectArrayEntity<E> {
     @Persistable private E[] arrayValues
     private double[] doubleValues2 = [45D, 46D, 47D].toArray()
 
-    ObjectArrayEntity(E... values) {
+    ObjectArrayEntity(Class<E> clazz, E... values) {
+        arrayValues = values.length ? values : Array.newInstance(clazz, 0)
+    }
+
+    E[] getArrayValues() {
+        return arrayValues
+    }
+}
+
+class IntegerObjectArrayEntity {
+    @Persistable private Integer[] arrayValues
+    private double[] doubleValues2 = [45D, 46D, 47D].toArray()
+
+    IntegerObjectArrayEntity(Integer... values) {
         arrayValues = values
+    }
+
+    Integer[] getArrayValues() {
+        return arrayValues
     }
 }
 

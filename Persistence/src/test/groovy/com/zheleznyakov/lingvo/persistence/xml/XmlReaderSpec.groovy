@@ -3,6 +3,7 @@ package com.zheleznyakov.lingvo.persistence.xml
 import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.EnumXmlDeserializer
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ObjectXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.util.*
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -76,8 +77,8 @@ class XmlReaderSpec extends Specification {
 
         testXmlGenerator.setObjectEntity(ImmutableSet, new IntegerEntity(), new DoubleEntity()) | SetObjectEntity || { it.getSetObjectValues() } | [new IntegerEntity(), new DoubleEntity()].toSet()
 
-        testXmlGenerator.mapEntity(HashMap, 42, true, [42d], new BooleanEntity())               | MapEntity       || { it.getMyMap() }           | [42: true, [42D]: new BooleanEntity()]
-        testXmlGenerator.mapEntity(ImmutableMap)                                                | MapEntity       || { it.getMyMap() }           | [:]
+        testXmlGenerator.mapEntity(HashMap, 42, true, [42d], new BooleanEntity())      | MapEntity       || { it.getMyMap() }           | [42: true, [42D]: new BooleanEntity()]
+        testXmlGenerator.mapEntity(ImmutableMap, 42, true)                             | MapEntity       || { it.getMyMap() }           | [42: true]
     }
 
     @Unroll
@@ -137,6 +138,32 @@ class XmlReaderSpec extends Specification {
         testXmlGenerator.enumEntity('FORTY_FOUR')               | EnumEntity    || 'No enum constant.*TestEnum.*FORTY_FOUR'
     }
 
-    private static trait TestEnumXmlDeserializer implements EnumXmlDeserializer<TestEnum> {}
+    @Unroll
+    def "Test reading entity: #expectedClass.simpleName"() {
+        given: "the file contains an array entity encoded in xml"
+        InputStream input = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))
 
+        when: "the reader reads the file"
+        def entity = reader.read(input, expectedClass)
+
+        then: "the extracted entity is correct"
+        entity.getClass() == expectedClass
+        entity.getArrayValues() == expectedValue
+
+        where: "the parameters are"
+        xml                                                          | expectedClass        || expectedValue
+        testXmlGenerator.booleanArrayEntity('true', 'true', 'false') | BooleanArrayEntity   || [true, true, false].toArray()
+        testXmlGenerator.booleanArrayEntity()                        | BooleanArrayEntity   || [].toArray()
+        testXmlGenerator.characterArrayEntity('a', 'b', 'c')         | CharacterArrayEntity || ['a' as char, 'b' as char, 'c' as char].toArray()
+        testXmlGenerator.byteArrayEntity('42', '43', '44')           | ByteArrayEntity      || [42 as byte, 43 as byte, 44 as byte].toArray()
+        testXmlGenerator.shortArrayEntity('42', '43', '44')          | ShortArrayEntity     || [42 as short, 43 as short, 44 as short].toArray()
+        testXmlGenerator.integerArrayEntity('42', '43', '44')        | IntegerArrayEntity   || [42, 43, 44].toArray()
+        testXmlGenerator.longArrayEntity('42', '43', '44')           | LongArrayEntity      || [42L, 43L, 44L].toArray()
+        testXmlGenerator.floatArrayEntity('42.0', '43.0', '44.0')    | FloatArrayEntity     || [42D, 43F, 44F].toArray()
+        testXmlGenerator.doubleArrayEntity('42.0', '43.0', '44.0')   | DoubleArrayEntity    || [42d, 43d, 44d].toArray()
+
+        testXmlGenerator.objectArrayEntity('Integer', '42', '43', '44') | IntegerObjectArrayEntity || [Integer.valueOf(42), Integer.valueOf(43), Integer.valueOf(44)].toArray()
+    }
+
+    private static trait TestEnumXmlDeserializer implements EnumXmlDeserializer<TestEnum> {}
 }
