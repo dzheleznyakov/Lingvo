@@ -3,15 +3,14 @@ package com.zheleznyakov.lingvo.persistence
 import com.google.common.collect.ImmutableSet
 import com.google.common.reflect.ClassPath
 import com.zheleznyakov.lingvo.basic.persistence.Persistable
+import com.zheleznyakov.lingvo.persistence.xml.serializers.GrammaticalWordXmlSerializer
+import com.zheleznyakov.lingvo.util.Util
 
 import java.lang.reflect.Field
 
 class PersistenceHelper {
     private static Map<Class<?>, Set<Field>> persistableFieldsByClass = new HashMap<>()
-
-//    private static Map<String, Class<?>> classSimpleNamesToClasses = new HashMap<>()
-//    private static Set<Class<?>> loadedClasses
-//    public static final String ROOT_PACKAGE = "com.zheleznyakov.lingvo"
+    private static Set<Class<? extends GrammaticalWordXmlSerializer>> wordSerializers = new HashSet<>()
 
     private PersistenceHelper() throws IllegalAccessException {
         throw new IllegalAccessException("This class is a static helper; it is not supposed to be instantiated");
@@ -25,22 +24,21 @@ class PersistenceHelper {
         })
     }
 
-//    static Class<?> getClass(String className) {
-//        return classSimpleNamesToClasses.computeIfAbsent(className, { name ->
-//            getLoadedClasses().stream()
-//                    .filter { clazz -> clazz.simpleName == name }
-//                    .findAny()
-//                    .orElse(null)
-//        })
-//    }
-//
-//    private static Set<Class<?>> getLoadedClasses() {
-//        if (loadedClasses == null) {
-//            ClassPath classPath = ClassPath.from(ClassLoader.getSystemClassLoader())
-//            loadedClasses = classPath.getTopLevelClassesRecursive(ROOT_PACKAGE).stream()
-//                    .map { classInfo -> classInfo.load() }
-//                    .collect(ImmutableSet.toImmutableSet())
-//        }
-//        return loadedClasses
-//    }
+    static void loadWordSerializers(String packageName) {
+        if (Util.isBlank(packageName))
+            return;
+
+        def newLoadedWordSerializers = ClassPath.from(ClassLoader.getSystemClassLoader())
+                .getTopLevelClasses(packageName)
+                .stream()
+                .map { classInfo -> classInfo.load() }
+                .filter { cl -> GrammaticalWordXmlSerializer.isAssignableFrom(cl) }
+                .collect(ImmutableSet.toImmutableSet())
+        wordSerializers.addAll newLoadedWordSerializers
+    }
+
+
+    static Set<Class<? extends GrammaticalWordXmlSerializer>> getWordSerializers() {
+        return wordSerializers
+    }
 }

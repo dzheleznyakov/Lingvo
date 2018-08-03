@@ -3,7 +3,6 @@ package com.zheleznyakov.lingvo.persistence.xml
 import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.EnumXmlDeserializer
-import com.zheleznyakov.lingvo.persistence.xml.deserializers.basic.ObjectXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.util.*
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -27,50 +26,50 @@ class XmlReaderSpec extends Specification {
         value(entity) == expectedValue
 
         where: "the parameters are"
-        xml                                                                                     | expectedClass   || value                    | expectedValue
-        testXmlGenerator.booleanEntity('true')                                                  | BooleanEntity   || { it.getBooleanValue() } | true
-        testXmlGenerator.booleanEntity('false')                                                 | BooleanEntity   || { it.getBooleanValue() } | false
+        xml                                                                                     | expectedClass   || value                      | expectedValue
+        testXmlGenerator.booleanEntity('true')                                                  | BooleanEntity   || { it.getBooleanValue() }   | true
+        testXmlGenerator.booleanEntity('false')                                                 | BooleanEntity   || { it.getBooleanValue() }   | false
 
-        testXmlGenerator.charEntity('*')                                                        | CharEntity      || { it.getCharValue() }    | 42 as char
-        testXmlGenerator.charEntity('1')                                                        | CharEntity      || { it.getCharValue() }    | '1'
+        testXmlGenerator.charEntity('*')                                                        | CharEntity      || { it.getCharValue() }      | 42 as char
+        testXmlGenerator.charEntity('1')                                                        | CharEntity      || { it.getCharValue() }      | '1'
 
-        testXmlGenerator.byteEntity('42')                                                       | ByteEntity      || { it.getByteValue() }    | 42 as byte
-        testXmlGenerator.byteEntity('1')                                                        | ByteEntity      || { it.getByteValue() }    | 1 as byte
+        testXmlGenerator.byteEntity('42')                                                       | ByteEntity      || { it.getByteValue() }      | 42 as byte
+        testXmlGenerator.byteEntity('1')                                                        | ByteEntity      || { it.getByteValue() }      | 1 as byte
 
-        testXmlGenerator.shortEntity('42')                                                      | ShortEntity     || { it.getShortValue() }   | 42 as short
-        testXmlGenerator.shortEntity('1')                                                       | ShortEntity     || { it.getShortValue() }   | 1 as short
+        testXmlGenerator.shortEntity('42')                                                      | ShortEntity     || { it.getShortValue() }     | 42 as short
+        testXmlGenerator.shortEntity('1')                                                       | ShortEntity     || { it.getShortValue() }     | 1 as short
 
-        testXmlGenerator.integerEntity('42')                                                    | IntegerEntity   || { it.getIntValue() }     | 42
-        testXmlGenerator.integerEntity('1')                                                     | IntegerEntity   || { it.getIntValue() }     | 1
+        testXmlGenerator.integerEntity('42')                                                    | IntegerEntity   || { it.getIntValue() }       | 42
+        testXmlGenerator.integerEntity('1')                                                     | IntegerEntity   || { it.getIntValue() }       | 1
 
-        testXmlGenerator.longEntity('42')                                                       | LongEntity      || { it.getLongValue() }    | 42L
-        testXmlGenerator.longEntity('1')                                                        | LongEntity      || { it.getLongValue() }    | 1L
+        testXmlGenerator.longEntity('42')                                                       | LongEntity      || { it.getLongValue() }      | 42L
+        testXmlGenerator.longEntity('1')                                                        | LongEntity      || { it.getLongValue() }      | 1L
 
-        testXmlGenerator.floatEntity('42.0')                                                    | FloatEntity     || { it.getFloatValue() }   | 42f
-        testXmlGenerator.floatEntity('1.0')                                                     | FloatEntity     || { it.getFloatValue() }   | 1f
-        testXmlGenerator.floatEntity('1')                                                       | FloatEntity     || { it.getFloatValue() }   | 1f
-        testXmlGenerator.floatEntity("1${Float.MAX_VALUE}")                                     | FloatEntity     || { it.getFloatValue() }   | Float.POSITIVE_INFINITY
+        testXmlGenerator.floatEntity('42.0')                                                    | FloatEntity     || { it.getFloatValue() }      | 42f
+        testXmlGenerator.floatEntity('1.0')                                                     | FloatEntity     || { it.getFloatValue() }      | 1f
+        testXmlGenerator.floatEntity('1')                                                       | FloatEntity     || { it.getFloatValue() }      | 1f
+        testXmlGenerator.floatEntity("1${Float.MAX_VALUE}")                                     | FloatEntity     || { it.getFloatValue() }      | Float.POSITIVE_INFINITY
 
-        testXmlGenerator.doubleEntity('42.0')                                                   | DoubleEntity    || { it.getDoubleValue() }  | 42d
-        testXmlGenerator.doubleEntity('1.0')                                                    | DoubleEntity    || { it.getDoubleValue() }  | 1d
-        testXmlGenerator.doubleEntity('1')                                                      | DoubleEntity    || { it.getDoubleValue() }  | 1d
-        testXmlGenerator.doubleEntity("1${Double.MAX_VALUE}")                                   | DoubleEntity    || { it.getDoubleValue() }  | Double.POSITIVE_INFINITY
+        testXmlGenerator.doubleEntity('42.0')                                                   | DoubleEntity    || { it.getDoubleValue() }     | 42d
+        testXmlGenerator.doubleEntity('1.0')                                                    | DoubleEntity    || { it.getDoubleValue() }     | 1d
+        testXmlGenerator.doubleEntity('1')                                                      | DoubleEntity    || { it.getDoubleValue() }     | 1d
+        testXmlGenerator.doubleEntity("1${Double.MAX_VALUE}")                                   | DoubleEntity    || { it.getDoubleValue() }     | Double.POSITIVE_INFINITY
 
-        testXmlGenerator.enumEntity('FORTY_TWO')                                                | EnumEntity      || { it.getEnumValue() }    | TestEnum.FORTY_TWO
-        testXmlGenerator.enumEntity('FORTY_THREE')                                              | EnumEntity      || { it.getEnumValue() }    | TestEnum.FORTY_THREE
-        testXmlGenerator.enumEntity()                                                           | EnumEntity      || { it.getEnumValue() }    | null
+        testXmlGenerator.enumEntity('FORTY_TWO')                                                | EnumEntity      || { it.getEnumValue() }       | TestEnum.FORTY_TWO
+        testXmlGenerator.enumEntity('FORTY_THREE')                                              | EnumEntity      || { it.getEnumValue() }       | TestEnum.FORTY_THREE
+        testXmlGenerator.enumEntity()                                                           | EnumEntity      || { it.getEnumValue() }       | null
 
-        testXmlGenerator.stringEntity('testValue')                                              | StringEntity    || { it.getStringValue() }  | 'testValue'
-        testXmlGenerator.stringEntity('testValue2')                                             | StringEntity    || { it.getStringValue() }  | 'testValue2'
-        testXmlGenerator.stringEntity('')                                                       | StringEntity    || { it.getStringValue() }  | ''
-        testXmlGenerator.stringEntity()                                                         | StringEntity    || { it.getStringValue() }  | null
+        testXmlGenerator.stringEntity('testValue')                                              | StringEntity    || { it.getStringValue() }     | 'testValue'
+        testXmlGenerator.stringEntity('testValue2')                                             | StringEntity    || { it.getStringValue() }     | 'testValue2'
+        testXmlGenerator.stringEntity('')                                                       | StringEntity    || { it.getStringValue() }     | ''
+        testXmlGenerator.stringEntity()                                                         | StringEntity    || { it.getStringValue() }     | null
 
-        testXmlGenerator.listEntity(ArrayList, 42, 43, 44)                                      | ListEntity      || { it.getListValues() }   | [42, 43, 44]
-        testXmlGenerator.listEntity(ArrayList, 0, 100, 999)                                     | ListEntity      || { it.getListValues() }   | [0, 100, 999]
-        testXmlGenerator.listEntity(null)                                                       | ListEntity      || { it.getListValues() }   | null
-        testXmlGenerator.listEntity(ArrayList)                                                  | ListEntity      || { it.getListValues() }   | []
+        testXmlGenerator.listEntity(ArrayList, 42, 43, 44)                                      | ListEntity      || { it.getListValues() }      | [42, 43, 44]
+        testXmlGenerator.listEntity(ArrayList, 0, 100, 999)                                     | ListEntity      || { it.getListValues() }      | [0, 100, 999]
+        testXmlGenerator.listEntity(null)                                                       | ListEntity      || { it.getListValues() }      | null
+        testXmlGenerator.listEntity(ArrayList)                                                  | ListEntity      || { it.getListValues() }      | []
 
-        testXmlGenerator.setEntity(HashSet, 42d, 43d, 44d)                                      | SetEntity       || { it.getSetValues() }    | [42d, 43d, 44d].toSet()
+        testXmlGenerator.setEntity(HashSet, 42d, 43d, 44d)                                      | SetEntity       || { it.getSetValues() }       | [42d, 43d, 44d].toSet()
         testXmlGenerator.setEntity(HashSet, 42.42d, 43.43d, 44.44d)                             | SetEntity       || { it.getSetValues() }       | [42.42, 43.43, 44.44].toSet()
         testXmlGenerator.setEntity(null)                                                        | SetEntity       || { it.getSetValues() }       | null
         testXmlGenerator.setEntity(HashSet)                                                     | SetEntity       || { it.getSetValues() }       | [].toSet()

@@ -6,19 +6,27 @@ import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionaryConfig
 import com.zheleznyakov.lingvo.basic.dictionary.Record
 import com.zheleznyakov.lingvo.helpers.DictionaryRecordTestHelper
 import com.zheleznyakov.lingvo.implementations.FakeEnglish
+import com.zheleznyakov.lingvo.persistence.PersistenceHelper
 import com.zheleznyakov.lingvo.persistence.xml.util.IOTestHelper
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
+import org.junit.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.util.function.Function
 
 class XmlPersistenceManagerSpec extends Specification {
-    private static final String DICTIONARY_NAME = "Test"
-    private static final String PATH_TO_FILE_STORAGE = ZhConfigFactory.get().getString("persistence.xml.root")
+    private static final String DICTIONARY_NAME = 'Test'
+    private static final String PATH_TO_FILE_STORAGE = ZhConfigFactory.get().getString('persistence.xml.root')
 
-    private XmlPersistenceManager persistenceManager = []
+    private XmlPersistenceManager persistenceManager
+
     private LearningDictionary dictionary = [FakeEnglish.FIXED_LANGUAGE, DICTIONARY_NAME]
+
+    void setup() {
+        PersistenceHelper.loadWordSerializers('com.zheleznyakov.lingvo.persistence.xml.util')
+        persistenceManager = []
+    }
 
     def cleanup() {
         IOTestHelper.makeFolderEmpty(PATH_TO_FILE_STORAGE)
@@ -30,7 +38,7 @@ class XmlPersistenceManagerSpec extends Specification {
         !file.exists()
 
         when: "the dictionary is persisted"
-        persistenceManager.persist(dictionary)
+        persistenceManager.persist dictionary
 
         then: "the xml file with the dictionary exists"
         file.exists()
@@ -47,8 +55,8 @@ class XmlPersistenceManagerSpec extends Specification {
         !file2.exists()
 
         when: "the dictionaries are persisted"
-        persistenceManager.persist(dictionary)
-        persistenceManager.persist(secondDictionary)
+        persistenceManager.persist dictionary
+        persistenceManager.persist secondDictionary
 
         then: "files for both dictionaries are in the same folder"
         file1.exists()
@@ -58,7 +66,7 @@ class XmlPersistenceManagerSpec extends Specification {
 
     def "When a dictionary is persisted, them xml file contains persistence metadata"() {
         when: "the dictionary is persisted"
-        persistenceManager.persist(dictionary)
+        persistenceManager.persist dictionary
 
         then: "the xml file contains persistence metadata"
         def root = new XmlSlurper().parse(dictionaryFileToWrite)
@@ -71,7 +79,7 @@ class XmlPersistenceManagerSpec extends Specification {
         dictionary.records.isEmpty()
 
         when: "the dictionary is persisted"
-        persistenceManager.persist(dictionary)
+        persistenceManager.persist dictionary
 
         then: "no records are persisted"
         assertPersistedRecords(dictionaryFileToWrite)
@@ -82,7 +90,7 @@ class XmlPersistenceManagerSpec extends Specification {
         DictionaryRecordTestHelper.addFullRecordsToDictionary(dictionary, 10)
 
         when: "the dictionary is persisted"
-        persistenceManager.persist(dictionary)
+        persistenceManager.persist dictionary
 
         then: "then all records are persisted"
         assertPersistedRecords(dictionaryFileToWrite, 10)
@@ -95,10 +103,22 @@ class XmlPersistenceManagerSpec extends Specification {
         dictionary.config.mode = LearningDictionaryConfig.Mode.TOGGLE
 
         when: "the dictionary is persisted"
-        persistenceManager.persist(dictionary)
+        persistenceManager.persist dictionary
 
         then: "the dictionaries config is persisted as well"
         assertPersistedDictionaryConfig(dictionaryFileToWrite)
+    }
+
+    def "When a dictionary is persisted, its name and language are persisted as well"() {
+        when: "the dictionary is persisted"
+        persistenceManager.persist dictionary
+
+        then: "its language is persisted"
+        def root = new XmlSlurper().parse dictionaryFileToWrite
+        root.dictionary.language == dictionary.language.code()
+
+        and: "its name is persisted"
+        root.dictionary.name == dictionary.name
     }
 
     private File getDictionaryFileToRead(dictionary=this.dictionary) {
@@ -148,7 +168,7 @@ class XmlPersistenceManagerSpec extends Specification {
             assert xmlRecord.examples.elem[0].translation == expectedRecord.examples[0].translation
 
             def xmlWord = xmlRecord.word
-//            assert xmlWord.@class == expectedRecord.word.class.simpleName
+            assert xmlWord.@class == expectedRecord.word.class.canonicalName
             assert xmlWord.mainForm == expectedRecord.word.mainForm
             assert xmlWord.randomValue == expectedRecord.word.randomValue
         }

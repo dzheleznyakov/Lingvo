@@ -1,7 +1,10 @@
 package com.zheleznyakov.lingvo.persistence.xml
 
 import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
+import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import com.zheleznyakov.lingvo.basic.words.Language
+import com.zheleznyakov.lingvo.persistence.PersistenceHelper
+import com.zheleznyakov.lingvo.persistence.xml.serializers.GrammaticalWordXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.domain.LanguageXmlSerializer
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
 
@@ -12,9 +15,17 @@ class XmlPersistenceManager {
         ensureDirectoryExists(directoryPath)
 
         FileWriter writer = ["$directoryPath/${dictionary.getName()}.xml"]
-        def additionalSerializers = new LinkedHashMap()
-        additionalSerializers.put(Language, LanguageXmlSerializer)
+        def additionalSerializers = [:]
+        additionalSerializers[(Language)] = LanguageXmlSerializer
+        PersistenceHelper.wordSerializers.each { ser ->
+            def serializableClass = findSerializableClass(ser)
+            additionalSerializers[(serializableClass)] = ser
+        }
         XmlWriter.with(writer, additionalSerializers).write(dictionary)
+    }
+
+    private static Class<? extends GrammaticalWord> findSerializableClass(ser) {
+        return new Object().withTraits(ser).serializableClass
     }
 
     private static void ensureDirectoryExists(String directoryPath) throws IOException {
