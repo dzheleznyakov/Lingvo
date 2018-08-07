@@ -88,8 +88,8 @@ class XmlReaderSpec extends Specification {
         when: "the reader reads the file"
         reader.read(input, clazz)
 
-        then: "the extracted entity is correct"
-        IllegalArgumentException exception = thrown()
+        then: "an exception is thrown"
+        PersistenceException exception = thrown()
         exception.message.matches ".*$expectedExceptionMessage.*"
 
         where: "the parameters are"

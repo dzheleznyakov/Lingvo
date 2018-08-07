@@ -19,7 +19,7 @@ class XmlReader implements XmlPersistenceV1{
 
     LearningDictionary read(File file) {
         if (!file.exists())
-            throw new PersistenceException("File [" + file.absolutePath + "] is not found")
+            throw new PersistenceException("File [${file.absolutePath}] is not found")
         def root = new XmlSlurper().parse(file)
         verifyMetadata(root)
 
@@ -29,7 +29,11 @@ class XmlReader implements XmlPersistenceV1{
 
     def read(InputStream input, Class<?> clazz) {
         def root = new XmlSlurper().parse(input)
-        return deserializer.deserialize(root, clazz)
+        try {
+            return deserializer.deserialize(root, clazz)
+        } catch (IllegalArgumentException e) {
+            throw new PersistenceException(e)
+        }
     }
 
     private void verifyMetadata(def root) {

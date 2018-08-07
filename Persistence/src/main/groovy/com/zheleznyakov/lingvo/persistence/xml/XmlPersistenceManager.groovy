@@ -4,6 +4,7 @@ import com.zheleznyakov.lingvo.basic.dictionary.LearningDictionary
 import com.zheleznyakov.lingvo.basic.words.GrammaticalWord
 import com.zheleznyakov.lingvo.basic.words.Language
 import com.zheleznyakov.lingvo.persistence.PersistenceHelper
+import com.zheleznyakov.lingvo.persistence.xml.deserializers.domain.LearningDictionaryXmlDeserializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.GrammaticalWordXmlSerializer
 import com.zheleznyakov.lingvo.persistence.xml.serializers.domain.LanguageXmlSerializer
 import com.zheleznyakov.lingvo.util.ZhConfigFactory
@@ -38,7 +39,7 @@ class XmlPersistenceManager {
     }
 
     LearningDictionary load(File file) {
-        return new XmlReader().read(file)
+        return new XmlReader([(LearningDictionary): LearningDictionaryXmlDeserializer]).read(file)
     }
 
 }

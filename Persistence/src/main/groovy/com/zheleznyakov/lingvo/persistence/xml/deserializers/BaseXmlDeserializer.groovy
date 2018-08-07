@@ -8,6 +8,11 @@ trait BaseXmlDeserializer<E> implements XmlDeserializer<E> {
         Util.validateArgument(exists(node), "Node '{}' does not exist", node.name())
     }
 
+    void verifyAllNodesExist(GPathResult... nodes) {
+        for (GPathResult node : nodes)
+            verifyNodeExistence(node);
+    }
+
     void verifyValuePresence(GPathResult node) {
         Util.validateArgument(!Util.isBlank(node.text()), "Node '{}' contains no {} value", node.name(), getValueType())
     }

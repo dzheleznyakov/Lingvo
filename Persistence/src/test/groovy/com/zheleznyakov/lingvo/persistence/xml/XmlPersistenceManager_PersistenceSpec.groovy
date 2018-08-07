@@ -8,16 +8,12 @@ import com.zheleznyakov.lingvo.helpers.DictionaryRecordTestHelper
 import com.zheleznyakov.lingvo.implementations.FakeEnglish
 import com.zheleznyakov.lingvo.persistence.PersistenceHelper
 import com.zheleznyakov.lingvo.persistence.xml.util.IOTestHelper
-import com.zheleznyakov.lingvo.util.ZhConfigFactory
-import org.junit.Ignore
 import spock.lang.Specification
-import spock.lang.Unroll
 
 import java.util.function.Function
 
-class XmlPersistenceManagerSpec extends Specification {
+class XmlPersistenceManager_PersistenceSpec extends Specification {
     private static final String DICTIONARY_NAME = 'Test'
-    private static final String PATH_TO_FILE_STORAGE = ZhConfigFactory.get().getString('persistence.xml.root')
 
     private XmlPersistenceManager persistenceManager
 
@@ -29,7 +25,7 @@ class XmlPersistenceManagerSpec extends Specification {
     }
 
     def cleanup() {
-        IOTestHelper.makeFolderEmpty(PATH_TO_FILE_STORAGE)
+        IOTestHelper.clean()
     }
 
     def "If xml file with dictionary does not exists, persistence manager creates a new one"() {
@@ -42,6 +38,23 @@ class XmlPersistenceManagerSpec extends Specification {
 
         then: "the xml file with the dictionary exists"
         file.exists()
+    }
+
+    def "if xml file exists, then it gets overridden"() {
+        given: 'the xml file with unrelated data'
+        File file = getDictionaryFileToWrite()
+        file.delete()
+        String initialFileContent = '<root>some data</root>'
+        file << initialFileContent
+
+        when: 'the dictionary is persisted'
+        persistenceManager.persist dictionary
+
+        then: 'the file\'s content is overridden'
+        assertPersistenceMetadata()
+        assertPersistedDictionaryConfig(file)
+        assertPersistedRecords(file)
+        !file.text.contains(initialFileContent);
     }
 
     def "Files for dictionary of the same language are stored in the same folder"() {
@@ -69,9 +82,32 @@ class XmlPersistenceManagerSpec extends Specification {
         persistenceManager.persist dictionary
 
         then: "the xml file contains persistence metadata"
-        def root = new XmlSlurper().parse(dictionaryFileToWrite)
-        root.persistenceManager.@version == "v1"
-        root.persistenceManager.@type == "xml"
+        assertPersistenceMetadata()
+    }
+
+    def "When a dictionary is persisted, its name and language are persisted as well"() {
+        when: "the dictionary is persisted"
+        persistenceManager.persist dictionary
+
+        then: "its language is persisted"
+        def root = new XmlSlurper().parse dictionaryFileToWrite
+        root.dictionary.language == dictionary.language.code()
+
+        and: "its name is persisted"
+        root.dictionary.name == dictionary.name
+    }
+
+    def "When a dictionary is persisted, its config is persisted as well"() {
+        given: "the dictionaries setting in the config are not default"
+        dictionary.config.maxLearnCount = 10
+        dictionary.config.strict = true
+        dictionary.config.mode = LearningDictionaryConfig.Mode.TOGGLE
+
+        when: "the dictionary is persisted"
+        persistenceManager.persist dictionary
+
+        then: "the dictionaries config is persisted as well"
+        assertPersistedDictionaryConfig(dictionaryFileToWrite)
     }
 
     def "When an empty dictionary is persisted, it has no records"() {
@@ -96,40 +132,20 @@ class XmlPersistenceManagerSpec extends Specification {
         assertPersistedRecords(dictionaryFileToWrite, 10)
     }
 
-    def "The dictionary config is persisted with the dictionary"() {
-        given: "the dictionaries setting in the config are not default"
-        dictionary.config.maxLearnCount = 10
-        dictionary.config.strict = true
-        dictionary.config.mode = LearningDictionaryConfig.Mode.TOGGLE
-
-        when: "the dictionary is persisted"
-        persistenceManager.persist dictionary
-
-        then: "the dictionaries config is persisted as well"
-        assertPersistedDictionaryConfig(dictionaryFileToWrite)
+    private File getDictionaryFileToRead(dictionary = this.dictionary) {
+        IOTestHelper.getDictionaryFileToRead(dictionary.name)
     }
 
-    def "When a dictionary is persisted, its name and language are persisted as well"() {
-        when: "the dictionary is persisted"
-        persistenceManager.persist dictionary
-
-        then: "its language is persisted"
-        def root = new XmlSlurper().parse dictionaryFileToWrite
-        root.dictionary.language == dictionary.language.code()
-
-        and: "its name is persisted"
-        root.dictionary.name == dictionary.name
+    private File getDictionaryFileToWrite(dictionary = this.dictionary) {
+        IOTestHelper.getDictionaryFileToWrite(dictionary.name)
     }
 
-    private File getDictionaryFileToRead(dictionary=this.dictionary) {
-        new File("${PATH_TO_FILE_STORAGE}/${FakeEnglish.FIXED_LANGUAGE.code()}/xml/${dictionary.name}.xml")
-    }
+    private void assertPersistenceMetadata() {
+        def root = new XmlSlurper().parse(dictionaryFileToWrite)
+        root.persistenceManager.@version == "v1"
+        root.persistenceManager.@type == "xml"
 
-    private File getDictionaryFileToWrite() {
-        File file = dictionaryFileToRead
-        if (!file.parentFile.exists())
-            file.parentFile.mkdirs()
-        return file
+        true
     }
 
     private assertPersistedDictionaryConfig(File file) {
@@ -174,49 +190,5 @@ class XmlPersistenceManagerSpec extends Specification {
         }
 
         true
-    }
-
-    def "If xml file does not exist, throw"() {
-        given: "the xml file"
-        File file = ["file.xml"]
-
-        expect: "that the file does not exist"
-        !file.exists()
-
-        when: "the persistence manager attempts to load the file"
-        persistenceManager.load file
-
-        then: "an exception is thrown"
-        def e = thrown(PersistenceException)
-        e.message.contains "not found"
-    }
-
-    @Unroll
-    def "Throw when persistence metadata is incorrect: version=#version, type=#type"() {
-        given: "the xml file has not complete persistence metadata"
-        def file = dictionaryFileToWrite
-        writePersistenceMetadata(file, version, type)
-
-        when: "the file is loaded"
-        persistenceManager.load file
-
-        then: "exception is thrown"
-        def e = thrown(PersistenceException)
-        e.message.contains messagePart
-
-        where: "the parameters are"
-        version | type   | messagePart
-        null    | "xml"  | "Wrong version"
-        "v1"    | null   | "Wrong type"
-        "v123"  | "xml"  | "Wrong version"
-        "v1"    | "html" | "Wrong type"
-        "v123"  | "html" | "Wrong version"
-    }
-
-    private void writePersistenceMetadata(File file, version, type) {
-        String metadata = "<persistenceManager" +
-                (version == null ? "" : " version='$version'") +
-                (type == null ? "" : " type='$type'") + " />"
-        file << "<root>$metadata</root>"
     }
 }

@@ -4,4 +4,8 @@ class PersistenceException extends Exception {
     PersistenceException(String message) {
         super(message)
     }
+
+    PersistenceException(Throwable cause) {
+        super(cause.message, cause)
+    }
 }
