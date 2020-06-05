@@ -1,5 +1,6 @@
 package zh.lingvo.utils;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class Id<E> {
@@ -24,5 +25,12 @@ public class Id<E> {
     @Override
     public int hashCode() {
         return Objects.hashCode(value);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("value", value)
+                .toString();
     }
 }

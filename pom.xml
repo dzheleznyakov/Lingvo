@@ -8,6 +8,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <modules>
         <module>Common</module>
+        <module>Persistence</module>
     </modules>
 
     <properties>
@@ -126,6 +127,11 @@
             <dependency>
                 <groupId>zh.lingvo</groupId>
                 <artifactId>Common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>zh.lingvo</groupId>
+                <artifactId>Persistence</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
